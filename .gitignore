@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Songs and Bingo Cards files
+songs.txt
+MusicBingoCards.xlsx

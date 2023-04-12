@@ -4,7 +4,7 @@ import xlsxwriter
 
 song_list = []
 try:
-    with open("songs.txt","r", encoding='utf-8') as f:
+    with open("./../songs.txt","r", encoding='utf-8') as f:
         song_list = f.readlines()
 except:
     print("Could not read songs.txt file.")
@@ -18,7 +18,7 @@ minNum = 1
 maxNum = len(song_list)
 
 # Spreadsheed table formats
-workbook = xlsxwriter.Workbook('bingoCards.xlsx')
+workbook = xlsxwriter.Workbook('./../MusicBingoCards.xlsx')
 worksheet = workbook.add_worksheet()
 cell_format = workbook.add_format()
 cell_format.set_align('center')
