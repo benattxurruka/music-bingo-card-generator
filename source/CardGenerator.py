@@ -30,11 +30,6 @@ merge_format = workbook.add_format({
     'border': 1,
 })
 
-# number_list = []
-# for n in range(max_rand_num):
-#     for x in range(12):
-#         number_list.append(n+1) 
-
 def add_card_to_spreadsheet(bingo_card, row):
     worksheet.merge_range(row, 0, row, 2, "Music Bingo", merge_format)
     row += 1
@@ -65,7 +60,7 @@ def generate_cards():
     except:
         print("Bingo cards could not been generated.")
 
-    return row > 0 # if greated than 0, cards were generated
+    return row > 0 # if greater than 0, cards were generated
 
 def format_and_save_file():
     worksheet.autofit()
