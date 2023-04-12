@@ -1,6 +1,12 @@
 # Music bingo card generator
 Create your music bingo cards using this tool.
 
+## Before you execute
+You need to install `xlsxwriter`:
+```
+pip install xlsxwriter
+```
+
 ## How to generate and print the bingo cards
 
 1. Navigate to /souce folder
