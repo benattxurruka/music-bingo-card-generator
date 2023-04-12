@@ -11,8 +11,8 @@ pip install xlsxwriter
 
 1. Navigate to /souce folder
 2. Fill songs.txt file with the song names you want to use in the Bingo.
-3. Execute CardGenerator.py
-4. Print bingoCards.xlsx file in Horizontal and fitting printing size to show all columns.
+3. Execute CardGenerator.py. It will create a file named `bingoCards.xlsx` at the project home directory. 
+4. Print `bingoCards.xlsx` file in Horizontal and fitting printing size to show all columns.
 
 ## How to modify amount and appearance:
 You can edit `CardGenerator.py` file to modify:
