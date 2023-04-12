@@ -14,11 +14,11 @@ columns = 3
 rows   = 2
 cards = 100
 
-minNum = 1
-maxNum = len(song_list)
+min_rand_num = 1
+max_rand_num = len(song_list)
 
 # Spreadsheed table formats
-workbook = xlsxwriter.Workbook('./../MusicBingoCards.xlsx')
+workbook = xlsxwriter.Workbook('./../bingoCards.xlsx')
 worksheet = workbook.add_worksheet()
 cell_format = workbook.add_format()
 cell_format.set_align('center')
@@ -30,38 +30,38 @@ merge_format = workbook.add_format({
     'border': 1,
 })
 
-number_list = []
-for n in range(maxNum):
-    for x in range(12):
-        number_list.append(n+1) 
+# number_list = []
+# for n in range(max_rand_num):
+#     for x in range(12):
+#         number_list.append(n+1) 
 
-def add_card_to_spreadsheet(bingoCard, row):
+def add_card_to_spreadsheet(bingo_card, row):
     worksheet.merge_range(row, 0, row, 2, "Music Bingo", merge_format)
     row += 1
-    for col, data in enumerate(bingoCard):
+    for col, data in enumerate(bingo_card):
         worksheet.write_column(row, col, data, cell_format)
     row += 3
     return row
 
 def generate_cards():
-    randRange = range(minNum, maxNum)
+    rand_range = range(min_rand_num, max_rand_num)
     row = 0
 
     try:
         for h in range(cards):
             card_as_numbers = []
             try:
-                card_as_numbers = random.sample(randRange, columns * rows)
+                card_as_numbers = random.sample(rand_range, columns * rows)
             except:
                 print("There are not enough songs in the list to generate bingo cards.")
-            bingoCard = []
+            bingo_card = []
             for i in range(columns):
-                bingoRow = []
+                bingo_row = []
                 for j in range(rows):
                     number = card_as_numbers[i * rows + j]
-                    bingoRow.append(song_list[number])
-                bingoCard.append(bingoRow)
-            row = add_card_to_spreadsheet(bingoCard, row)
+                    bingo_row.append(song_list[number])
+                bingo_card.append(bingo_row)
+            row = add_card_to_spreadsheet(bingo_card, row)
     except:
         print("Bingo cards could not been generated.")
 
