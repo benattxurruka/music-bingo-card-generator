@@ -63,7 +63,13 @@ def generate_cards():
     return row > 0 # if greater than 0, cards were generated
 
 def format_and_save_file():
-    worksheet.autofit()
+    card_size_with_spaces = 4
+    for card_index in range(cards):
+        worksheet.set_row(card_size_with_spaces * card_index, 30) # Tite
+        worksheet.set_row(card_size_with_spaces * card_index + 1, 50) # First bingo card row
+        worksheet.set_row(card_size_with_spaces * card_index + 2, 50) # Second bingo card row
+    worksheet.autofit() # Autofit width
+    worksheet.set_column('D:XFD', None, None, {'hidden': True}) # Hide columns after bingo card
     workbook.close()
     print("Music bingo cards generated succesfully.")
 
