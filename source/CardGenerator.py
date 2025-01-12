@@ -30,17 +30,17 @@ merge_format = workbook.add_format({
     'border': 1,
 })
 
-def add_card_to_spreadsheet(bingo_card, row):
-    worksheet.merge_range(row, 0, row, 2, "Music Bingo", merge_format)
-    row += 1
+def add_card_to_spreadsheet(bingo_card, row_index):
+    worksheet.merge_range(row_index, 0, row_index, 2, "Music Bingo", merge_format)
+    row_index += 1
     for col, data in enumerate(bingo_card):
-        worksheet.write_column(row, col, data, cell_format)
-    row += 3
-    return row
+        worksheet.write_column(row_index, col, data, cell_format)
+    row_index += rows + 1 # Bingo cards size = amount of rows + title
+    return row_index
 
 def generate_cards():
     rand_range = range(min_rand_num, max_rand_num)
-    row = 0
+    row_index = 0
 
     try:
         for h in range(cards):
@@ -56,18 +56,18 @@ def generate_cards():
                     number = card_as_numbers[i * rows + j]
                     bingo_row.append(song_list[number])
                 bingo_card.append(bingo_row)
-            row = add_card_to_spreadsheet(bingo_card, row)
+            row_index = add_card_to_spreadsheet(bingo_card, row_index)
     except:
         print("Bingo cards could not been generated.")
 
-    return row > 0 # if greater than 0, cards were generated
+    return row_index > 0 # if greater than 0, cards were generated
 
 def format_and_save_file():
-    card_size_with_spaces = 4
+    card_size_with_spaces = rows + 2 # Bingo card row amount + title + space between cards
     for card_index in range(cards):
-        worksheet.set_row(card_size_with_spaces * card_index, 30) # Tite
-        worksheet.set_row(card_size_with_spaces * card_index + 1, 50) # First bingo card row
-        worksheet.set_row(card_size_with_spaces * card_index + 2, 50) # Second bingo card row
+        worksheet.set_row(card_size_with_spaces * card_index, 30) # Set tite heigh
+        for row in range(rows):
+            worksheet.set_row(card_size_with_spaces * card_index + row + 1, 50) # Set songs rows height
     worksheet.autofit() # Autofit width
     worksheet.set_column('D:XFD', None, None, {'hidden': True}) # Hide columns after bingo card
     workbook.close()
