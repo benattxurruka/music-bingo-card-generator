@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Bingo Card Generator</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f4f4f8;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ── Header ────────────────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, #6c3fcf, #a855f7);
+      color: #fff;
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(108,63,207,.35);
+      position: relative;
+    }
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: .5px; }
+    header p  { margin-top: .4rem; opacity: .85; font-size: .95rem; }
+
+    #lang-switcher {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    #lang-switcher select {
+      background: rgba(255,255,255,.15);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,.4);
+      border-radius: 7px;
+      padding: .35rem .65rem;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 1.8rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='white'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right .6rem center;
+    }
+    #lang-switcher select:focus { outline: none; border-color: #fff; }
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    main {
+      max-width: 860px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* ── Config Panel ───────────────────────────────────────────── */
+    .config-panel {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,.08);
+      margin-bottom: 1.25rem;
+    }
+    .config-panel h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #6c3fcf;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+    .config-row {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .config-field {
+      display: flex;
+      flex-direction: column;
+      gap: .35rem;
+      flex: 1;
+      min-width: 120px;
+    }
+    .config-field label {
+      font-size: .82rem;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .config-field input[type="number"] {
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      padding: .5rem .75rem;
+      font-size: 1rem;
+      transition: border-color .2s;
+      width: 100%;
+    }
+    .config-field input[type="number"]:focus {
+      outline: none;
+      border-color: #a855f7;
+    }
+
+    /* ── Song Input ─────────────────────────────────────────────── */
+    .songs-panel {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,.08);
+      margin-bottom: 1.25rem;
+    }
+    .songs-panel h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #6c3fcf;
+      margin-bottom: .5rem;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+    .songs-panel .hint {
+      font-size: .82rem;
+      color: #777;
+      margin-bottom: .75rem;
+    }
+    .songs-panel .hint code {
+      background: #f3e8ff;
+      color: #7e22ce;
+      padding: .1em .35em;
+      border-radius: 4px;
+      font-size: .8rem;
+    }
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 7px;
+      padding: .75rem 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: .88rem;
+      line-height: 1.6;
+      resize: vertical;
+      transition: border-color .2s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #a855f7;
+    }
+    textarea.error { border-color: #ef4444; }
+
+    /* ── Validation Errors ──────────────────────────────────────── */
+    #error-list {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fca5a5;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: .75rem;
+    }
+    #error-list p {
+      font-size: .85rem;
+      font-weight: 600;
+      color: #b91c1c;
+      margin-bottom: .4rem;
+    }
+    #error-list ul {
+      list-style: none;
+      font-size: .82rem;
+      color: #dc2626;
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+    }
+    #error-list ul li::before { content: "✕ "; font-weight: 700; }
+
+    /* ── Song Counter ───────────────────────────────────────────── */
+    .song-counter {
+      font-size: .78rem;
+      color: #888;
+      margin-top: .4rem;
+      text-align: right;
+    }
+
+    /* ── Actions ────────────────────────────────────────────────── */
+    .actions {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-size: .95rem;
+      font-weight: 600;
+      padding: .7rem 1.5rem;
+      transition: opacity .2s, transform .1s;
+    }
+    button:active { transform: scale(.97); }
+    button:disabled { opacity: .45; cursor: default; }
+
+    #btn-generate {
+      background: linear-gradient(135deg, #6c3fcf, #a855f7);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(168,85,247,.4);
+    }
+    #btn-generate:not(:disabled):hover { opacity: .9; }
+
+    #btn-print {
+      background: #1a1a2e;
+      color: #fff;
+      display: none;
+    }
+    #btn-print:hover { opacity: .85; }
+
+    /* ── Results ────────────────────────────────────────────────── */
+    #results { display: none; }
+    #results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    #results-header h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+    #results-header span {
+      font-size: .82rem;
+      color: #888;
+    }
+
+    /* ── Bingo Cards Grid ───────────────────────────────────────── */
+    #cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ── Single Bingo Card ──────────────────────────────────────── */
+    .bingo-card {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,.1);
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .bingo-card-title {
+      background: linear-gradient(135deg, #6c3fcf, #a855f7);
+      color: #fff;
+      text-align: center;
+      font-weight: 700;
+      font-size: .9rem;
+      padding: .5rem;
+      letter-spacing: .5px;
+    }
+    .bingo-card table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .bingo-card td {
+      border: 1px solid #e5e7eb;
+      padding: .6rem .5rem;
+      text-align: center;
+      font-size: .8rem;
+      line-height: 1.3;
+      vertical-align: middle;
+      word-break: break-word;
+    }
+    .bingo-card .card-number {
+      font-size: .65rem;
+      color: #bbb;
+      text-align: right;
+      padding: .25rem .5rem;
+    }
+
+    /* ── Print Styles ───────────────────────────────────────────── */
+    @media print {
+      body { background: #fff; }
+
+      header, main > .config-panel, main > .songs-panel, .actions, #results-header {
+        display: none !important;
+      }
+
+      main {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      #results { display: block !important; }
+
+      #cards-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: .5cm;
+        padding: .5cm;
+      }
+
+      .bingo-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        border-radius: 0;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        /* Fixed total card height so every card is identical */
+        height: 9cm;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .bingo-card table {
+        flex: 1;          /* fill remaining height after the title bar */
+        height: 100%;
+        table-layout: fixed;
+      }
+
+      .bingo-card td {
+        /* Let cells share the available height equally; clip long text */
+        height: 1px;      /* triggers percentage height inside table cells */
+        overflow: hidden;
+        white-space: normal;
+        word-break: break-word;
+        font-size: .75rem;
+      }
+
+      .bingo-card-title {
+        background: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        flex-shrink: 0;
+      }
+
+      .bingo-card .card-number { flex-shrink: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div id="lang-switcher">
+    <select id="lang-select">
+      <option value="en">English</option>
+      <option value="es">Español</option>
+      <option value="ca">Català</option>
+      <option value="eu">Euskara</option>
+    </select>
+  </div>
+  <h1 data-i18n="header.title">🎵 Music Bingo Card Generator</h1>
+  <p data-i18n="header.subtitle">Enter your songs, configure the card size, and generate printable bingo cards.</p>
+</header>
+
+<main>
+
+  <!-- ── Configuration ── -->
+  <div class="config-panel">
+    <h2 data-i18n="config.title">Card Configuration</h2>
+    <div class="config-row">
+      <div class="config-field">
+        <label for="inp-columns" data-i18n="config.columns">Columns</label>
+        <input type="number" id="inp-columns" value="3" min="1" max="10">
+      </div>
+      <div class="config-field">
+        <label for="inp-rows" data-i18n="config.rows">Rows</label>
+        <input type="number" id="inp-rows" value="2" min="1" max="10">
+      </div>
+      <div class="config-field">
+        <label for="inp-cards" data-i18n="config.cards">Number of cards</label>
+        <input type="number" id="inp-cards" value="10" min="1" max="500">
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Song Input ── -->
+  <div class="songs-panel">
+    <h2 data-i18n="songs.title">Song List</h2>
+    <p class="hint">
+      <span data-i18n="songs.hint">One song per line. Each line must follow the format:</span>
+      <code>Song Title - Artist</code>
+    </p>
+    <textarea
+      id="songs-input"
+      spellcheck="false"
+      placeholder="Dancing Queen - ABBA&#10;Bohemian Rhapsody - Queen&#10;Thriller - Michael Jackson&#10;Hey Jude - The Beatles"
+    ></textarea>
+    <div class="song-counter" id="song-counter">0 songs entered</div>
+    <div id="error-list">
+      <p data-i18n="errors.title">Please fix the following issues:</p>
+      <ul id="error-items"></ul>
+    </div>
+  </div>
+
+  <!-- ── Actions ── -->
+  <div class="actions">
+    <button id="btn-generate" data-i18n="actions.generate">Generate Bingo Cards</button>
+    <button id="btn-print" data-i18n="actions.print">Print / Export PDF</button>
+  </div>
+
+  <!-- ── Results ── -->
+  <div id="results">
+    <div id="results-header">
+      <h2 id="results-title" data-i18n="results.title">Generated Cards</h2>
+      <span id="results-meta"></span>
+    </div>
+    <div id="cards-container"></div>
+  </div>
+
+</main>
+
+<script>
+  // ── Translations ───────────────────────────────────────────────
+  const TRANSLATIONS = {
+    en: {
+      'header.title':    '🎵 Music Bingo Card Generator',
+      'header.subtitle': 'Enter your songs, configure the card size, and generate printable bingo cards.',
+      'config.title':    'Card Configuration',
+      'config.columns':  'Columns',
+      'config.rows':     'Rows',
+      'config.cards':    'Number of cards',
+      'songs.title':     'Song List',
+      'songs.hint':      'One song per line. Each line must follow the format:',
+      'songs.placeholder': 'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
+      'songs.counter':   (n) => `${n} song${n !== 1 ? 's' : ''} entered`,
+      'errors.title':    'Please fix the following issues:',
+      'errors.format':   (line, song) => `Line ${line}: <strong>${song}</strong> — expected format: "Song Title - Artist"`,
+      'errors.tooFew':   (needed, cols, rows, have) => `You need at least <strong>${needed}</strong> songs for a ${cols}×${rows} card, but only ${have} were provided.`,
+      'actions.generate': 'Generate Bingo Cards',
+      'actions.print':    'Print / Export PDF',
+      'results.title':    'Generated Cards',
+      'results.meta':     (cards, cols, rows, songs) => `${cards} cards · ${cols} col × ${rows} row · ${songs} songs`,
+      'card.title':       'Music Bingo',
+    },
+    es: {
+      'header.title':    '🎵 Generador de Cartones de Bingo Musical',
+      'header.subtitle': 'Introduce tus canciones, configura el tamaño del cartón y genera cartones imprimibles.',
+      'config.title':    'Configuración del cartón',
+      'config.columns':  'Columnas',
+      'config.rows':     'Filas',
+      'config.cards':    'Número de cartones',
+      'songs.title':     'Lista de canciones',
+      'songs.hint':      'Una canción por línea. Cada línea debe seguir el formato:',
+      'songs.placeholder': 'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
+      'songs.counter':   (n) => `${n} canción${n !== 1 ? 'es' : ''} introducida${n !== 1 ? 's' : ''}`,
+      'errors.title':    'Por favor corrige los siguientes errores:',
+      'errors.format':   (line, song) => `Línea ${line}: <strong>${song}</strong> — formato esperado: "Título de la canción - Artista"`,
+      'errors.tooFew':   (needed, cols, rows, have) => `Necesitas al menos <strong>${needed}</strong> canciones para un cartón de ${cols}×${rows}, pero solo se han introducido ${have}.`,
+      'actions.generate': 'Generar cartones de bingo',
+      'actions.print':    'Imprimir / Exportar PDF',
+      'results.title':    'Cartones generados',
+      'results.meta':     (cards, cols, rows, songs) => `${cards} cartones · ${cols} col × ${rows} fil · ${songs} canciones`,
+      'card.title':       'Bingo Musical',
+    },
+    ca: {
+      'header.title':    '🎵 Generador de Cartrons de Bingo Musical',
+      'header.subtitle': 'Introdueix les teves cançons, configura la mida del cartró i genera cartrons imprimibles.',
+      'config.title':    'Configuració del cartró',
+      'config.columns':  'Columnes',
+      'config.rows':     'Files',
+      'config.cards':    'Nombre de cartrons',
+      'songs.title':     'Llista de cançons',
+      'songs.hint':      'Una cançó per línia. Cada línia ha de seguir el format:',
+      'songs.placeholder': 'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
+      'songs.counter':   (n) => `${n} cançó${n !== 1 ? 'ns' : ''} introduïda${n !== 1 ? 'es' : ''}`,
+      'errors.title':    'Si us plau, corregeix els errors següents:',
+      'errors.format':   (line, song) => `Línia ${line}: <strong>${song}</strong> — format esperat: "Títol de la cançó - Artista"`,
+      'errors.tooFew':   (needed, cols, rows, have) => `Necessites almenys <strong>${needed}</strong> cançons per a un cartró de ${cols}×${rows}, però només s'han introduït ${have}.`,
+      'actions.generate': 'Generar cartrons de bingo',
+      'actions.print':    'Imprimir / Exportar PDF',
+      'results.title':    'Cartrons generats',
+      'results.meta':     (cards, cols, rows, songs) => `${cards} cartrons · ${cols} col × ${rows} fil · ${songs} cançons`,
+      'card.title':       'Bingo Musical',
+    },
+    eu: {
+      'header.title':    '🎵 Musika Bingo Txartel Sortzailea',
+      'header.subtitle': 'Sartu zure abestiak, txartelaren tamaina konfiguratu eta inprimatzeko bingo txartelak sortu.',
+      'config.title':    'Txartelaren konfigurazioa',
+      'config.columns':  'Zutabeak',
+      'config.rows':     'Errenkadak',
+      'config.cards':    'Txartel kopurua',
+      'songs.title':     'Abesti zerrenda',
+      'songs.hint':      'Abesti bat lerroko. Lerro bakoitzak honako formatua izan behar du:',
+      'songs.placeholder': 'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
+      'songs.counter':   (n) => `${n} abesti sartu da${n !== 1 ? '' : ''}`,
+      'errors.title':    'Mesedez, zuzendu ondoko arazoak:',
+      'errors.format':   (line, song) => `${line}. lerroa: <strong>${song}</strong> — espero den formatua: "Abesti izenburua - Artista"`,
+      'errors.tooFew':   (needed, cols, rows, have) => `${cols}×${rows} txartel baterako gutxienez <strong>${needed}</strong> abesti behar dituzu, baina ${have} baino ez dituzu sartu.`,
+      'actions.generate': 'Bingo txartelak sortu',
+      'actions.print':    'Inprimatu / PDF gisa esportatu',
+      'results.title':    'Sortutako txartelak',
+      'results.meta':     (cards, cols, rows, songs) => `${cards} txartel · ${cols} zut × ${rows} err · ${songs} abesti`,
+      'card.title':       'Musika Bingoa',
+    },
+  };
+
+  let currentLang = 'en';
+
+  function t(key, ...args) {
+    const val = TRANSLATIONS[currentLang][key];
+    return typeof val === 'function' ? val(...args) : val;
+  }
+
+  function applyLanguage(lang) {
+    currentLang = lang;
+    // Update all static data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const val = TRANSLATIONS[lang][key];
+      if (val !== undefined && typeof val === 'string') el.textContent = val;
+    });
+    // Update textarea placeholder
+    songsInput.placeholder = t('songs.placeholder');
+    // Refresh counter text
+    const count = parseSongs(songsInput.value).length;
+    songCounter.textContent = t('songs.counter', count);
+  }
+
+  document.getElementById('lang-select').addEventListener('change', (e) => {
+    applyLanguage(e.target.value);
+  });
+
+  // ── DOM refs ───────────────────────────────────────────────────
+  const songsInput   = document.getElementById('songs-input');
+  const songCounter  = document.getElementById('song-counter');
+  const errorList    = document.getElementById('error-list');
+  const errorItems   = document.getElementById('error-items');
+  const btnGenerate  = document.getElementById('btn-generate');
+  const btnPrint     = document.getElementById('btn-print');
+  const results      = document.getElementById('results');
+  const resultsMeta  = document.getElementById('results-meta');
+  const cardsContainer = document.getElementById('cards-container');
+
+  const inpColumns = document.getElementById('inp-columns');
+  const inpRows    = document.getElementById('inp-rows');
+  const inpCards   = document.getElementById('inp-cards');
+
+  // ── Live song counter ──────────────────────────────────────────
+  songsInput.addEventListener('input', () => {
+    const count = parseSongs(songsInput.value).length;
+    songCounter.textContent = t('songs.counter', count);
+    // Clear errors as user types
+    errorList.style.display = 'none';
+    songsInput.classList.remove('error');
+  });
+
+  // ── Parse songs from textarea ──────────────────────────────────
+  function parseSongs(text) {
+    return text
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+  }
+
+  // ── Validate every line matches "words - words" ────────────────
+  // Allows any characters on both sides of " - "
+  const SONG_FORMAT = /^.+\s[-–—]\s.+$/;
+
+  function validate(songs) {
+    const errors = [];
+    songs.forEach((song, i) => {
+      if (!SONG_FORMAT.test(song)) {
+        errors.push(t('errors.format', i + 1, escapeHtml(song)));
+      }
+    });
+    return errors;
+  }
+
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ── Random sample without replacement ─────────────────────────
+  function randomSample(arr, n) {
+    const copy = [...arr];
+    const result = [];
+    for (let i = 0; i < n; i++) {
+      const idx = Math.floor(Math.random() * copy.length);
+      result.push(copy.splice(idx, 1)[0]);
+    }
+    return result;
+  }
+
+  // ── Build one bingo card element ───────────────────────────────
+  function buildCard(songs, columns, rows, cardNumber) {
+    const sample = randomSample(songs, columns * rows);
+
+    // Arrange into a columns × rows grid (column-major, matching Python)
+    const grid = Array.from({ length: rows }, (_, r) =>
+      Array.from({ length: columns }, (_, c) => sample[c * rows + r])
+    );
+
+    const card = document.createElement('div');
+    card.className = 'bingo-card';
+
+    const title = document.createElement('div');
+    title.className = 'bingo-card-title';
+    title.textContent = t('card.title');
+    card.appendChild(title);
+
+    const table = document.createElement('table');
+    grid.forEach(row => {
+      const tr = document.createElement('tr');
+      row.forEach(cell => {
+        const td = document.createElement('td');
+        td.textContent = cell;
+        tr.appendChild(td);
+      });
+      table.appendChild(tr);
+    });
+    card.appendChild(table);
+
+    const num = document.createElement('div');
+    num.className = 'card-number';
+    num.textContent = `#${cardNumber}`;
+    card.appendChild(num);
+
+    return card;
+  }
+
+  // ── Generate ───────────────────────────────────────────────────
+  btnGenerate.addEventListener('click', () => {
+    const songs   = parseSongs(songsInput.value);
+    const errors  = validate(songs);
+    const columns = parseInt(inpColumns.value, 10) || 3;
+    const rows    = parseInt(inpRows.value, 10)    || 2;
+    const numCards = parseInt(inpCards.value, 10)  || 10;
+    const needed  = columns * rows;
+
+    // Show validation errors
+    if (errors.length > 0) {
+      errorItems.innerHTML = errors.map(e => `<li>${e}</li>`).join('');
+      errorList.style.display = 'block';
+      songsInput.classList.add('error');
+      songsInput.focus();
+      return;
+    }
+    errorList.style.display = 'none';
+    songsInput.classList.remove('error');
+
+    // Check enough unique songs
+    if (songs.length < needed) {
+      errorItems.innerHTML = `<li>${t('errors.tooFew', needed, columns, rows, songs.length)}</li>`;
+      errorList.style.display = 'block';
+      songsInput.classList.add('error');
+      return;
+    }
+
+    // Generate cards
+    cardsContainer.innerHTML = '';
+    for (let i = 1; i <= numCards; i++) {
+      cardsContainer.appendChild(buildCard(songs, columns, rows, i));
+    }
+
+    resultsMeta.textContent = t('results.meta', numCards, columns, rows, songs.length);
+    results.style.display = 'block';
+    btnPrint.style.display = 'inline-block';
+    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // ── Print / PDF ────────────────────────────────────────────────
+  btnPrint.addEventListener('click', () => window.print());
+</script>
+
+</body>
+</html>
