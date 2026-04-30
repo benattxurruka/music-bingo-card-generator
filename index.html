@@ -50,6 +50,31 @@
     }
     #lang-switcher select:focus { outline: none; border-color: #fff; }
 
+    /* ── Tab Bar ────────────────────────────────────────────────── */
+    .tab-bar {
+      background: #fff;
+      border-bottom: 2px solid #e5e7eb;
+      display: flex;
+      padding: 0 max(1rem, calc(50% - 420px));
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      border-radius: 0;
+      padding: .85rem 1.4rem;
+      font-size: .95rem;
+      font-weight: 600;
+      color: #888;
+      cursor: pointer;
+      transition: color .2s, border-color .2s;
+      margin-bottom: -2px;
+      box-shadow: none;
+    }
+    .tab-btn:hover { color: #6c3fcf; }
+    .tab-btn.active { color: #6c3fcf; border-bottom-color: #6c3fcf; }
+    .tab-btn:active { transform: none; }
+
     /* ── Layout ─────────────────────────────────────────────────── */
     main {
       max-width: 860px;
@@ -147,10 +172,7 @@
       resize: vertical;
       transition: border-color .2s;
     }
-    textarea:focus {
-      outline: none;
-      border-color: #a855f7;
-    }
+    textarea:focus { outline: none; border-color: #a855f7; }
     textarea.error { border-color: #ef4444; }
 
     /* ── Validation Errors ──────────────────────────────────────── */
@@ -227,15 +249,8 @@
       align-items: center;
       margin-bottom: 1rem;
     }
-    #results-header h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #1a1a2e;
-    }
-    #results-header span {
-      font-size: .82rem;
-      color: #888;
-    }
+    #results-header h2 { font-size: 1.1rem; font-weight: 700; color: #1a1a2e; }
+    #results-header span { font-size: .82rem; color: #888; }
 
     /* ── Bingo Cards Grid ───────────────────────────────────────── */
     #cards-container {
@@ -262,10 +277,7 @@
       padding: .5rem;
       letter-spacing: .5px;
     }
-    .bingo-card table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    .bingo-card table { width: 100%; border-collapse: collapse; }
     .bingo-card td {
       border: 1px solid #e5e7eb;
       padding: .6rem .5rem;
@@ -282,63 +294,325 @@
       padding: .25rem .5rem;
     }
 
+    /* ── Bingo Player ───────────────────────────────────────────── */
+    .player-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,.08);
+      margin-bottom: 1.25rem;
+    }
+    .player-section h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #6c3fcf;
+      margin-bottom: .5rem;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+    .player-section > .hint {
+      font-size: .82rem;
+      color: #777;
+      margin-bottom: 1rem;
+    }
+
+    /* Prepare table */
+    .prepare-table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+    .prepare-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    .prepare-table th {
+      background: #f9f5ff;
+      color: #6c3fcf;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      padding: .5rem .75rem;
+      text-align: left;
+      border-bottom: 2px solid #e9d5ff;
+    }
+    .prepare-table td {
+      padding: .4rem .5rem;
+      border-bottom: 1px solid #f3f4f6;
+      vertical-align: middle;
+    }
+    .prepare-table tr:last-child td { border-bottom: none; }
+    .song-name-cell {
+      font-size: .82rem;
+      color: #1a1a2e;
+      min-width: 140px;
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .prepare-table input[type="text"] {
+      border: 1.5px solid #d1d5db;
+      border-radius: 6px;
+      padding: .35rem .6rem;
+      font-size: .82rem;
+      width: 100%;
+      transition: border-color .2s;
+    }
+    .prepare-table input[type="text"]:focus { outline: none; border-color: #a855f7; }
+    .prepare-table input[type="number"] {
+      border: 1.5px solid #d1d5db;
+      border-radius: 6px;
+      padding: .35rem .5rem;
+      font-size: .82rem;
+      width: 70px;
+      transition: border-color .2s;
+    }
+    .prepare-table input[type="number"]:focus { outline: none; border-color: #a855f7; }
+    .prepare-table input.url-valid   { border-color: #22c55e !important; }
+    .prepare-table input.url-invalid { border-color: #ef4444 !important; }
+    .col-url     { min-width: 260px; }
+    .col-seconds { width: 80px; }
+    .col-preview { width: 44px; text-align: center; }
+
+    .btn-preview-song {
+      background: none;
+      border: 1.5px solid #d1d5db;
+      border-radius: 6px;
+      padding: .3rem .55rem;
+      font-size: .85rem;
+      color: #555;
+      cursor: pointer;
+      line-height: 1;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-preview-song:hover  { border-color: #a855f7; color: #6c3fcf; }
+    .btn-preview-song:active { transform: scale(.93); }
+
+    .prepare-empty {
+      text-align: center;
+      color: #aaa;
+      padding: 2rem;
+      font-size: .88rem;
+    }
+
+    /* Shared button styles */
+    .btn-primary {
+      background: linear-gradient(135deg, #6c3fcf, #a855f7);
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(168,85,247,.4);
+    }
+    .btn-primary:not(:disabled):hover { opacity: .9; }
+    .btn-dark { background: #1a1a2e; color: #fff; }
+    .btn-dark:hover { opacity: .85; }
+
+    /* Load config */
+    .load-config-area {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .load-config-label {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      cursor: pointer;
+      background: #f3f4f6;
+      color: #374151;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      padding: .65rem 1.25rem;
+      font-size: .95rem;
+      font-weight: 600;
+      transition: background .2s, border-color .2s, color .2s;
+    }
+    .load-config-label:hover { background: #ede9fe; border-color: #a855f7; color: #6c3fcf; }
+    #inp-load-config { display: none; }
+
+    .config-loaded-info {
+      display: none;
+      font-size: .88rem;
+      color: #16a34a;
+      font-weight: 600;
+    }
+
+    /* Player UI */
+    #player-ui {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .player-now-playing {
+      background: linear-gradient(135deg, #1a1a2e, #2d1b69);
+      color: #fff;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    #yt-player-container {
+      flex-shrink: 0;
+      width: 120px;
+      height: 68px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #111;
+      color: #555;
+      font-size: .7rem;
+    }
+
+    .player-error-msg {
+      display: none;
+      color: #fca5a5;
+      font-size: .78rem;
+      background: rgba(239,68,68,.18);
+      border-radius: 6px;
+      padding: .4rem .65rem;
+      margin-top: .4rem;
+      line-height: 1.4;
+    }
+
+    .player-info { flex: 1; min-width: 0; }
+    .player-label {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      opacity: .6;
+      margin-bottom: .2rem;
+    }
+    .player-song-name {
+      font-size: 1rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: .5rem;
+    }
+
+    .player-progress {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: .65rem;
+    }
+    .player-time {
+      font-size: .75rem;
+      opacity: .7;
+      font-variant-numeric: tabular-nums;
+      min-width: 72px;
+    }
+    .progress-bar-wrap {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #a855f7;
+      border-radius: 2px;
+      transition: width .4s linear;
+      width: 0%;
+    }
+
+    .player-controls { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .ctrl-btn {
+      background: rgba(255,255,255,.15);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .45rem 1rem;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .ctrl-btn:hover  { background: rgba(255,255,255,.28); }
+    .ctrl-btn:active { transform: scale(.95); }
+    .ctrl-btn-main   { background: #a855f7; }
+    .ctrl-btn-main:hover { background: #9333ea; }
+
+    /* Queue */
+    .player-queue {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .queue-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .65rem 1rem;
+      background: #f9f5ff;
+      border-bottom: 1px solid #e9d5ff;
+    }
+    .queue-header h3 {
+      font-size: .78rem;
+      font-weight: 700;
+      color: #6c3fcf;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .queue-header span { font-size: .78rem; color: #888; }
+    .queue-list { max-height: 220px; overflow-y: auto; }
+    .queue-item {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .55rem 1rem;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: .83rem;
+      color: #374151;
+    }
+    .queue-item:last-child { border-bottom: none; }
+    .queue-item.q-current { background: #f9f5ff; color: #6c3fcf; font-weight: 600; }
+    .queue-item.q-played  { opacity: .38; text-decoration: line-through; }
+    .queue-num { font-size: .7rem; color: #bbb; min-width: 20px; text-align: right; }
+    .queue-item.q-current .queue-num { color: #a855f7; }
+    .queue-icon { display: none; font-size: .72rem; }
+    .queue-item.q-current .queue-icon { display: inline; }
+
     /* ── Print Styles ───────────────────────────────────────────── */
     @media print {
       body { background: #fff; }
-
-      header, main > .config-panel, main > .songs-panel, .actions, #results-header {
+      header, .tab-bar, #tab-player,
+      main > .config-panel, main > .songs-panel, .actions, #results-header {
         display: none !important;
       }
-
-      main {
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
+      main { max-width: 100%; margin: 0; padding: 0; }
       #results { display: block !important; }
-
       #cards-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: .5cm;
         padding: .5cm;
       }
-
       .bingo-card {
         box-shadow: none;
         border: 1px solid #ccc;
         border-radius: 0;
         break-inside: avoid;
         page-break-inside: avoid;
-        /* Fixed total card height so every card is identical */
         height: 9cm;
         display: flex;
         flex-direction: column;
       }
-
-      .bingo-card table {
-        flex: 1;          /* fill remaining height after the title bar */
-        height: 100%;
-        table-layout: fixed;
-      }
-
+      .bingo-card table { flex: 1; height: 100%; table-layout: fixed; }
       .bingo-card td {
-        /* Let cells share the available height equally; clip long text */
-        height: 1px;      /* triggers percentage height inside table cells */
+        height: 1px;
         overflow: hidden;
         white-space: normal;
         word-break: break-word;
         font-size: .75rem;
       }
-
       .bingo-card-title {
         background: #000 !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
         flex-shrink: 0;
       }
-
       .bingo-card .card-number { flex-shrink: 0; }
     }
   </style>
@@ -358,64 +632,152 @@
   <p data-i18n="header.subtitle">Enter your songs, configure the card size, and generate printable bingo cards.</p>
 </header>
 
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="tab-generator" data-i18n="tabs.generator">Card Generator</button>
+  <button class="tab-btn"        data-tab="tab-player"    data-i18n="tabs.player">Bingo Player</button>
+</div>
+
 <main>
 
-  <!-- ── Configuration ── -->
-  <div class="config-panel">
-    <h2 data-i18n="config.title">Card Configuration</h2>
-    <div class="config-row">
-      <div class="config-field" style="flex: 2; min-width: 200px;">
-        <label for="inp-title" data-i18n="config.cardTitle">Card Title</label>
-        <input type="text" id="inp-title" data-i18n-placeholder="card.title" placeholder="Music Bingo" maxlength="80">
-      </div>
-      <div class="config-field">
-        <label for="inp-columns" data-i18n="config.columns">Columns</label>
-        <input type="number" id="inp-columns" value="3" min="1" max="10">
-      </div>
-      <div class="config-field">
-        <label for="inp-rows" data-i18n="config.rows">Rows</label>
-        <input type="number" id="inp-rows" value="2" min="1" max="10">
-      </div>
-      <div class="config-field">
-        <label for="inp-cards" data-i18n="config.cards">Number of cards</label>
-        <input type="number" id="inp-cards" value="10" min="1" max="500">
+  <!-- ═══════════ TAB 1: Card Generator ═══════════ -->
+  <div id="tab-generator">
+
+    <div class="config-panel">
+      <h2 data-i18n="config.title">Card Configuration</h2>
+      <div class="config-row">
+        <div class="config-field" style="flex:2;min-width:200px">
+          <label for="inp-title" data-i18n="config.cardTitle">Card Title</label>
+          <input type="text" id="inp-title" data-i18n-placeholder="card.title" placeholder="Music Bingo" maxlength="80">
+        </div>
+        <div class="config-field">
+          <label for="inp-columns" data-i18n="config.columns">Columns</label>
+          <input type="number" id="inp-columns" value="3" min="1" max="10">
+        </div>
+        <div class="config-field">
+          <label for="inp-rows" data-i18n="config.rows">Rows</label>
+          <input type="number" id="inp-rows" value="2" min="1" max="10">
+        </div>
+        <div class="config-field">
+          <label for="inp-cards" data-i18n="config.cards">Number of cards</label>
+          <input type="number" id="inp-cards" value="10" min="1" max="500">
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- ── Song Input ── -->
-  <div class="songs-panel">
-    <h2 data-i18n="songs.title">Song List</h2>
-    <p class="hint">
-      <span data-i18n="songs.hint">One song per line. Each line must follow the format:</span>
-      <code>Song Title - Artist</code>
-    </p>
-    <textarea
-      id="songs-input"
-      spellcheck="false"
-      placeholder="Dancing Queen - ABBA&#10;Bohemian Rhapsody - Queen&#10;Thriller - Michael Jackson&#10;Hey Jude - The Beatles"
-    ></textarea>
-    <div class="song-counter" id="song-counter">0 songs entered</div>
-    <div id="error-list">
-      <p data-i18n="errors.title">Please fix the following issues:</p>
-      <ul id="error-items"></ul>
+    <div class="songs-panel">
+      <h2 data-i18n="songs.title">Song List</h2>
+      <p class="hint">
+        <span data-i18n="songs.hint">One song per line. Each line must follow the format:</span>
+        <code>Song Title - Artist</code>
+      </p>
+      <textarea id="songs-input" spellcheck="false"
+        placeholder="Dancing Queen - ABBA&#10;Bohemian Rhapsody - Queen&#10;Thriller - Michael Jackson&#10;Hey Jude - The Beatles"
+      ></textarea>
+      <div class="song-counter" id="song-counter">0 songs entered</div>
+      <div id="error-list">
+        <p data-i18n="errors.title">Please fix the following issues:</p>
+        <ul id="error-items"></ul>
+      </div>
     </div>
-  </div>
 
-  <!-- ── Actions ── -->
-  <div class="actions">
-    <button id="btn-generate" data-i18n="actions.generate">Generate Bingo Cards</button>
-    <button id="btn-print" data-i18n="actions.print">Print / Export PDF</button>
-  </div>
-
-  <!-- ── Results ── -->
-  <div id="results">
-    <div id="results-header">
-      <h2 id="results-title" data-i18n="results.title">Generated Cards</h2>
-      <span id="results-meta"></span>
+    <div class="actions">
+      <button id="btn-generate" data-i18n="actions.generate">Generate Bingo Cards</button>
+      <button id="btn-print"    data-i18n="actions.print">Print / Export PDF</button>
     </div>
-    <div id="cards-container"></div>
-  </div>
+
+    <div id="results">
+      <div id="results-header">
+        <h2 id="results-title" data-i18n="results.title">Generated Cards</h2>
+        <span id="results-meta"></span>
+      </div>
+      <div id="cards-container"></div>
+    </div>
+
+  </div><!-- /tab-generator -->
+
+  <!-- ═══════════ TAB 2: Bingo Player ═══════════ -->
+  <div id="tab-player" style="display:none">
+
+    <!-- ── Prepare ── -->
+    <div class="player-section">
+      <h2 data-i18n="player.prepare.title">Prepare Bingo</h2>
+      <p class="hint" data-i18n="player.prepare.hint">For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 30 seconds.</p>
+
+      <div class="prepare-table-wrap">
+        <table class="prepare-table">
+          <thead>
+            <tr>
+              <th data-i18n="player.prepare.songCol">Song</th>
+              <th class="col-url"     data-i18n="player.prepare.urlCol">YouTube URL</th>
+              <th class="col-seconds" data-i18n="player.prepare.startCol">Start (s)</th>
+              <th class="col-seconds" data-i18n="player.prepare.endCol">End (s)</th>
+              <th class="col-preview"></th>
+            </tr>
+          </thead>
+          <tbody id="prepare-tbody">
+            <tr><td colspan="5" class="prepare-empty" data-i18n="player.prepare.noSongs">No songs in the Song List yet. Add songs in the Card Generator tab first.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions" style="margin-bottom:0">
+        <button id="btn-play-from-prepare" class="btn-primary" data-i18n="player.prepare.playNow">Play Bingo</button>
+        <button id="btn-export-config" class="btn-dark" data-i18n="player.prepare.export">Export Config</button>
+      </div>
+    </div>
+
+    <!-- ── Play ── -->
+    <div class="player-section">
+      <h2 data-i18n="player.play.title">Play Bingo</h2>
+      <p class="hint" data-i18n="player.play.hint">Load a previously exported config file, then press Play to shuffle and start.</p>
+
+      <div class="load-config-area">
+        <label class="load-config-label" for="inp-load-config">
+          <span>📂</span>
+          <span data-i18n="player.play.load">Load Config File</span>
+        </label>
+        <input type="file" id="inp-load-config" accept=".json">
+        <span class="config-loaded-info" id="config-loaded-info"></span>
+      </div>
+
+      <div class="actions" style="margin-bottom:.5rem">
+        <button id="btn-play-bingo" class="btn-primary" data-i18n="player.play.start" disabled>Play Bingo</button>
+        <button id="btn-stop-bingo" class="btn-dark"    data-i18n="player.play.stop"  style="display:none">Stop</button>
+      </div>
+
+      <!-- Player (shown when playing / previewing) -->
+      <div id="player-ui">
+        <div class="player-now-playing">
+          <div id="yt-player-container"></div>
+          <div class="player-info">
+            <div class="player-label" data-i18n="player.play.nowPlaying">Now Playing</div>
+            <div class="player-song-name" id="player-song-name">—</div>
+            <div class="player-progress">
+              <span class="player-time" id="player-time">0:00 / 0:30</span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="progress-bar-fill"></div>
+              </div>
+            </div>
+            <div class="player-controls">
+              <button class="ctrl-btn" id="ctrl-prev" data-i18n="player.play.prev">⏮ Prev</button>
+              <button class="ctrl-btn ctrl-btn-main" id="ctrl-pause" data-i18n="player.play.pause">⏸ Pause</button>
+              <button class="ctrl-btn" id="ctrl-next" data-i18n="player.play.next">Next ⏭</button>
+            </div>
+            <div class="player-error-msg" id="player-error"></div>
+          </div>
+        </div>
+
+        <div class="player-queue">
+          <div class="queue-header">
+            <h3 data-i18n="player.play.queue">Queue</h3>
+            <span id="queue-progress-label"></span>
+          </div>
+          <div class="queue-list" id="queue-list"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-player -->
 
 </main>
 
@@ -425,86 +787,182 @@
     en: {
       'header.title':    '🎵 Music Bingo Card Generator',
       'header.subtitle': 'Enter your songs, configure the card size, and generate printable bingo cards.',
+      'tabs.generator':  'Card Generator',
+      'tabs.player':     'Bingo Player',
       'config.title':    'Card Configuration',
-      'config.cardTitle': 'Card Title',
+      'config.cardTitle':'Card Title',
       'config.columns':  'Columns',
       'config.rows':     'Rows',
       'config.cards':    'Number of cards',
       'songs.title':     'Song List',
       'songs.hint':      'One song per line. Each line must follow the format:',
-      'songs.placeholder': 'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
+      'songs.placeholder':'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
       'songs.counter':   (n) => `${n} song${n !== 1 ? 's' : ''} entered`,
       'errors.title':    'Please fix the following issues:',
       'errors.format':   (line, song) => `Line ${line}: <strong>${song}</strong> — expected format: "Song Title - Artist"`,
       'errors.tooFew':   (needed, cols, rows, have) => `You need at least <strong>${needed}</strong> songs for a ${cols}×${rows} card, but only ${have} were provided.`,
-      'actions.generate': 'Generate Bingo Cards',
-      'actions.print':    'Print / Export PDF',
-      'results.title':    'Generated Cards',
-      'results.meta':     (cards, cols, rows, songs) => `${cards} cards · ${cols} col × ${rows} row · ${songs} songs`,
-      'card.title':       'Music Bingo',
+      'actions.generate':'Generate Bingo Cards',
+      'actions.print':   'Print / Export PDF',
+      'results.title':   'Generated Cards',
+      'results.meta':    (cards, cols, rows, songs) => `${cards} cards · ${cols} col × ${rows} row · ${songs} songs`,
+      'card.title':      'Music Bingo',
+      'player.prepare.title':   'Prepare Bingo',
+      'player.prepare.hint':    'For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 30 seconds.',
+      'player.prepare.songCol': 'Song',
+      'player.prepare.urlCol':  'YouTube URL',
+      'player.prepare.startCol':'Start (s)',
+      'player.prepare.endCol':  'End (s)',
+      'player.prepare.playNow': 'Play Bingo',
+      'player.prepare.export':  'Export Config',
+      'player.prepare.noSongs': 'No songs in the Song List yet. Add songs in the Card Generator tab first.',
+      'player.play.title':      'Play Bingo',
+      'player.play.hint':       'Load a previously exported config file, then press Play to shuffle and start.',
+      'player.play.load':       'Load Config File',
+      'player.play.loaded':     (n) => `${n} song${n !== 1 ? 's' : ''} loaded`,
+      'player.play.start':      'Play Bingo',
+      'player.play.stop':       'Stop',
+      'player.play.nowPlaying': 'Now Playing',
+      'player.play.prev':       '⏮ Prev',
+      'player.play.pause':      '⏸ Pause',
+      'player.play.resume':     '▶ Resume',
+      'player.play.next':       'Next ⏭',
+      'player.play.queue':      'Queue',
+      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
     },
     es: {
       'header.title':    '🎵 Generador de Cartones de Bingo Musical',
       'header.subtitle': 'Introduce tus canciones, configura el tamaño del cartón y genera cartones imprimibles.',
+      'tabs.generator':  'Generador de cartones',
+      'tabs.player':     'Reproductor de bingo',
       'config.title':    'Configuración del cartón',
-      'config.cardTitle': 'Título del cartón',
+      'config.cardTitle':'Título del cartón',
       'config.columns':  'Columnas',
       'config.rows':     'Filas',
       'config.cards':    'Número de cartones',
       'songs.title':     'Lista de canciones',
       'songs.hint':      'Una canción por línea. Cada línea debe seguir el formato:',
-      'songs.placeholder': 'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
+      'songs.placeholder':'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
       'songs.counter':   (n) => `${n} canción${n !== 1 ? 'es' : ''} introducida${n !== 1 ? 's' : ''}`,
       'errors.title':    'Por favor corrige los siguientes errores:',
-      'errors.format':   (line, song) => `Línea ${line}: <strong>${song}</strong> — formato esperado: "Título de la canción - Artista"`,
+      'errors.format':   (line, song) => `Línea ${line}: <strong>${song}</strong> — formato esperado: "Título - Artista"`,
       'errors.tooFew':   (needed, cols, rows, have) => `Necesitas al menos <strong>${needed}</strong> canciones para un cartón de ${cols}×${rows}, pero solo se han introducido ${have}.`,
-      'actions.generate': 'Generar cartones de bingo',
-      'actions.print':    'Imprimir / Exportar PDF',
-      'results.title':    'Cartones generados',
-      'results.meta':     (cards, cols, rows, songs) => `${cards} cartones · ${cols} col × ${rows} fil · ${songs} canciones`,
-      'card.title':       'Bingo Musical',
+      'actions.generate':'Generar cartones de bingo',
+      'actions.print':   'Imprimir / Exportar PDF',
+      'results.title':   'Cartones generados',
+      'results.meta':    (cards, cols, rows, songs) => `${cards} cartones · ${cols} col × ${rows} fil · ${songs} canciones`,
+      'card.title':      'Bingo Musical',
+      'player.prepare.title':   'Preparar el bingo',
+      'player.prepare.hint':    'Para cada canción, pega una URL de YouTube y opcionalmente establece los segundos de inicio/fin. Déjalo en blanco para reproducir los primeros 30 segundos.',
+      'player.prepare.songCol': 'Canción',
+      'player.prepare.urlCol':  'URL de YouTube',
+      'player.prepare.startCol':'Inicio (s)',
+      'player.prepare.endCol':  'Fin (s)',
+      'player.prepare.playNow': 'Jugar al bingo',
+      'player.prepare.export':  'Exportar configuración',
+      'player.prepare.noSongs': 'No hay canciones en la lista todavía. Añade canciones en la pestaña Generador de cartones primero.',
+      'player.play.title':      'Jugar al bingo',
+      'player.play.hint':       'Carga un archivo de configuración exportado previamente y pulsa Jugar para empezar.',
+      'player.play.load':       'Cargar archivo de configuración',
+      'player.play.loaded':     (n) => `${n} canción${n !== 1 ? 'es' : ''} cargada${n !== 1 ? 's' : ''}`,
+      'player.play.start':      'Jugar al bingo',
+      'player.play.stop':       'Detener',
+      'player.play.nowPlaying': 'Reproduciendo ahora',
+      'player.play.prev':       '⏮ Anterior',
+      'player.play.pause':      '⏸ Pausa',
+      'player.play.resume':     '▶ Reanudar',
+      'player.play.next':       'Siguiente ⏭',
+      'player.play.queue':      'Cola',
+      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
     },
     ca: {
       'header.title':    '🎵 Generador de Cartrons de Bingo Musical',
       'header.subtitle': 'Introdueix les teves cançons, configura la mida del cartró i genera cartrons imprimibles.',
+      'tabs.generator':  'Generador de cartrons',
+      'tabs.player':     'Reproductor de bingo',
       'config.title':    'Configuració del cartró',
-      'config.cardTitle': 'Títol del cartró',
+      'config.cardTitle':'Títol del cartró',
       'config.columns':  'Columnes',
       'config.rows':     'Files',
       'config.cards':    'Nombre de cartrons',
       'songs.title':     'Llista de cançons',
       'songs.hint':      'Una cançó per línia. Cada línia ha de seguir el format:',
-      'songs.placeholder': 'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
+      'songs.placeholder':'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
       'songs.counter':   (n) => `${n} cançó${n !== 1 ? 'ns' : ''} introduïda${n !== 1 ? 'es' : ''}`,
       'errors.title':    'Si us plau, corregeix els errors següents:',
-      'errors.format':   (line, song) => `Línia ${line}: <strong>${song}</strong> — format esperat: "Títol de la cançó - Artista"`,
+      'errors.format':   (line, song) => `Línia ${line}: <strong>${song}</strong> — format esperat: "Títol - Artista"`,
       'errors.tooFew':   (needed, cols, rows, have) => `Necessites almenys <strong>${needed}</strong> cançons per a un cartró de ${cols}×${rows}, però només s'han introduït ${have}.`,
-      'actions.generate': 'Generar cartrons de bingo',
-      'actions.print':    'Imprimir / Exportar PDF',
-      'results.title':    'Cartrons generats',
-      'results.meta':     (cards, cols, rows, songs) => `${cards} cartrons · ${cols} col × ${rows} fil · ${songs} cançons`,
-      'card.title':       'Bingo Musical',
+      'actions.generate':'Generar cartrons de bingo',
+      'actions.print':   'Imprimir / Exportar PDF',
+      'results.title':   'Cartrons generats',
+      'results.meta':    (cards, cols, rows, songs) => `${cards} cartrons · ${cols} col × ${rows} fil · ${songs} cançons`,
+      'card.title':      'Bingo Musical',
+      'player.prepare.title':   'Preparar el bingo',
+      'player.prepare.hint':    "Per a cada cançó, enganxa una URL de YouTube i, opcionalment, estableix els segons d'inici/fi. Deixa-ho en blanc per reproduir els primers 30 segons.",
+      'player.prepare.songCol': 'Cançó',
+      'player.prepare.urlCol':  'URL de YouTube',
+      'player.prepare.startCol':'Inici (s)',
+      'player.prepare.endCol':  'Fi (s)',
+      'player.prepare.playNow': 'Jugar al bingo',
+      'player.prepare.export':  'Exportar configuració',
+      'player.prepare.noSongs': 'Encara no hi ha cançons a la llista. Afegeix cançons a la pestanya Generador de cartrons primer.',
+      'player.play.title':      'Jugar al bingo',
+      'player.play.hint':       'Carrega un fitxer de configuració exportat prèviament i prem Jugar per començar.',
+      'player.play.load':       'Carregar fitxer de configuració',
+      'player.play.loaded':     (n) => `${n} cançó${n !== 1 ? 'ns' : ''} carregada${n !== 1 ? 'es' : ''}`,
+      'player.play.start':      'Jugar al bingo',
+      'player.play.stop':       'Aturar',
+      'player.play.nowPlaying': 'Reproduint ara',
+      'player.play.prev':       '⏮ Anterior',
+      'player.play.pause':      '⏸ Pausa',
+      'player.play.resume':     '▶ Reprèn',
+      'player.play.next':       'Següent ⏭',
+      'player.play.queue':      'Cua',
+      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
     },
     eu: {
       'header.title':    '🎵 Musika Bingo Txartel Sortzailea',
       'header.subtitle': 'Sartu zure abestiak, txartelaren tamaina konfiguratu eta inprimatzeko bingo txartelak sortu.',
+      'tabs.generator':  'Txartel sortzailea',
+      'tabs.player':     'Bingo erreproduzitzailea',
       'config.title':    'Txartelaren konfigurazioa',
-      'config.cardTitle': 'Txartelaren izenburua',
+      'config.cardTitle':'Txartelaren izenburua',
       'config.columns':  'Zutabeak',
       'config.rows':     'Errenkadak',
       'config.cards':    'Txartel kopurua',
       'songs.title':     'Abesti zerrenda',
       'songs.hint':      'Abesti bat lerroko. Lerro bakoitzak honako formatua izan behar du:',
-      'songs.placeholder': 'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
-      'songs.counter':   (n) => `${n} abesti sartu da${n !== 1 ? '' : ''}`,
+      'songs.placeholder':'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
+      'songs.counter':   (n) => `${n} abesti sartu da`,
       'errors.title':    'Mesedez, zuzendu ondoko arazoak:',
-      'errors.format':   (line, song) => `${line}. lerroa: <strong>${song}</strong> — espero den formatua: "Abesti izenburua - Artista"`,
+      'errors.format':   (line, song) => `${line}. lerroa: <strong>${song}</strong> — espero den formatua: "Izenburua - Artista"`,
       'errors.tooFew':   (needed, cols, rows, have) => `${cols}×${rows} txartel baterako gutxienez <strong>${needed}</strong> abesti behar dituzu, baina ${have} baino ez dituzu sartu.`,
-      'actions.generate': 'Bingo txartelak sortu',
-      'actions.print':    'Inprimatu / PDF gisa esportatu',
-      'results.title':    'Sortutako txartelak',
-      'results.meta':     (cards, cols, rows, songs) => `${cards} txartel · ${cols} zut × ${rows} err · ${songs} abesti`,
-      'card.title':       'Musika Bingoa',
+      'actions.generate':'Bingo txartelak sortu',
+      'actions.print':   'Inprimatu / PDF gisa esportatu',
+      'results.title':   'Sortutako txartelak',
+      'results.meta':    (cards, cols, rows, songs) => `${cards} txartel · ${cols} zut × ${rows} err · ${songs} abesti`,
+      'card.title':      'Musika Bingoa',
+      'player.prepare.title':   'Bingoa prestatu',
+      'player.prepare.hint':    'Abesti bakoitzeko, itsatsi YouTube URL bat eta, aukeran, ezarri hasiera/amaiera segunduak. Hutsik utziz gero, lehenengo 30 segunduak erreproduzituko dira.',
+      'player.prepare.songCol': 'Abestia',
+      'player.prepare.urlCol':  'YouTube URLa',
+      'player.prepare.startCol':'Hasiera (s)',
+      'player.prepare.endCol':  'Amaiera (s)',
+      'player.prepare.playNow': 'Bingoa jokatu',
+      'player.prepare.export':  'Konfigurazioa esportatu',
+      'player.prepare.noSongs': 'Oraindik ez dago abestirik zerrendan. Gehitu abestiak Txartel sortzailea fitxan lehenik.',
+      'player.play.title':      'Bingoa jokatu',
+      'player.play.hint':       'Kargatu aurretik esportatutako konfigurazio fitxategia eta sakatu Jokatu hasteko.',
+      'player.play.load':       'Konfigurazio fitxategia kargatu',
+      'player.play.loaded':     (n) => `${n} abesti kargatu da`,
+      'player.play.start':      'Bingoa jokatu',
+      'player.play.stop':       'Gelditu',
+      'player.play.nowPlaying': 'Orain erreproduzitzen',
+      'player.play.prev':       '⏮ Aurrekoa',
+      'player.play.pause':      '⏸ Pausatu',
+      'player.play.resume':     '▶ Jarraitu',
+      'player.play.next':       'Hurrengoa ⏭',
+      'player.play.queue':      'Ilara',
+      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
     },
   };
 
@@ -512,89 +970,79 @@
 
   function t(key, ...args) {
     const val = TRANSLATIONS[currentLang][key];
-    return typeof val === 'function' ? val(...args) : val;
+    return typeof val === 'function' ? val(...args) : (val ?? key);
   }
 
   function applyLanguage(lang) {
     currentLang = lang;
-    // Update all static data-i18n elements
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       const val = TRANSLATIONS[lang][key];
       if (val !== undefined && typeof val === 'string') el.textContent = val;
     });
-    // Update textarea placeholder
     songsInput.placeholder = t('songs.placeholder');
-    // Update title input placeholder
-    inpTitle.placeholder = t('card.title');
-    // Refresh counter text
+    inpTitle.placeholder   = t('card.title');
     const count = parseSongs(songsInput.value).length;
     songCounter.textContent = t('songs.counter', count);
   }
 
-  document.getElementById('lang-select').addEventListener('change', (e) => {
-    applyLanguage(e.target.value);
-  });
+  document.getElementById('lang-select').addEventListener('change', e => applyLanguage(e.target.value));
 
   // ── DOM refs ───────────────────────────────────────────────────
-  const songsInput   = document.getElementById('songs-input');
-  const songCounter  = document.getElementById('song-counter');
-  const errorList    = document.getElementById('error-list');
-  const errorItems   = document.getElementById('error-items');
-  const btnGenerate  = document.getElementById('btn-generate');
-  const btnPrint     = document.getElementById('btn-print');
-  const results      = document.getElementById('results');
-  const resultsMeta  = document.getElementById('results-meta');
+  const songsInput     = document.getElementById('songs-input');
+  const songCounter    = document.getElementById('song-counter');
+  const errorList      = document.getElementById('error-list');
+  const errorItems     = document.getElementById('error-items');
+  const btnGenerate    = document.getElementById('btn-generate');
+  const btnPrint       = document.getElementById('btn-print');
+  const results        = document.getElementById('results');
+  const resultsMeta    = document.getElementById('results-meta');
   const cardsContainer = document.getElementById('cards-container');
+  const inpTitle       = document.getElementById('inp-title');
+  const inpColumns     = document.getElementById('inp-columns');
+  const inpRows        = document.getElementById('inp-rows');
+  const inpCards       = document.getElementById('inp-cards');
 
-  const inpTitle   = document.getElementById('inp-title');
-  const inpColumns = document.getElementById('inp-columns');
-  const inpRows    = document.getElementById('inp-rows');
-  const inpCards   = document.getElementById('inp-cards');
+  // ── Tab switching ──────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabId = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-generator').style.display = tabId === 'tab-generator' ? '' : 'none';
+      document.getElementById('tab-player').style.display    = tabId === 'tab-player'    ? '' : 'none';
+      if (tabId === 'tab-player') renderPrepareTable();
+    });
+  });
 
   // ── Live song counter ──────────────────────────────────────────
   songsInput.addEventListener('input', () => {
-    const count = parseSongs(songsInput.value).length;
-    songCounter.textContent = t('songs.counter', count);
-    // Clear errors as user types
+    songCounter.textContent = t('songs.counter', parseSongs(songsInput.value).length);
     errorList.style.display = 'none';
     songsInput.classList.remove('error');
   });
 
-  // ── Parse songs from textarea ──────────────────────────────────
+  // ── Helpers ────────────────────────────────────────────────────
   function parseSongs(text) {
-    return text
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line.length > 0);
+    return text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
   }
 
-  // ── Validate every line matches "words - words" ────────────────
-  // Allows any characters on both sides of " - "
   const SONG_FORMAT = /^.+\s[-–—]\s.+$/;
 
   function validate(songs) {
     const errors = [];
     songs.forEach((song, i) => {
-      if (!SONG_FORMAT.test(song)) {
-        errors.push(t('errors.format', i + 1, escapeHtml(song)));
-      }
+      if (!SONG_FORMAT.test(song)) errors.push(t('errors.format', i + 1, escapeHtml(song)));
     });
     return errors;
   }
 
-  function escapeHtml(str) {
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ── Random sample without replacement ─────────────────────────
   function randomSample(arr, n) {
-    const copy = [...arr];
-    const result = [];
+    const copy = [...arr], result = [];
     for (let i = 0; i < n; i++) {
       const idx = Math.floor(Math.random() * copy.length);
       result.push(copy.splice(idx, 1)[0]);
@@ -602,23 +1050,31 @@
     return result;
   }
 
-  // ── Build one bingo card element ───────────────────────────────
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function fmtTime(sec) {
+    return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+  }
+
+  // ── Build one bingo card ───────────────────────────────────────
   function buildCard(songs, columns, rows, cardNumber, cardTitle) {
     const sample = randomSample(songs, columns * rows);
-
-    // Arrange into a columns × rows grid (column-major, matching Python)
-    const grid = Array.from({ length: rows }, (_, r) =>
+    const grid   = Array.from({ length: rows }, (_, r) =>
       Array.from({ length: columns }, (_, c) => sample[c * rows + r])
     );
-
-    const card = document.createElement('div');
+    const card  = document.createElement('div');
     card.className = 'bingo-card';
-
     const title = document.createElement('div');
     title.className = 'bingo-card-title';
     title.textContent = cardTitle;
     card.appendChild(title);
-
     const table = document.createElement('table');
     grid.forEach(row => {
       const tr = document.createElement('tr');
@@ -630,25 +1086,22 @@
       table.appendChild(tr);
     });
     card.appendChild(table);
-
     const num = document.createElement('div');
     num.className = 'card-number';
     num.textContent = `#${cardNumber}`;
     card.appendChild(num);
-
     return card;
   }
 
-  // ── Generate ───────────────────────────────────────────────────
+  // ── Generate cards ─────────────────────────────────────────────
   btnGenerate.addEventListener('click', () => {
-    const songs   = parseSongs(songsInput.value);
-    const errors  = validate(songs);
-    const columns = parseInt(inpColumns.value, 10) || 3;
-    const rows    = parseInt(inpRows.value, 10)    || 2;
-    const numCards = parseInt(inpCards.value, 10)  || 10;
-    const needed  = columns * rows;
+    const songs    = parseSongs(songsInput.value);
+    const errors   = validate(songs);
+    const columns  = parseInt(inpColumns.value, 10) || 3;
+    const rows     = parseInt(inpRows.value,    10) || 2;
+    const numCards = parseInt(inpCards.value,   10) || 10;
+    const needed   = columns * rows;
 
-    // Show validation errors
     if (errors.length > 0) {
       errorItems.innerHTML = errors.map(e => `<li>${e}</li>`).join('');
       errorList.style.display = 'block';
@@ -659,7 +1112,6 @@
     errorList.style.display = 'none';
     songsInput.classList.remove('error');
 
-    // Check enough unique songs
     if (songs.length < needed) {
       errorItems.innerHTML = `<li>${t('errors.tooFew', needed, columns, rows, songs.length)}</li>`;
       errorList.style.display = 'block';
@@ -667,22 +1119,495 @@
       return;
     }
 
-    // Generate cards
     const cardTitle = inpTitle.value.trim() || t('card.title');
     cardsContainer.innerHTML = '';
     for (let i = 1; i <= numCards; i++) {
       cardsContainer.appendChild(buildCard(songs, columns, rows, i, cardTitle));
     }
-
     resultsMeta.textContent = t('results.meta', numCards, columns, rows, songs.length);
-    results.style.display = 'block';
-    btnPrint.style.display = 'inline-block';
+    results.style.display   = 'block';
+    btnPrint.style.display  = 'inline-block';
     results.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  // ── Print / PDF ────────────────────────────────────────────────
   btnPrint.addEventListener('click', () => window.print());
-</script>
 
+  // ══════════════════════════════════════════════════════════════
+  // ── BINGO PLAYER ──────────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════
+
+  // Persisted prepare data: { [songName]: { url, startSeconds, endSeconds } }
+  let prepareData = {};
+
+  function extractVideoId(url) {
+    if (!url) return null;
+    const m = url.match(
+      /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_\-]{11})/
+    );
+    return m ? m[1] : null;
+  }
+
+  // ── Prepare table ──────────────────────────────────────────────
+  function renderPrepareTable() {
+    const songs = parseSongs(songsInput.value);
+    const tbody = document.getElementById('prepare-tbody');
+    tbody.innerHTML = '';
+
+    if (songs.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="prepare-empty">${t('player.prepare.noSongs')}</td></tr>`;
+      return;
+    }
+
+    songs.forEach(song => {
+      const saved = prepareData[song] || {};
+      const tr    = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="song-name-cell" title="${escapeHtml(song)}">${escapeHtml(song)}</td>
+        <td class="col-url">
+          <input type="text" class="url-input"
+            placeholder="https://youtube.com/watch?v=..."
+            value="${escapeHtml(saved.url || '')}">
+        </td>
+        <td class="col-seconds">
+          <input type="number" class="start-input" placeholder="0" min="0"
+            value="${saved.startSeconds !== undefined ? saved.startSeconds : ''}">
+        </td>
+        <td class="col-seconds">
+          <input type="number" class="end-input" placeholder="30" min="1"
+            value="${saved.endSeconds !== undefined ? saved.endSeconds : ''}">
+        </td>
+        <td class="col-preview">
+          <button class="btn-preview-song" title="Preview">▶</button>
+        </td>`;
+
+      const urlInput   = tr.querySelector('.url-input');
+      const startInput = tr.querySelector('.start-input');
+      const endInput   = tr.querySelector('.end-input');
+      const previewBtn = tr.querySelector('.btn-preview-song');
+
+      function saveRow() {
+        const vid = extractVideoId(urlInput.value.trim());
+        if (urlInput.value.trim()) {
+          urlInput.classList.toggle('url-valid',   !!vid);
+          urlInput.classList.toggle('url-invalid', !vid);
+        } else {
+          urlInput.classList.remove('url-valid', 'url-invalid');
+        }
+        prepareData[song] = {
+          url:          urlInput.value.trim(),
+          startSeconds: startInput.value !== '' ? parseInt(startInput.value, 10) : undefined,
+          endSeconds:   endInput.value   !== '' ? parseInt(endInput.value,   10) : undefined,
+        };
+      }
+
+      urlInput.addEventListener('input',   saveRow);
+      startInput.addEventListener('input', saveRow);
+      endInput.addEventListener('input',   saveRow);
+      if (saved.url) saveRow(); // validate pre-filled value
+
+      previewBtn.addEventListener('click', () => {
+        saveRow();
+        const vid = extractVideoId(urlInput.value.trim());
+        if (!vid) { alert('Please enter a valid YouTube URL first.'); return; }
+        const start = parseInt(startInput.value, 10) || 0;
+        const end   = parseInt(endInput.value,   10) || (start + 30);
+        previewSegment(vid, start, end);
+        // Switch to Play section visually
+        document.getElementById('tab-player').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ── Export config ──────────────────────────────────────────────
+  document.getElementById('btn-export-config').addEventListener('click', () => {
+    const songs = parseSongs(songsInput.value);
+    if (songs.length === 0) { alert(t('player.prepare.noSongs')); return; }
+
+    const config = {
+      version:    1,
+      exportedAt: new Date().toISOString(),
+      songs: songs.map(song => {
+        const d     = prepareData[song] || {};
+        const start = d.startSeconds !== undefined ? d.startSeconds : 0;
+        const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 30;
+        return {
+          name:         song,
+          videoId:      extractVideoId(d.url || '') || '',
+          startSeconds: start,
+          endSeconds:   end,
+        };
+      }),
+    };
+
+    const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = 'bingo-config.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  // ── Play directly from Prepare (no export needed) ─────────────
+  document.getElementById('btn-play-from-prepare').addEventListener('click', () => {
+    const songs = parseSongs(songsInput.value);
+    if (songs.length === 0) { alert(t('player.prepare.noSongs')); return; }
+
+    const valid = songs
+      .map(song => {
+        const d     = prepareData[song] || {};
+        const start = d.startSeconds !== undefined ? d.startSeconds : 0;
+        const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 30;
+        return { name: song, videoId: extractVideoId(d.url || '') || '', startSeconds: start, endSeconds: end };
+      })
+      .filter(s => s.videoId);
+
+    if (valid.length === 0) {
+      alert('No songs have YouTube URLs yet. Fill in the URLs in the table above first.');
+      return;
+    }
+
+    // Start the bingo session in the Play section
+    playlist      = shuffle(valid);
+    currentIndex  = -1;
+    isPreviewMode = false;
+    loadedConfig  = null; // clear any previously loaded file
+    document.getElementById('config-loaded-info').style.display = 'none';
+    document.getElementById('btn-play-bingo').style.display     = 'none';
+    document.getElementById('btn-stop-bingo').style.display     = 'inline-block';
+    updateQueueUI();
+    // Scroll to Play section and start
+    document.querySelector('.player-section:last-child').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    playSong(0);
+  });
+
+  // ── Load config ────────────────────────────────────────────────
+  let loadedConfig = null;
+
+  document.getElementById('inp-load-config').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const cfg = JSON.parse(ev.target.result);
+        if (!cfg.songs || !Array.isArray(cfg.songs)) throw new Error();
+        loadedConfig = cfg;
+        const info = document.getElementById('config-loaded-info');
+        info.textContent = t('player.play.loaded', cfg.songs.length);
+        info.style.display = 'inline';
+        document.getElementById('btn-play-bingo').disabled = false;
+      } catch {
+        alert('Could not read config file. Make sure it was exported from this app.');
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  // ── Audio via Piped API (no embedding, no API key) ────────────
+  // Piped is an open-source YouTube frontend that proxies audio streams.
+  // We fetch the raw audio URL and play it with <audio> — YouTube's
+  // embedding restrictions don't apply at all.
+
+  // We try multiple Piped instances. For each one we first attempt a
+  // direct fetch (fast when CORS is present), then fall back to routing
+  // through corsproxy.io (handles both missing CORS headers and lets us
+  // still read 502 bodies to skip broken instances quickly).
+  const PIPED_INSTANCES = [
+    'https://pipedapi.kavin.rocks',
+    'https://pipedapi.adminforge.de',
+    'https://pipedapi.in.projectsegfau.lt',
+    'https://pipedapi.mha.fi',
+  ];
+  const CORS_PROXY = 'https://corsproxy.io/?';
+
+  let audioEl = null;
+
+  function getAudioEl() {
+    if (!audioEl) {
+      audioEl = new Audio();
+      audioEl.addEventListener('ended', () => { if (!isPreviewMode) onSongEnded(); });
+    }
+    return audioEl;
+  }
+
+  function fetchWithTimeout(url, ms) {
+    const ctrl = new AbortController();
+    const id   = setTimeout(() => ctrl.abort(), ms);
+    return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(id));
+  }
+
+  function sortStreams(streams) {
+    return (streams || []).sort((a, b) => {
+      // Prefer audio/mp4 (AAC) for Safari; fall back to audio/webm (Opus)
+      const aM4a = (a.mimeType || '').includes('mp4') ? 1 : 0;
+      const bM4a = (b.mimeType || '').includes('mp4') ? 1 : 0;
+      if (aM4a !== bM4a) return bM4a - aM4a;
+      return (b.bitrate || 0) - (a.bitrate || 0);
+    });
+  }
+
+  async function tryFetch(url, ms) {
+    try {
+      const res = await fetchWithTimeout(url, ms);
+      if (!res.ok) return null;
+      const data = await res.json();
+      const streams = sortStreams(data.audioStreams);
+      return streams.length ? streams[0].url : null;
+    } catch { return null; }
+  }
+
+  async function fetchAudioStream(videoId) {
+    for (const base of PIPED_INSTANCES) {
+      const apiUrl = `${base}/streams/${videoId}`;
+      // Direct first (4 s — CORS errors fail instantly so this barely costs time)
+      const direct = await tryFetch(apiUrl, 4000);
+      if (direct) return direct;
+      // Via CORS proxy (handles missing headers + lets us read any error status)
+      const proxied = await tryFetch(CORS_PROXY + encodeURIComponent(apiUrl), 8000);
+      if (proxied) return proxied;
+    }
+    throw new Error('All Piped instances unreachable.');
+  }
+
+  function showPlayerError(msg) {
+    const el = document.getElementById('player-error');
+    el.textContent   = msg;
+    el.style.display = 'block';
+  }
+  function clearPlayerError() {
+    const el = document.getElementById('player-error');
+    el.style.display = 'none';
+    el.textContent   = '';
+  }
+
+  function setThumb(videoId) {
+    const c = document.getElementById('yt-player-container');
+    c.innerHTML = '';
+    const img = document.createElement('img');
+    img.src   = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+    c.appendChild(img);
+  }
+
+  function setThumbLoading() {
+    const c = document.getElementById('yt-player-container');
+    c.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;'
+      + 'justify-content:center;font-size:.7rem;color:#666;">Loading…</div>';
+  }
+
+  async function ytLoad(videoId, startSeconds) {
+    document.getElementById('player-ui').style.display = 'flex';
+    setThumbLoading();
+    clearPlayerError();
+    try {
+      const url = await fetchAudioStream(videoId);
+      const audio = getAudioEl();
+      audio.src         = url;
+      audio.currentTime = startSeconds;
+      const playPromise = audio.play();
+      if (playPromise) playPromise.catch(() =>
+        showPlayerError('Autoplay blocked — click anywhere on the page then press Resume.')
+      );
+      setThumb(videoId);
+    } catch (e) {
+      setThumb(videoId);
+      showPlayerError('Could not load audio stream. Check your internet connection or try a different video URL.');
+    }
+  }
+
+  function ytStop() {
+    if (audioEl) { audioEl.pause(); audioEl.src = ''; }
+  }
+
+  function ytCommand(func) {
+    if (!audioEl) return;
+    if (func === 'pauseVideo') audioEl.pause();
+    if (func === 'playVideo')  audioEl.play().catch(() => {});
+  }
+
+  // ── Playback state ─────────────────────────────────────────────
+  let playlist        = [];
+  let currentIndex    = -1;
+  let segmentDuration = 30000; // ms of the current segment
+  let segmentElapsed  = 0;     // ms elapsed before the last pause
+  let segmentStart    = 0;     // Date.now() when playback (re)started
+  let isPaused        = false;
+  let segmentTimer    = null;
+  let progressTimer   = null;
+  let isPreviewMode   = false; // true while playing a single preview
+
+  function clearTimers() {
+    clearTimeout(segmentTimer);
+    clearInterval(progressTimer);
+    segmentTimer  = null;
+    progressTimer = null;
+  }
+
+  function startProgressUI() {
+    const fill   = document.getElementById('progress-bar-fill');
+    const timeEl = document.getElementById('player-time');
+    const total  = Math.round(segmentDuration / 1000);
+    segmentStart = Date.now() - segmentElapsed;
+
+    clearInterval(progressTimer);
+    progressTimer = setInterval(() => {
+      const elapsed = Date.now() - segmentStart;
+      const pct     = Math.min(100, elapsed / segmentDuration * 100);
+      fill.style.width = pct + '%';
+      const elSec  = Math.min(total, Math.round(elapsed / 1000));
+      timeEl.textContent = `${fmtTime(elSec)} / ${fmtTime(total)}`;
+    }, 200);
+  }
+
+  function onSongEnded() {
+    if (isPreviewMode) return;
+    advanceToNext();
+  }
+
+  function playSong(index) {
+    if (index < 0 || index >= playlist.length) return;
+    clearTimers();
+    isPreviewMode  = false;
+    currentIndex   = index;
+    isPaused       = false;
+    segmentElapsed = 0;
+
+    const song     = playlist[index];
+    const start    = song.startSeconds;
+    const end      = song.endSeconds;
+    segmentDuration = (end - start) * 1000;
+
+    document.getElementById('player-song-name').textContent = song.name;
+    document.getElementById('ctrl-pause').textContent       = t('player.play.pause');
+    document.getElementById('progress-bar-fill').style.width = '0%';
+    clearPlayerError();
+    updateQueueUI();
+
+    // Start progress UI immediately (optimistic); audio loads in the background
+    startProgressUI();
+    segmentTimer = setTimeout(() => advanceToNext(), segmentDuration + 1000);
+    ytLoad(song.videoId, start);
+  }
+
+  function advanceToNext() {
+    clearTimers();
+    if (currentIndex < playlist.length - 1) {
+      playSong(currentIndex + 1);
+    } else {
+      document.getElementById('player-song-name').textContent = '✓ Done';
+      document.getElementById('progress-bar-fill').style.width = '100%';
+      updateQueueUI();
+    }
+  }
+
+  function updateQueueUI() {
+    const list = document.getElementById('queue-list');
+    list.innerHTML = '';
+    // Only show already-played songs and the current one — hide upcoming to preserve bingo suspense
+    playlist.forEach((song, i) => {
+      if (i > currentIndex) return;
+      const div = document.createElement('div');
+      div.className = 'queue-item' +
+        (i === currentIndex ? ' q-current' : ' q-played');
+      div.innerHTML =
+        `<span class="queue-num">${i + 1}</span>` +
+        `<span class="queue-icon">♪ </span>` +
+        `<span>${escapeHtml(song.name)}</span>`;
+      list.appendChild(div);
+    });
+    const cur = list.querySelector('.q-current');
+    if (cur) cur.scrollIntoView({ block: 'nearest' });
+    document.getElementById('queue-progress-label').textContent =
+      playlist.length ? t('player.play.queuePos', currentIndex + 1, playlist.length) : '';
+  }
+
+  // Controls
+  document.getElementById('ctrl-prev').addEventListener('click', () => {
+    if (currentIndex > 0) playSong(currentIndex - 1);
+  });
+
+  document.getElementById('ctrl-next').addEventListener('click', () => {
+    if (!isPreviewMode) advanceToNext();
+  });
+
+  document.getElementById('ctrl-pause').addEventListener('click', () => {
+    const btn = document.getElementById('ctrl-pause');
+    if (isPaused) {
+      isPaused = false;
+      ytCommand('playVideo');
+      btn.textContent = t('player.play.pause');
+      const remaining = segmentDuration - segmentElapsed;
+      startProgressUI(); // uses segmentElapsed to set segmentStart correctly
+      segmentTimer = setTimeout(() => { if (!isPreviewMode) advanceToNext(); }, remaining + 1000);
+    } else {
+      isPaused       = true;
+      segmentElapsed = Date.now() - segmentStart;
+      clearTimers();
+      ytCommand('pauseVideo');
+      btn.textContent = t('player.play.resume');
+    }
+  });
+
+  document.getElementById('btn-stop-bingo').addEventListener('click', () => {
+    clearTimers();
+    ytStop();
+    playlist      = [];
+    currentIndex  = -1;
+    isPaused      = false;
+    isPreviewMode = false;
+    document.getElementById('player-ui').style.display           = 'none';
+    document.getElementById('btn-stop-bingo').style.display      = 'none';
+    // Re-enable Play button only if a config file is loaded
+    const playBtn = document.getElementById('btn-play-bingo');
+    playBtn.style.display = 'inline-block';
+    playBtn.disabled      = !loadedConfig;
+    document.getElementById('queue-list').innerHTML              = '';
+    document.getElementById('queue-progress-label').textContent  = '';
+  });
+
+  // ── Play Bingo ─────────────────────────────────────────────────
+  document.getElementById('btn-play-bingo').addEventListener('click', () => {
+    if (!loadedConfig) return;
+    const valid = loadedConfig.songs.filter(s => s.videoId);
+    if (valid.length === 0) {
+      alert('No songs with YouTube links found. Please complete the Prepare step first.');
+      return;
+    }
+    playlist     = shuffle(valid);
+    currentIndex = -1;
+    isPreviewMode = false;
+    document.getElementById('btn-play-bingo').style.display = 'none';
+    document.getElementById('btn-stop-bingo').style.display = 'inline-block';
+    updateQueueUI();
+    playSong(0);
+  });
+
+  // ── Preview a single segment (from Prepare table) ─────────────
+  let previewStopTimer = null;
+
+  function previewSegment(videoId, startSeconds, endSeconds) {
+    clearTimers();
+    clearTimeout(previewStopTimer);
+    isPreviewMode   = true;
+    segmentDuration = (endSeconds - startSeconds) * 1000;
+    segmentElapsed  = 0;
+    isPaused        = false;
+
+    document.getElementById('player-song-name').textContent       = '▶ Preview';
+    document.getElementById('ctrl-pause').textContent             = t('player.play.pause');
+    document.getElementById('progress-bar-fill').style.width      = '0%';
+    document.getElementById('queue-progress-label').textContent   = '';
+    document.getElementById('queue-list').innerHTML                = '';
+
+    startProgressUI();
+    previewStopTimer = setTimeout(() => {
+      ytStop();
+      isPreviewMode = false;
+    }, segmentDuration + 1000);
+    ytLoad(videoId, startSeconds);
+  }
+</script>
 </body>
 </html>
