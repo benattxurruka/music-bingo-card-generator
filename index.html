@@ -92,7 +92,8 @@
       text-transform: uppercase;
       letter-spacing: .4px;
     }
-    .config-field input[type="number"] {
+    .config-field input[type="number"],
+    .config-field input[type="text"] {
       border: 1.5px solid #d1d5db;
       border-radius: 7px;
       padding: .5rem .75rem;
@@ -100,7 +101,8 @@
       transition: border-color .2s;
       width: 100%;
     }
-    .config-field input[type="number"]:focus {
+    .config-field input[type="number"]:focus,
+    .config-field input[type="text"]:focus {
       outline: none;
       border-color: #a855f7;
     }
@@ -362,6 +364,10 @@
   <div class="config-panel">
     <h2 data-i18n="config.title">Card Configuration</h2>
     <div class="config-row">
+      <div class="config-field" style="flex: 2; min-width: 200px;">
+        <label for="inp-title" data-i18n="config.cardTitle">Card Title</label>
+        <input type="text" id="inp-title" data-i18n-placeholder="card.title" placeholder="Music Bingo" maxlength="80">
+      </div>
       <div class="config-field">
         <label for="inp-columns" data-i18n="config.columns">Columns</label>
         <input type="number" id="inp-columns" value="3" min="1" max="10">
@@ -420,6 +426,7 @@
       'header.title':    '🎵 Music Bingo Card Generator',
       'header.subtitle': 'Enter your songs, configure the card size, and generate printable bingo cards.',
       'config.title':    'Card Configuration',
+      'config.cardTitle': 'Card Title',
       'config.columns':  'Columns',
       'config.rows':     'Rows',
       'config.cards':    'Number of cards',
@@ -440,6 +447,7 @@
       'header.title':    '🎵 Generador de Cartones de Bingo Musical',
       'header.subtitle': 'Introduce tus canciones, configura el tamaño del cartón y genera cartones imprimibles.',
       'config.title':    'Configuración del cartón',
+      'config.cardTitle': 'Título del cartón',
       'config.columns':  'Columnas',
       'config.rows':     'Filas',
       'config.cards':    'Número de cartones',
@@ -460,6 +468,7 @@
       'header.title':    '🎵 Generador de Cartrons de Bingo Musical',
       'header.subtitle': 'Introdueix les teves cançons, configura la mida del cartró i genera cartrons imprimibles.',
       'config.title':    'Configuració del cartró',
+      'config.cardTitle': 'Títol del cartró',
       'config.columns':  'Columnes',
       'config.rows':     'Files',
       'config.cards':    'Nombre de cartrons',
@@ -480,6 +489,7 @@
       'header.title':    '🎵 Musika Bingo Txartel Sortzailea',
       'header.subtitle': 'Sartu zure abestiak, txartelaren tamaina konfiguratu eta inprimatzeko bingo txartelak sortu.',
       'config.title':    'Txartelaren konfigurazioa',
+      'config.cardTitle': 'Txartelaren izenburua',
       'config.columns':  'Zutabeak',
       'config.rows':     'Errenkadak',
       'config.cards':    'Txartel kopurua',
@@ -515,6 +525,8 @@
     });
     // Update textarea placeholder
     songsInput.placeholder = t('songs.placeholder');
+    // Update title input placeholder
+    inpTitle.placeholder = t('card.title');
     // Refresh counter text
     const count = parseSongs(songsInput.value).length;
     songCounter.textContent = t('songs.counter', count);
@@ -535,6 +547,7 @@
   const resultsMeta  = document.getElementById('results-meta');
   const cardsContainer = document.getElementById('cards-container');
 
+  const inpTitle   = document.getElementById('inp-title');
   const inpColumns = document.getElementById('inp-columns');
   const inpRows    = document.getElementById('inp-rows');
   const inpCards   = document.getElementById('inp-cards');
@@ -590,7 +603,7 @@
   }
 
   // ── Build one bingo card element ───────────────────────────────
-  function buildCard(songs, columns, rows, cardNumber) {
+  function buildCard(songs, columns, rows, cardNumber, cardTitle) {
     const sample = randomSample(songs, columns * rows);
 
     // Arrange into a columns × rows grid (column-major, matching Python)
@@ -603,7 +616,7 @@
 
     const title = document.createElement('div');
     title.className = 'bingo-card-title';
-    title.textContent = t('card.title');
+    title.textContent = cardTitle;
     card.appendChild(title);
 
     const table = document.createElement('table');
@@ -655,9 +668,10 @@
     }
 
     // Generate cards
+    const cardTitle = inpTitle.value.trim() || t('card.title');
     cardsContainer.innerHTML = '';
     for (let i = 1; i <= numCards; i++) {
-      cardsContainer.appendChild(buildCard(songs, columns, rows, i));
+      cardsContainer.appendChild(buildCard(songs, columns, rows, i, cardTitle));
     }
 
     resultsMeta.textContent = t('results.meta', numCards, columns, rows, songs.length);
