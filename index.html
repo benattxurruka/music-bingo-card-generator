@@ -532,6 +532,104 @@
     .ctrl-btn:active { transform: scale(.95); }
     .ctrl-btn-main   { background: #a855f7; }
     .ctrl-btn-main:hover { background: #9333ea; }
+    .ctrl-btn-fs { background: rgba(255,255,255,.1); }
+    .ctrl-btn-fs:hover { background: rgba(255,255,255,.22); }
+
+    /* Fullscreen overlay */
+    #fullscreen-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: linear-gradient(160deg, #0d0620 0%, #1a0533 45%, #2d1b69 100%);
+      color: #fff;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      padding: 3.5rem 2rem 2rem;
+      text-align: center;
+      overflow: hidden;
+    }
+    #fullscreen-overlay.fs-active { display: flex; }
+
+    #btn-exit-fullscreen {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: rgba(255,255,255,.12);
+      border: 1.5px solid rgba(255,255,255,.22);
+      color: #fff;
+      border-radius: 8px;
+      padding: .45rem 1.1rem;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    #btn-exit-fullscreen:hover { background: rgba(255,255,255,.26); }
+
+    .fs-label {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      opacity: .5;
+    }
+
+    #fs-thumbnail {
+      width: min(400px, 72vw);
+      aspect-ratio: 16/9;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #111;
+      box-shadow: 0 12px 48px rgba(168,85,247,.45);
+      flex-shrink: 0;
+    }
+    #fs-thumbnail img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #fs-thumbnail .fs-thumb-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; opacity: .3;
+    }
+
+    .fs-song-title {
+      font-size: clamp(1.8rem, 5.5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.15;
+      max-width: 88vw;
+      word-break: break-word;
+    }
+    .fs-song-artist {
+      font-size: clamp(1.1rem, 2.8vw, 2rem);
+      opacity: .62;
+      font-weight: 400;
+      margin-top: -.4rem;
+      max-width: 88vw;
+      word-break: break-word;
+    }
+
+    .fs-history {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .4rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid rgba(255,255,255,.12);
+      width: 100%;
+      max-width: 560px;
+    }
+    .fs-history-label {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      opacity: .38;
+      margin-bottom: .15rem;
+    }
+    .fs-history-item {
+      font-size: clamp(.85rem, 1.8vw, 1rem);
+      opacity: .38;
+      color: #e9d5ff;
+    }
 
     /* Queue */
     .player-queue {
@@ -762,6 +860,7 @@
               <button class="ctrl-btn" id="ctrl-prev" data-i18n="player.play.prev">⏮ Prev</button>
               <button class="ctrl-btn ctrl-btn-main" id="ctrl-pause" data-i18n="player.play.pause">⏸ Pause</button>
               <button class="ctrl-btn" id="ctrl-next" data-i18n="player.play.next">Next ⏭</button>
+              <button class="ctrl-btn ctrl-btn-fs" id="ctrl-fullscreen" data-i18n="player.play.fullscreen">⛶ Fullscreen</button>
             </div>
             <div class="player-error-msg" id="player-error"></div>
           </div>
@@ -780,6 +879,16 @@
   </div><!-- /tab-player -->
 
 </main>
+
+<!-- Fullscreen overlay — shown during bingo play session -->
+<div id="fullscreen-overlay">
+  <button id="btn-exit-fullscreen" data-i18n="player.play.exitFullscreen">✕ Exit Fullscreen</button>
+  <div class="fs-label" data-i18n="player.play.nowPlaying">Now Playing</div>
+  <div id="fs-thumbnail"><div class="fs-thumb-placeholder">♪</div></div>
+  <div class="fs-song-title" id="fs-song-title">—</div>
+  <div class="fs-song-artist" id="fs-song-artist"></div>
+  <div class="fs-history" id="fs-history" style="display:none"></div>
+</div>
 
 <script>
   // ── Translations ───────────────────────────────────────────────
@@ -826,8 +935,11 @@
       'player.play.pause':      '⏸ Pause',
       'player.play.resume':     '▶ Resume',
       'player.play.next':       'Next ⏭',
-      'player.play.queue':      'Queue',
-      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
+      'player.play.queue':        'Queue',
+      'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
+      'player.play.fullscreen':   '⛶ Fullscreen',
+      'player.play.exitFullscreen': '✕ Exit Fullscreen',
+      'player.play.lastPlayed':   'Previously played:',
     },
     es: {
       'header.title':    '🎵 Generador de Cartones de Bingo Musical',
@@ -871,8 +983,11 @@
       'player.play.pause':      '⏸ Pausa',
       'player.play.resume':     '▶ Reanudar',
       'player.play.next':       'Siguiente ⏭',
-      'player.play.queue':      'Cola',
-      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
+      'player.play.queue':        'Cola',
+      'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
+      'player.play.fullscreen':   '⛶ Pantalla completa',
+      'player.play.exitFullscreen': '✕ Salir de pantalla completa',
+      'player.play.lastPlayed':   'Anteriores:',
     },
     ca: {
       'header.title':    '🎵 Generador de Cartrons de Bingo Musical',
@@ -916,8 +1031,11 @@
       'player.play.pause':      '⏸ Pausa',
       'player.play.resume':     '▶ Reprèn',
       'player.play.next':       'Següent ⏭',
-      'player.play.queue':      'Cua',
-      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
+      'player.play.queue':        'Cua',
+      'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
+      'player.play.fullscreen':   '⛶ Pantalla completa',
+      'player.play.exitFullscreen': '✕ Sortir de pantalla completa',
+      'player.play.lastPlayed':   'Anteriors:',
     },
     eu: {
       'header.title':    '🎵 Musika Bingo Txartel Sortzailea',
@@ -961,8 +1079,11 @@
       'player.play.pause':      '⏸ Pausatu',
       'player.play.resume':     '▶ Jarraitu',
       'player.play.next':       'Hurrengoa ⏭',
-      'player.play.queue':      'Ilara',
-      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
+      'player.play.queue':        'Ilara',
+      'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
+      'player.play.fullscreen':   '⛶ Pantaila osoa',
+      'player.play.exitFullscreen': '✕ Pantaila osotik irten',
+      'player.play.lastPlayed':   'Aurrekoak:',
     },
   };
 
@@ -1359,6 +1480,17 @@
   }
 
   async function fetchAudioStream(videoId) {
+    // Primary: our backend API (avoids CORS entirely — works on Vercel deployment)
+    try {
+      const res = await fetchWithTimeout(`/api/audio?videoId=${encodeURIComponent(videoId)}`, 12000);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.url) return data.url;
+      }
+    } catch { /* not deployed to Vercel yet — fall through to direct Piped */ }
+
+    // Fallback: try Piped instances directly from the browser
+    // (works when running locally or on GitHub Pages; may be blocked by CORS on some instances)
     for (const base of PIPED_INSTANCES) {
       const apiUrl = `${base}/streams/${videoId}`;
       // Direct first (4 s — CORS errors fail instantly so this barely costs time)
@@ -1486,6 +1618,7 @@
     updateQueueUI();
 
     // Start progress UI immediately (optimistic); audio loads in the background
+    updateFullscreenUI();
     startProgressUI();
     segmentTimer = setTimeout(() => advanceToNext(), segmentDuration + 1000);
     ytLoad(song.videoId, start);
@@ -1582,6 +1715,75 @@
     document.getElementById('btn-stop-bingo').style.display = 'inline-block';
     updateQueueUI();
     playSong(0);
+  });
+
+  // ── Fullscreen mode ────────────────────────────────────────────
+  let isFullscreen = false;
+
+  function updateFullscreenUI() {
+    if (!isFullscreen) return;
+    const song = playlist[currentIndex];
+    if (!song) return;
+
+    // Thumbnail
+    const fsThumb = document.getElementById('fs-thumbnail');
+    if (song.videoId) {
+      const img = document.createElement('img');
+      img.src = `https://img.youtube.com/vi/${song.videoId}/mqdefault.jpg`;
+      img.alt = '';
+      fsThumb.innerHTML = '';
+      fsThumb.appendChild(img);
+    } else {
+      fsThumb.innerHTML = '<div class="fs-thumb-placeholder">♪</div>';
+    }
+
+    // Split "Song Title - Artist" into title + artist parts
+    const sep = song.name.match(/\s[-–—]\s/);
+    const splitAt = sep ? song.name.indexOf(sep[0]) : -1;
+    const title  = splitAt > 0 ? song.name.slice(0, splitAt) : song.name;
+    const artist = splitAt > 0 ? song.name.slice(splitAt + sep[0].length) : '';
+
+    document.getElementById('fs-song-title').textContent  = title;
+    document.getElementById('fs-song-artist').textContent = artist;
+
+    // Last 3 played songs (before the current one), most recent first
+    const historyDiv = document.getElementById('fs-history');
+    const lastPlayed = playlist.slice(Math.max(0, currentIndex - 3), currentIndex).reverse();
+    if (lastPlayed.length > 0) {
+      historyDiv.innerHTML = `<div class="fs-history-label">${escapeHtml(t('player.play.lastPlayed'))}</div>`;
+      lastPlayed.forEach(s => {
+        const item = document.createElement('div');
+        item.className = 'fs-history-item';
+        item.textContent = s.name;
+        historyDiv.appendChild(item);
+      });
+      historyDiv.style.display = 'flex';
+    } else {
+      historyDiv.style.display = 'none';
+    }
+  }
+
+  function openFullscreen() {
+    isFullscreen = true;
+    const overlay = document.getElementById('fullscreen-overlay');
+    overlay.classList.add('fs-active');
+    updateFullscreenUI();
+    // Request browser fullscreen on the overlay element
+    overlay.requestFullscreen?.().catch(() => {});
+  }
+
+  function closeFullscreen() {
+    isFullscreen = false;
+    document.getElementById('fullscreen-overlay').classList.remove('fs-active');
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }
+
+  document.getElementById('ctrl-fullscreen').addEventListener('click', openFullscreen);
+  document.getElementById('btn-exit-fullscreen').addEventListener('click', closeFullscreen);
+
+  // Handle native Escape / browser fullscreen exit
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement && isFullscreen) closeFullscreen();
   });
 
   // ── Preview a single segment (from Prepare table) ─────────────
