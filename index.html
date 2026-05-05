@@ -212,6 +212,58 @@
       text-align: right;
     }
 
+    #yt-player-container {
+      position: fixed;
+      left: -200px;
+      top: -200px;
+      width: 120px;
+      height: 68px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    #btn-reset-songs {
+      font-size: .75rem;
+      font-weight: 500;
+      padding: .2rem .65rem;
+      border-radius: 6px;
+      background: none;
+      color: #aaa;
+      border: 1px solid #d1d5db;
+      margin-top: .3rem;
+      transition: color .15s, border-color .15s;
+    }
+    #btn-reset-songs:hover { color: #ef4444; border-color: #ef4444; }
+
+    /* ── Decade example buttons ──────────────────────────────────── */
+    .decade-btns {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      flex-wrap: wrap;
+      margin-bottom: .75rem;
+    }
+    .decade-btns-label {
+      font-size: .78rem;
+      color: #888;
+      white-space: nowrap;
+    }
+    .decade-btn {
+      font-size: .78rem;
+      font-weight: 600;
+      padding: .3rem .8rem;
+      border-radius: 20px;
+      background: #f3e8ff;
+      color: #6c3fcf;
+      border: 1.5px solid #d8b4fe;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .decade-btn:hover {
+      background: #6c3fcf;
+      color: #fff;
+      border-color: #6c3fcf;
+    }
+
     /* ── Actions ────────────────────────────────────────────────── */
     .actions {
       display: flex;
@@ -452,16 +504,6 @@
       display: flex;
       align-items: center;
       gap: 1.25rem;
-    }
-
-    #yt-player-container {
-      position: fixed;
-      left: -200px;
-      top: -200px;
-      width: 120px;
-      height: 68px;
-      overflow: hidden;
-      pointer-events: none;
     }
 
     .player-error-msg {
@@ -856,10 +898,22 @@
         <span data-i18n="songs.hint">One song per line. Each line must follow the format:</span>
         <code>Song Title - Artist</code>
       </p>
+      <div class="decade-btns">
+        <span class="decade-btns-label" data-i18n="songs.exampleLabel">Fill with examples:</span>
+        <button type="button" class="decade-btn" data-decade="80s">80s</button>
+        <button type="button" class="decade-btn" data-decade="90s">90s</button>
+        <button type="button" class="decade-btn" data-decade="2000s">2000s</button>
+        <button type="button" class="decade-btn" data-decade="2010s">2010s</button>
+        <button type="button" class="decade-btn" data-decade="2020s">2020s</button>
+        <button type="button" class="decade-btn" data-decade="90s-es">ESP-90s</button>
+        <button type="button" class="decade-btn" data-decade="2000s-es">ESP-2000s</button>
+        <button type="button" class="decade-btn" data-decade="2010s-es">ESP-2010s</button>
+      </div>
       <textarea id="songs-input" spellcheck="false"
         placeholder="Dancing Queen - ABBA&#10;Bohemian Rhapsody - Queen&#10;Thriller - Michael Jackson&#10;Hey Jude - The Beatles"
       ></textarea>
       <div class="song-counter" id="song-counter">0 songs entered</div>
+      <button type="button" id="btn-reset-songs" data-i18n="songs.reset">Reset list</button>
       <div id="error-list">
         <p data-i18n="errors.title">Please fix the following issues:</p>
         <ul id="error-items"></ul>
@@ -908,6 +962,8 @@
       <div class="actions" style="margin-bottom:.75rem">
         <button id="btn-play-from-prepare" class="btn-primary" data-i18n="player.prepare.playNow">Play Bingo</button>
         <button id="btn-export-config" class="btn-dark" data-i18n="player.prepare.export">Export Config</button>
+        <button id="btn-autofill-urls" class="btn-dark" data-i18n="player.prepare.autofill">Auto-fill URLs</button>
+        <span id="autofill-status" style="font-size:.82rem;color:#888;align-self:center"></span>
       </div>
 
       <p class="hint" style="margin-bottom:.65rem" data-i18n="player.prepare.loadHint">Or load a previously exported config file to restore your song list and URLs:</p>
@@ -1023,6 +1079,8 @@
       'config.cards':    'Number of cards',
       'songs.title':     'Song List',
       'songs.hint':      'One song per line. Each line must follow the format:',
+      'songs.exampleLabel': 'Fill with examples:',
+      'songs.reset':     'Reset list',
       'songs.placeholder':'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
       'songs.counter':   (n) => `${n} song${n !== 1 ? 's' : ''} entered`,
       'errors.title':    'Please fix the following issues:',
@@ -1040,7 +1098,11 @@
       'player.prepare.startCol':'Start',
       'player.prepare.endCol':  'End',
       'player.prepare.playNow': 'Play Bingo',
-      'player.prepare.export':  'Export Config',
+      'player.prepare.export':          'Export Config',
+      'player.prepare.autofill':        'Auto-fill URLs',
+      'player.prepare.autofillProgress': (done, total) => `Searching ${done} / ${total}…`,
+      'player.prepare.autofillDone':    (filled, total) => `Done — ${filled} of ${total} filled`,
+      'player.prepare.autofillNone':    'All URLs are already filled',
       'player.prepare.noSongs': 'No songs in the Song List yet. Add songs in the Card Generator tab first.',
       'player.prepare.loadHint': 'Or load a previously exported config file to restore your song list and URLs:',
       'player.play.title':      'Play Bingo',
@@ -1082,6 +1144,8 @@
       'config.cards':    'Número de cartones',
       'songs.title':     'Lista de canciones',
       'songs.hint':      'Una canción por línea. Cada línea debe seguir el formato:',
+      'songs.exampleLabel': 'Rellenar con ejemplos:',
+      'songs.reset':     'Borrar lista',
       'songs.placeholder':'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
       'songs.counter':   (n) => `${n} canción${n !== 1 ? 'es' : ''} introducida${n !== 1 ? 's' : ''}`,
       'errors.title':    'Por favor corrige los siguientes errores:',
@@ -1099,7 +1163,11 @@
       'player.prepare.startCol':'Inicio',
       'player.prepare.endCol':  'Fin',
       'player.prepare.playNow': 'Jugar al bingo',
-      'player.prepare.export':  'Exportar configuración',
+      'player.prepare.export':          'Exportar configuración',
+      'player.prepare.autofill':        'Rellenar URLs automáticamente',
+      'player.prepare.autofillProgress': (done, total) => `Buscando ${done} / ${total}…`,
+      'player.prepare.autofillDone':    (filled, total) => `Listo — ${filled} de ${total} rellenadas`,
+      'player.prepare.autofillNone':    'Todas las URLs ya están rellenadas',
       'player.prepare.noSongs': 'No hay canciones en la lista todavía. Añade canciones en la pestaña Generador de cartones primero.',
       'player.prepare.loadHint': 'O carga un archivo de configuración exportado anteriormente para restaurar tu lista de canciones y URLs:',
       'player.play.title':      'Jugar al bingo',
@@ -1141,6 +1209,8 @@
       'config.cards':    'Nombre de cartrons',
       'songs.title':     'Llista de cançons',
       'songs.hint':      'Una cançó per línia. Cada línia ha de seguir el format:',
+      'songs.exampleLabel': 'Omple amb exemples:',
+      'songs.reset':     'Buidar llista',
       'songs.placeholder':'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
       'songs.counter':   (n) => `${n} cançó${n !== 1 ? 'ns' : ''} introduïda${n !== 1 ? 'es' : ''}`,
       'errors.title':    'Si us plau, corregeix els errors següents:',
@@ -1158,7 +1228,11 @@
       'player.prepare.startCol':'Inici',
       'player.prepare.endCol':  'Fi',
       'player.prepare.playNow': 'Jugar al bingo',
-      'player.prepare.export':  'Exportar configuració',
+      'player.prepare.export':          'Exportar configuració',
+      'player.prepare.autofill':        'Emplena URLs automàticament',
+      'player.prepare.autofillProgress': (done, total) => `Cercant ${done} / ${total}…`,
+      'player.prepare.autofillDone':    (filled, total) => `Fet — ${filled} de ${total} emplenades`,
+      'player.prepare.autofillNone':    'Totes les URLs ja estan emplenades',
       'player.prepare.noSongs': 'Encara no hi ha cançons a la llista. Afegeix cançons a la pestanya Generador de cartrons primer.',
       'player.prepare.loadHint': "O carrega un fitxer de configuració exportat prèviament per restaurar la teva llista de cançons i URLs:",
       'player.play.title':      'Jugar al bingo',
@@ -1200,6 +1274,8 @@
       'config.cards':    'Txartel kopurua',
       'songs.title':     'Abesti zerrenda',
       'songs.hint':      'Abesti bat lerroko. Lerro bakoitzak honako formatua izan behar du:',
+      'songs.exampleLabel': 'Bete adibideekin:',
+      'songs.reset':     'Zerrenda garbitu',
       'songs.placeholder':'Dancing Queen - ABBA\nBohemian Rhapsody - Queen\nThriller - Michael Jackson\nHey Jude - The Beatles',
       'songs.counter':   (n) => `${n} abesti sartu da`,
       'errors.title':    'Mesedez, zuzendu ondoko arazoak:',
@@ -1217,7 +1293,11 @@
       'player.prepare.startCol':'Hasiera',
       'player.prepare.endCol':  'Amaiera',
       'player.prepare.playNow': 'Bingoa jokatu',
-      'player.prepare.export':  'Konfigurazioa esportatu',
+      'player.prepare.export':          'Konfigurazioa esportatu',
+      'player.prepare.autofill':        'URLak automatikoki bete',
+      'player.prepare.autofillProgress': (done, total) => `Bilatzen ${done} / ${total}…`,
+      'player.prepare.autofillDone':    (filled, total) => `Eginda — ${filled} / ${total} beteta`,
+      'player.prepare.autofillNone':    'URL guztiak dagoeneko beteta daude',
       'player.prepare.noSongs': 'Oraindik ez dago abestirik zerrendan. Gehitu abestiak Txartel sortzailea fitxan lehenik.',
       'player.prepare.loadHint': 'Edo kargatu aurretik esportatutako konfigurazio fitxategi bat zure abesti zerrenda eta URLak berreskuratzeko:',
       'player.play.title':      'Bingoa jokatu',
@@ -1282,6 +1362,404 @@
   const inpRows        = document.getElementById('inp-rows');
   const inpCards       = document.getElementById('inp-cards');
 
+  // ── Decade example songs ───────────────────────────────────────
+  const DECADE_SONGS = {
+    '80s': [
+      'Billie Jean - Michael Jackson',
+      'Beat It - Michael Jackson',
+      'Thriller - Michael Jackson',
+      'Like a Virgin - Madonna',
+      'Material Girl - Madonna',
+      "Sweet Child O' Mine - Guns N' Roses",
+      "Don't Stop Believin' - Journey",
+      'Girls Just Want to Have Fun - Cyndi Lauper',
+      'True Colors - Cyndi Lauper',
+      'Take On Me - a-ha',
+      'Every Breath You Take - The Police',
+      'Roxanne - The Police',
+      'Africa - Toto',
+      "Livin' on a Prayer - Bon Jovi",
+      'You Give Love a Bad Name - Bon Jovi',
+      'Come On Eileen - Dexys Midnight Runners',
+      'Wake Me Up Before You Go-Go - Wham!',
+      'Careless Whisper - George Michael',
+      'Faith - George Michael',
+      'Total Eclipse of the Heart - Bonnie Tyler',
+      "Don't You (Forget About Me) - Simple Minds",
+      'Everybody Wants to Rule the World - Tears for Fears',
+      'Shout - Tears for Fears',
+      'Eye of the Tiger - Survivor',
+      'Footloose - Kenny Loggins',
+      'I Wanna Dance with Somebody - Whitney Houston',
+      'Greatest Love of All - Whitney Houston',
+      'Pour Some Sugar on Me - Def Leppard',
+      'With or Without You - U2',
+      'Where the Streets Have No Name - U2',
+      '99 Luftballons - Nena',
+      'Never Gonna Give You Up - Rick Astley',
+      'Jump - Van Halen',
+      'Call Me - Blondie',
+      'Tainted Love - Soft Cell',
+      'Video Killed the Radio Star - The Buggles',
+      'Blue Monday - New Order',
+      'Love Shack - B-52s',
+      'Should I Stay or Should I Go - The Clash',
+      'Push It - Salt-N-Pepa',
+      'Walking on Sunshine - Katrina and the Waves',
+      'Take My Breath Away - Berlin',
+      'Dancing in the Dark - Bruce Springsteen',
+      'Under Pressure - Queen & David Bowie',
+      "Don't Stop Me Now - Queen",
+      'The Final Countdown - Europe',
+      'Here I Go Again - Whitesnake',
+      'I Just Called to Say I Love You - Stevie Wonder',
+      "What's Love Got to Do with It - Tina Turner",
+      'Hungry Like the Wolf - Duran Duran',
+    ].join('\n'),
+
+    '90s': [
+      'Smells Like Teen Spirit - Nirvana',
+      'Come as You Are - Nirvana',
+      'Baby Got Back - Sir Mix-a-Lot',
+      'Waterfalls - TLC',
+      'No Scrubs - TLC',
+      "Gangsta's Paradise - Coolio",
+      'Wannabe - Spice Girls',
+      'Spice Up Your Life - Spice Girls',
+      '...Baby One More Time - Britney Spears',
+      'I Will Always Love You - Whitney Houston',
+      'My Heart Will Go On - Celine Dion',
+      'Creep - Radiohead',
+      'Killing Me Softly - Fugees',
+      'Ready or Not - Fugees',
+      'One - U2',
+      'Under the Bridge - Red Hot Chili Peppers',
+      'Black Hole Sun - Soundgarden',
+      'Zombie - The Cranberries',
+      'Dreams - The Cranberries',
+      'Vogue - Madonna',
+      'Nothing Compares 2 U - Sinéad O\'Connor',
+      'November Rain - Guns N\' Roses',
+      'Iris - Goo Goo Dolls',
+      'Smooth - Santana ft. Rob Thomas',
+      'Mambo No. 5 - Lou Bega',
+      'Livin\' La Vida Loca - Ricky Martin',
+      'Believe - Cher',
+      'The Sign - Ace of Base',
+      'Wonderwall - Oasis',
+      "Don't Look Back in Anger - Oasis",
+      'Bitter Sweet Symphony - The Verve',
+      'Common People - Pulp',
+      'What Is Love - Haddaway',
+      'Good Riddance (Time of Your Life) - Green Day',
+      'Basket Case - Green Day',
+      'Semi-Charmed Life - Third Eye Blind',
+      'Jump Around - House of Pain',
+      'Ice Ice Baby - Vanilla Ice',
+      "U Can't Touch This - MC Hammer",
+      'Return of the Mack - Mark Morrison',
+      'Losing My Religion - R.E.M.',
+      'I Want It That Way - Backstreet Boys',
+      "Everybody (Backstreet's Back) - Backstreet Boys",
+      "Tearin' Up My Heart - NSYNC",
+      "I'll Be There for You - The Rembrandts",
+      'Lovefool - The Cardigans',
+      'Stay - Lisa Loeb',
+      "Breakfast at Tiffany's - Deep Blue Something",
+      'Two Princes - Spin Doctors',
+      'Mr. Jones - Counting Crows',
+    ].join('\n'),
+
+    '2000s': [
+      'Crazy in Love - Beyoncé',
+      'Yeah! - Usher',
+      'In da Club - 50 Cent',
+      'Umbrella - Rihanna',
+      'Crazy - Gnarls Barkley',
+      'SexyBack - Justin Timberlake',
+      'Single Ladies (Put a Ring on It) - Beyoncé',
+      'Rehab - Amy Winehouse',
+      'Hey Ya! - OutKast',
+      'Beautiful Day - U2',
+      'Boulevard of Broken Dreams - Green Day',
+      'Mr. Brightside - The Killers',
+      'Take Me Out - Franz Ferdinand',
+      'Seven Nation Army - The White Stripes',
+      'Lose Yourself - Eminem',
+      'Numb - Linkin Park',
+      'In the End - Linkin Park',
+      'Complicated - Avril Lavigne',
+      'Sk8er Boi - Avril Lavigne',
+      'Hot in Herre - Nelly',
+      'Gold Digger - Kanye West',
+      'Hips Don\'t Lie - Shakira',
+      'Hollaback Girl - Gwen Stefani',
+      'Ms. Jackson - OutKast',
+      'Poker Face - Lady Gaga',
+      'Just Dance - Lady Gaga',
+      'Low - Flo Rida',
+      'Apologize - Timbaland ft. OneRepublic',
+      'Unwritten - Natasha Bedingfield',
+      'Since U Been Gone - Kelly Clarkson',
+      "Stacy's Mom - Fountains of Wayne",
+      'Feel Good Inc. - Gorillaz',
+      'Clocks - Coldplay',
+      'Fix You - Coldplay',
+      'Chasing Cars - Snow Patrol',
+      'Say My Name - Destiny\'s Child',
+      'Toxic - Britney Spears',
+      'Beautiful - Christina Aguilera',
+      'SOS - Rihanna',
+      'Irreplaceable - Beyoncé',
+      'Bootylicious - Destiny\'s Child',
+      'Buttons - The Pussycat Dolls',
+      "Don't Cha - The Pussycat Dolls",
+      'Beautiful Girls - Sean Kingston',
+      'White Flag - Dido',
+      'Hanging by a Moment - Lifehouse',
+      'The Scientist - Coldplay',
+      'Fighter - Christina Aguilera',
+      'With You - Chris Brown',
+      'Float On - Modest Mouse',
+    ].join('\n'),
+
+    '2010s': [
+      'Rolling in the Deep - Adele',
+      'Someone Like You - Adele',
+      'Hello - Adele',
+      'Happy - Pharrell Williams',
+      'Blurred Lines - Robin Thicke',
+      'Get Lucky - Daft Punk',
+      'Call Me Maybe - Carly Rae Jepsen',
+      'Gangnam Style - PSY',
+      'Uptown Funk - Mark Ronson ft. Bruno Mars',
+      'Shape of You - Ed Sheeran',
+      'Thinking Out Loud - Ed Sheeran',
+      'Photograph - Ed Sheeran',
+      'Stay With Me - Sam Smith',
+      'Take Me to Church - Hozier',
+      'Royals - Lorde',
+      'Thrift Shop - Macklemore & Ryan Lewis',
+      'Shake It Off - Taylor Swift',
+      'Blank Space - Taylor Swift',
+      'Chandelier - Sia',
+      'Cheap Thrills - Sia',
+      'We Found Love - Rihanna',
+      'Work - Rihanna',
+      "Can't Feel My Face - The Weeknd",
+      'The Hills - The Weeknd',
+      'Hotline Bling - Drake',
+      "God's Plan - Drake",
+      'Sorry - Justin Bieber',
+      'Love Yourself - Justin Bieber',
+      'Treat You Better - Shawn Mendes',
+      'Old Town Road - Lil Nas X',
+      'Bad Guy - Billie Eilish',
+      'Havana - Camila Cabello',
+      'Despacito - Luis Fonsi ft. Daddy Yankee',
+      'Lean On - Major Lazer & DJ Snake',
+      'Closer - The Chainsmokers',
+      'Stressed Out - Twenty One Pilots',
+      'Somebody That I Used to Know - Gotye',
+      'We Are Young - fun.',
+      'Pumped Up Kicks - Foster the People',
+      'Radioactive - Imagine Dragons',
+      'Counting Stars - OneRepublic',
+      'Let Her Go - Passenger',
+      'Moves Like Jagger - Maroon 5',
+      'Wake Me Up - Avicii',
+      'Titanium - David Guetta ft. Sia',
+      'Rather Be - Clean Bandit',
+      "Can't Stop the Feeling - Justin Timberlake",
+      'Demons - Imagine Dragons',
+      'Best Song Ever - One Direction',
+      'Cheerleader - OMI',
+    ].join('\n'),
+
+    '2020s': [
+      'Blinding Lights - The Weeknd',
+      'Levitating - Dua Lipa',
+      "Don't Start Now - Dua Lipa",
+      'drivers license - Olivia Rodrigo',
+      'good 4 u - Olivia Rodrigo',
+      'brutal - Olivia Rodrigo',
+      'vampire - Olivia Rodrigo',
+      'obsessed - Olivia Rodrigo',
+      'MONTERO (Call Me by Your Name) - Lil Nas X',
+      'Industry Baby - Lil Nas X ft. Jack Harlow',
+      'Easy On Me - Adele',
+      'As It Was - Harry Styles',
+      'Watermelon Sugar - Harry Styles',
+      'Anti-Hero - Taylor Swift',
+      'Cruel Summer - Taylor Swift',
+      'Flowers - Miley Cyrus',
+      'Unholy - Sam Smith & Kim Petras',
+      'About Damn Time - Lizzo',
+      'Running Up That Hill - Kate Bush',
+      'Heat Waves - Glass Animals',
+      'Stay - The Kid LAROI & Justin Bieber',
+      'Leave the Door Open - Silk Sonic',
+      'Save Your Tears - The Weeknd',
+      'Die For You - The Weeknd',
+      'Happier Than Ever - Billie Eilish',
+      'Bad Habits - Ed Sheeran',
+      'Shivers - Ed Sheeran',
+      'Butter - BTS',
+      'Dynamite - BTS',
+      'Cold Heart - Elton John & Dua Lipa',
+      'Kiss Me More - Doja Cat ft. SZA',
+      'Calm Down - Rema & Selena Gomez',
+      'Escapism - RAYE',
+      'Ella Baila Sola - Eslabon Armado ft. Peso Pluma',
+      'BZRP Music Sessions Vol. 53 - Bizarrap ft. Shakira',
+      'La Bachata - Manuel Turizo',
+      'Tití Me Preguntó - Bad Bunny',
+      'Me Porto Bonito - Bad Bunny ft. Chencho Corleone',
+      'Espresso - Sabrina Carpenter',
+      'Please Please Please - Sabrina Carpenter',
+      'Feather - Sabrina Carpenter',
+      'Beautiful Things - Benson Boone',
+      'Lose Control - Teddy Swims',
+      'Mood - 24kGoldn ft. iann dior',
+      'Peaches - Justin Bieber ft. Daniel Caesar & Giveon',
+      'Heartbreak Anniversary - Giveon',
+      'Golden Hour - JVKE',
+      'APT. - ROSE ft. Bruno Mars',
+      'Not Like Us - Kendrick Lamar',
+      'Luther - Kendrick Lamar ft. SZA',
+    ].join('\n'),
+
+    // ── Spanish / Latin lists — fill these in as needed ───────────
+    '90s-es': [
+      'Macarena - Los del Río',
+      'La Flaca - Jarabe de Palo',
+      'Ciega, Sordomuda - Shakira',
+      'Azúcar Amargo - Fey',
+      'La Calle de las Sirenas - OV7',
+      'Provócame - Chayanne',
+      'María - Ricky Martin',
+      'Entre Dos Tierras - Héroes del Silencio',
+      'Vuela, Vuela - Magneto',
+      'Sin Documentos - Los Rodríguez',
+      'Pelo Suelto - Gloria Trevi',
+      'Sopa de Caracol - Banda Blanca',
+      'De Música Ligera - Soda Stereo',
+      'Oye mi Amor - Maná',
+      'Livin la Vida Loca - Ricky Martin',
+      'El Venao - Los Cantantes',
+      'La ventanita - Garibaldi',
+      'Suave - Luis Miguel',
+      'Muchacha Triste - Los Fantasmas del Caribe',
+      'Auto Rojo - Vilma Palma e Vampiros'
+    ].join('\n'),
+
+    '2000s-es': [
+      'Aserejé - Las Ketchup',
+      'Gasolina - Daddy Yankee',
+      'La Camisa Negra - Juanes',
+      'Atrévete-te-te - Calle 13',
+      'Las de la Intuición - Shakira',
+      'Me Gustas Tú - Manu Chao',
+      'Pobre Diabla - Don Omar',
+      'Ni Tú Ni Nadie - Moenia',
+      'Y Yo Sigo Aquí - Paulina Rubio',
+      'El Run Run - Estopa',
+      'Labios Compartidos - Maná',
+      'Rakata - Wisin & Yandel',
+      'Dime Que No - Ricardo Arjona',
+      'Ave María - David Bisbal',
+      'Torero - Chayanne',
+      'She Bangs - Ricky Martin',
+      'No Me Doy Por Vencido (Versión Dance) - Luis Fonsi',
+      'Rosa Pastel - Belanova',
+      'Don - Miranda!',
+      'En el 2000 - Natalia Lafourcade',
+      'Limón y Sal - Julieta Venegas',
+      'Amante Bandido (Versión Papitour) - Miguel Bosé',
+      'Vivir Mi Vida - Marc Anthony',
+      'Eres - Café Tacvba',
+      'Lento - Julieta Venegas',
+      'Sabor a Chocolate - Elefante',
+      'Caraluna - Bacilos',
+      'Obsesión - Aventura',
+      'Siente El Boom - Tito El Bambino',
+      'Apretaito - Ozuna',
+      'Marta, Sebas, Guille y los demás - Amaral',
+      'Princesas - Pereza',
+      'Zapatillas - El Canto del Loco',
+      'Niña - La Quinta Estación',
+      'Geometría Polisentimental - Fangoria',
+      'Papola de la Suave - El Arrebato',
+      'Yo Quiero Bailar - Sonia y Selena',
+      'A Dios Le Pido - Juanes',
+      'Color Esperanza - Diego Torres',
+      'Que la Detengan - David Civera',
+      'Antes Muerta Que Sencilla - María Isabel',
+      'Culpable o No - Kalimba',
+      'Nada Fue Un Error - Coti',
+      'Labios de Fresa - Coque Malla',
+      'No Te Pido Flores - Fanny Lu',
+      'Malo - Bebe',
+      'Camina y Ven - David Bustamante',
+      'Baila Casanova - Paulina Rubio',
+      'Mayonesa - Chocolate',
+      'Tenía tanto que darte - Nena Daconte',
+    ].join('\n'),
+
+    '2010s-es': [
+      'Danza Kuduro - Don Omar',
+      'Ai Se Eu Te Pego - Michel Teló',
+      'Bailando - Enrique Iglesias',
+      'Despacito - Luis Fonsi',
+      'Limbo - Daddy Yankee',
+      'Mi Gente - J Balvin',
+      'Vivir Mi Vida - Marc Anthony',
+      'La Bicicleta - Carlos Vives',
+      'Propuesta Indecente - Romeo Santos',
+      'El Perdón - Nicky Jam',
+      'Sofía - Alvaro Soler',
+      'Picky - Joey Montana',
+      'On the Floor (Spanish Version) - Jennifer Lopez',
+      'Waka Waka (Esto es África) - Shakira',
+      'Mayores - Becky G',
+      'Échame La Culpa - Demi Lovato',
+      'Robarte un Beso - Sebastian Yatra',
+      'Baila Baila Baila - Ozuna',
+      'La Gozadera - Gente de Zona',
+      'Felices los 4 - Maluma',
+      'Mía - Bad Bunny',
+      'Súbeme la Radio - Enrique Iglesias',
+      'El Mismo Sol - Alvaro Soler',
+      'Rayos de Sol - Jose de Rico',
+      'Te Pintaron Pajaritos - Yandar & Yostin',
+      'Darte un Beso - Prince Royce',
+      'Pegate - Grupo Treo',
+      'Follow the Leader - Wisin & Yandel',
+      'Taboo - Don Omar',
+      'Adrenalina - Wisin',
+      'La Romana - Bad Bunny',
+      'Tacones Rojos - Sebastian Yatra',
+      'Indecente - Anitta',
+      'Vaina Loca - Ozuna',
+      'Ella No Sigue Modas - Juan Magán',
+      'Danza Kuduro - Lucenzo',
+      'Bara Bará Bere Berê - Alex Ferrari',
+      'La Mordidita - Ricky Martin',
+      'Me Enamoré - Shakira',
+      'Bailando por ahí - Juan Magán',
+      'Colgando en tus manos - Carlos Baute'
+    ].join('\n'),
+  };
+
+  document.querySelectorAll('.decade-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const songs = DECADE_SONGS[btn.dataset.decade];
+      if (!songs) return;
+      songsInput.value = songs;
+      songsInput.dispatchEvent(new Event('input'));
+    });
+  });
+
   // ── Tab switching ──────────────────────────────────────────────
   const ALL_TABS = ['tab-generator', 'tab-prepare', 'tab-player'];
 
@@ -1305,6 +1783,12 @@
     songCounter.textContent = t('songs.counter', parseSongs(songsInput.value).length);
     errorList.style.display = 'none';
     songsInput.classList.remove('error');
+  });
+
+  // ── Reset song list ────────────────────────────────────────────
+  document.getElementById('btn-reset-songs').addEventListener('click', () => {
+    songsInput.value = '';
+    songsInput.dispatchEvent(new Event('input'));
   });
 
   // ── Helpers ────────────────────────────────────────────────────
@@ -1563,6 +2047,57 @@
     URL.revokeObjectURL(a.href);
   });
 
+  // ── Auto-fill URLs via Piped search ───────────────────────────
+  document.getElementById('btn-autofill-urls').addEventListener('click', async () => {
+    const btn      = document.getElementById('btn-autofill-urls');
+    const statusEl = document.getElementById('autofill-status');
+
+    // Collect table rows that have no URL yet
+    const todo = [...document.querySelectorAll('#prepare-tbody tr')].reduce((acc, tr) => {
+      const urlInput = tr.querySelector('.url-input');
+      const nameCell = tr.querySelector('.song-name-cell');
+      if (urlInput && !urlInput.value.trim() && nameCell) {
+        acc.push({ urlInput, song: nameCell.title || nameCell.textContent.trim() });
+      }
+      return acc;
+    }, []);
+
+    if (!todo.length) {
+      statusEl.style.color = '#888';
+      statusEl.textContent = t('player.prepare.autofillNone');
+      return;
+    }
+
+    btn.disabled = true;
+    statusEl.style.color = '#888';
+    statusEl.textContent = t('player.prepare.autofillProgress', 0, todo.length);
+    let filled = 0;
+
+    for (let i = 0; i < todo.length; i++) {
+      statusEl.textContent = t('player.prepare.autofillProgress', i + 1, todo.length);
+      // Yield to the browser so the status text paints before the fetch blocks
+      await new Promise(r => setTimeout(r, 0));
+      const { urlInput, song } = todo[i];
+      const url = await fetchPipedSearch(song);
+      if (url) {
+        urlInput.value = url;
+        urlInput.dispatchEvent(new Event('input')); // triggers saveRow
+        filled++;
+      }
+      // Small pause between requests so we don't hammer a single instance
+      if (i < todo.length - 1) await new Promise(r => setTimeout(r, 300));
+    }
+
+    btn.disabled = false;
+    if (filled === 0) {
+      statusEl.style.color = '#dc2626';
+      statusEl.textContent = t('player.prepare.autofillDone', filled, todo.length);
+    } else {
+      statusEl.style.color = '#16a34a';
+      statusEl.textContent = t('player.prepare.autofillDone', filled, todo.length);
+    }
+  });
+
   // ── Play directly from Prepare (no export needed) ─────────────
   document.getElementById('btn-play-from-prepare').addEventListener('click', () => {
     const songs = parseSongs(songsInput.value);
@@ -1634,11 +2169,6 @@
   });
 
   // ── YouTube IFrame API ─────────────────────────────────────────
-  // Official YouTube embed API — no CORS, no third-party services, always works.
-  // The IFrame player renders directly inside #yt-player-container.
-
-  // Load the API script dynamically so onYouTubeIframeAPIReady is guaranteed
-  // to be defined before the script finishes loading.
   (function () {
     const tag = document.createElement('script');
     tag.src   = 'https://www.youtube.com/iframe_api';
@@ -1661,6 +2191,61 @@
         }
       }, 100);
     });
+  }
+
+  // ── Video search (for auto-fill URLs) ─────────────────────────
+  // Tries Invidious instances directly (proper CORS headers),
+  // then falls back to Piped routed through a CORS proxy.
+
+  const PIPED_INSTANCES = [
+    'https://pipedapi.kavin.rocks',
+    'https://piped-api.garudalinux.org',
+    'https://api.piped.projectsegfau.lt',
+  ];
+
+  const INVIDIOUS_INSTANCES = [
+    'https://inv.riverside.rocks',
+    'https://invidious.privacydev.net',
+    'https://yewtu.be',
+    'https://yt.cdaut.de',
+  ];
+
+  async function fetchPipedSearch(query) {
+    const encoded = encodeURIComponent(query);
+
+    // 1. Try Invidious instances directly — they consistently send CORS headers
+    for (const instance of INVIDIOUS_INSTANCES) {
+      try {
+        const res = await fetch(
+          `${instance}/api/v1/search?q=${encoded}&type=video`,
+          { signal: AbortSignal.timeout(8000) }
+        );
+        if (!res.ok) continue;
+        const items = await res.json();
+        const video = (Array.isArray(items) ? items : []).find(i => i.videoId);
+        if (video) return `https://www.youtube.com/watch?v=${video.videoId}`;
+      } catch (_) {}
+    }
+
+    // 2. Fall back to Piped via corsproxy.io (adds the missing CORS header)
+    for (const instance of PIPED_INSTANCES) {
+      const target = `${instance}/search?q=${encoded}&filter=videos`;
+      try {
+        const res = await fetch(
+          `https://corsproxy.io/?url=${encodeURIComponent(target)}`,
+          { signal: AbortSignal.timeout(12000) }
+        );
+        if (!res.ok) continue;
+        const data  = await res.json();
+        const items = (data.items || []).filter(i => i.url && i.url.includes('watch'));
+        if (!items.length) continue;
+        const params  = new URLSearchParams(items[0].url.split('?')[1] || '');
+        const videoId = params.get('v');
+        if (videoId) return `https://www.youtube.com/watch?v=${videoId}`;
+      } catch (_) {}
+    }
+
+    return null;
   }
 
   function showPlayerError(msg) {
@@ -1686,10 +2271,9 @@
     }
 
     if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
-      // Reuse existing player — just swap the video
+      ytPlayer.setVolume(100);
       ytPlayer.loadVideoById({ videoId, startSeconds });
     } else {
-      // First time: IFrame API replaces the target div with an <iframe>
       const container = document.getElementById('yt-player-container');
       container.innerHTML = '<div id="yt-iframe-slot"></div>';
 
