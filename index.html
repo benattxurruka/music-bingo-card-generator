@@ -148,6 +148,10 @@
       text-transform: uppercase;
       letter-spacing: .6px;
     }
+    .hint {
+      font-size: .82rem;
+      color: #777;
+    }
     .songs-panel .hint {
       font-size: .82rem;
       color: #777;
@@ -451,14 +455,13 @@
     }
 
     #yt-player-container {
-      flex-shrink: 0;
+      position: fixed;
+      left: -200px;
+      top: -200px;
       width: 120px;
       height: 68px;
-      border-radius: 8px;
       overflow: hidden;
-      background: #111;
-      color: #555;
-      font-size: .7rem;
+      pointer-events: none;
     }
 
     .player-error-msg {
@@ -470,6 +473,45 @@
       padding: .4rem .65rem;
       margin-top: .4rem;
       line-height: 1.4;
+    }
+    .player-error-msg a {
+      color: #fca5a5;
+      text-decoration: underline;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .player-error-msg a:hover { color: #fff; }
+
+    /* Finished modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9500;
+      background: rgba(0,0,0,.55);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.modal-active { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,.25);
+      max-width: 340px;
+      width: 90%;
+    }
+    .modal-box h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #6c3fcf;
+      margin-bottom: .5rem;
+    }
+    .modal-box p {
+      color: #555;
+      font-size: .95rem;
+      margin-bottom: 1.5rem;
     }
 
     .player-info { flex: 1; min-width: 0; }
@@ -532,6 +574,143 @@
     .ctrl-btn:active { transform: scale(.95); }
     .ctrl-btn-main   { background: #a855f7; }
     .ctrl-btn-main:hover { background: #9333ea; }
+    .ctrl-btn-fs { background: rgba(255,255,255,.1); }
+    .ctrl-btn-fs:hover { background: rgba(255,255,255,.22); }
+
+    /* Fullscreen overlay */
+    #fullscreen-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: linear-gradient(160deg, #0d0620 0%, #1a0533 45%, #2d1b69 100%);
+      color: #fff;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      padding: 3.5rem 2rem 2rem;
+      text-align: center;
+      overflow: hidden;
+    }
+    #fullscreen-overlay.fs-active { display: flex; }
+
+    #btn-exit-fullscreen {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: rgba(255,255,255,.12);
+      border: 1.5px solid rgba(255,255,255,.22);
+      color: #fff;
+      border-radius: 8px;
+      padding: .45rem 1.1rem;
+      font-size: .88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    #btn-exit-fullscreen:hover { background: rgba(255,255,255,.26); }
+
+    .fs-label {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      opacity: .5;
+    }
+
+    .fs-progress {
+      width: min(640px, 85vw);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: .5rem;
+      margin-top: -.25rem;
+    }
+    .fs-progress-bar-wrap {
+      height: 6px;
+      background: rgba(255,255,255,.18);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .fs-progress-bar-fill {
+      height: 100%;
+      background: #a855f7;
+      border-radius: 3px;
+      transition: width .4s linear;
+      width: 0%;
+    }
+    .fs-progress-time {
+      font-size: clamp(.85rem, 1.8vw, 1.1rem);
+      opacity: .5;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .fs-song-title {
+      font-size: clamp(2.4rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 1.1;
+      max-width: 90vw;
+      word-break: break-word;
+    }
+    .fs-song-artist {
+      font-size: clamp(1.4rem, 4vw, 3rem);
+      opacity: .65;
+      font-weight: 400;
+      margin-top: -.3rem;
+      max-width: 90vw;
+      word-break: break-word;
+    }
+
+    .fs-controls {
+      display: flex;
+      gap: .75rem;
+      justify-content: center;
+    }
+    .fs-ctrl-btn {
+      background: rgba(255,255,255,.15);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: .65rem 1.5rem;
+      font-size: clamp(.9rem, 2vw, 1.1rem);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .fs-ctrl-btn:hover  { background: rgba(255,255,255,.28); }
+    .fs-ctrl-btn:active { transform: scale(.95); }
+    .fs-ctrl-btn-main   { background: #a855f7; }
+    .fs-ctrl-btn-main:hover { background: #9333ea; }
+
+    .fs-history {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .55rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255,255,255,.12);
+      width: 100%;
+      max-width: 640px;
+    }
+    .fs-history-label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      opacity: .38;
+      margin-bottom: .2rem;
+    }
+    .fs-history-item {
+      font-size: clamp(1rem, 2.2vw, 1.4rem);
+      opacity: .42;
+      color: #e9d5ff;
+    }
+    .fs-history-item--fourth {
+      opacity: .30;
+    }
+    .fs-history-item--oldest {
+      opacity: .22;
+    }
 
     /* Queue */
     .player-queue {
@@ -577,7 +756,7 @@
     /* ── Print Styles ───────────────────────────────────────────── */
     @media print {
       body { background: #fff; }
-      header, .tab-bar, #tab-player,
+      header, .tab-bar, #tab-prepare, #tab-player,
       main > .config-panel, main > .songs-panel, .actions, #results-header {
         display: none !important;
       }
@@ -629,12 +808,13 @@
     </select>
   </div>
   <h1 data-i18n="header.title">🎵 Music Bingo Card Generator</h1>
-  <p data-i18n="header.subtitle">Enter your songs, configure the card size, and generate printable bingo cards.</p>
+  <p data-i18n="header.subtitle">Generate printable bingo cards, set up YouTube links for your songs, and host a live music bingo game.</p>
 </header>
 
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="tab-generator" data-i18n="tabs.generator">Card Generator</button>
-  <button class="tab-btn"        data-tab="tab-player"    data-i18n="tabs.player">Bingo Player</button>
+  <button class="tab-btn"        data-tab="tab-prepare"   data-i18n="tabs.player">Prepare Bingo</button>
+  <button class="tab-btn"        data-tab="tab-player"    data-i18n="tabs.bingo">Bingo Player</button>
 </div>
 
 <main>
@@ -643,7 +823,13 @@
   <div id="tab-generator">
 
     <div class="config-panel">
+      <h2 data-i18n="generator.how.title">How does it work?</h2>
+      <p class="hint" data-i18n="generator.hint">Enter your songs, configure the card size, and generate printable bingo cards.</p>
+    </div>
+
+    <div class="config-panel">
       <h2 data-i18n="config.title">Card Configuration</h2>
+      <p class="hint" style="margin-bottom:1rem" data-i18n="config.hint">Set the card title, grid dimensions (columns × rows), and how many cards to generate.</p>
       <div class="config-row">
         <div class="config-field" style="flex:2;min-width:200px">
           <label for="inp-title" data-i18n="config.cardTitle">Card Title</label>
@@ -695,13 +881,12 @@
 
   </div><!-- /tab-generator -->
 
-  <!-- ═══════════ TAB 2: Bingo Player ═══════════ -->
-  <div id="tab-player" style="display:none">
+  <!-- ═══════════ TAB 2: Prepare Bingo ═══════════ -->
+  <div id="tab-prepare" style="display:none">
 
-    <!-- ── Prepare ── -->
     <div class="player-section">
       <h2 data-i18n="player.prepare.title">Prepare Bingo</h2>
-      <p class="hint" data-i18n="player.prepare.hint">For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 30 seconds.</p>
+      <p class="hint" data-i18n="player.prepare.hint">For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. When done, use Export Config to save the configuration as a JSON file you can reload later, or press Play Bingo to start right away.</p>
 
       <div class="prepare-table-wrap">
         <table class="prepare-table">
@@ -709,8 +894,8 @@
             <tr>
               <th data-i18n="player.prepare.songCol">Song</th>
               <th class="col-url"     data-i18n="player.prepare.urlCol">YouTube URL</th>
-              <th class="col-seconds" data-i18n="player.prepare.startCol">Start (s)</th>
-              <th class="col-seconds" data-i18n="player.prepare.endCol">End (s)</th>
+              <th class="col-seconds" data-i18n="player.prepare.startCol">Start</th>
+              <th class="col-seconds" data-i18n="player.prepare.endCol">End</th>
               <th class="col-preview"></th>
             </tr>
           </thead>
@@ -720,17 +905,12 @@
         </table>
       </div>
 
-      <div class="actions" style="margin-bottom:0">
+      <div class="actions" style="margin-bottom:.75rem">
         <button id="btn-play-from-prepare" class="btn-primary" data-i18n="player.prepare.playNow">Play Bingo</button>
         <button id="btn-export-config" class="btn-dark" data-i18n="player.prepare.export">Export Config</button>
       </div>
-    </div>
 
-    <!-- ── Play ── -->
-    <div class="player-section">
-      <h2 data-i18n="player.play.title">Play Bingo</h2>
-      <p class="hint" data-i18n="player.play.hint">Load a previously exported config file, then press Play to shuffle and start.</p>
-
+      <p class="hint" style="margin-bottom:.65rem" data-i18n="player.prepare.loadHint">Or load a previously exported config file to restore your song list and URLs:</p>
       <div class="load-config-area">
         <label class="load-config-label" for="inp-load-config">
           <span>📂</span>
@@ -739,21 +919,31 @@
         <input type="file" id="inp-load-config" accept=".json">
         <span class="config-loaded-info" id="config-loaded-info"></span>
       </div>
+    </div>
+
+  </div><!-- /tab-prepare -->
+
+  <!-- ═══════════ TAB 3: Bingo Player ═══════════ -->
+  <div id="tab-player" style="display:none">
+
+    <div class="player-section">
+      <h2 data-i18n="player.play.title">Play Bingo</h2>
+      <p class="hint" data-i18n="player.play.hint">Press Play to shuffle your songs and start the game. Fullscreen for a big-screen presentation. Songs play from the URLs you configured in the Prepare Bingo tab.</p>
 
       <div class="actions" style="margin-bottom:.5rem">
-        <button id="btn-play-bingo" class="btn-primary" data-i18n="player.play.start" disabled>Play Bingo</button>
+        <button id="btn-play-bingo" class="btn-primary" data-i18n="player.play.start">Play Bingo</button>
         <button id="btn-stop-bingo" class="btn-dark"    data-i18n="player.play.stop"  style="display:none">Stop</button>
       </div>
+      <div id="play-bingo-error" class="player-error-msg"><span data-i18n="player.play.noConfig.before">No songs with YouTube links found. Fill in the URLs in the </span><a href="#" id="error-goto-prepare" data-i18n="player.play.noConfig.link">Prepare Bingo tab</a><span data-i18n="player.play.noConfig.after"> or load a config file.</span></div>
 
       <!-- Player (shown when playing / previewing) -->
       <div id="player-ui">
         <div class="player-now-playing">
-          <div id="yt-player-container"></div>
           <div class="player-info">
             <div class="player-label" data-i18n="player.play.nowPlaying">Now Playing</div>
             <div class="player-song-name" id="player-song-name">—</div>
             <div class="player-progress">
-              <span class="player-time" id="player-time">0:00 / 0:30</span>
+              <span class="player-time" id="player-time">0:00 / 1:00</span>
               <div class="progress-bar-wrap">
                 <div class="progress-bar-fill" id="progress-bar-fill"></div>
               </div>
@@ -762,6 +952,7 @@
               <button class="ctrl-btn" id="ctrl-prev" data-i18n="player.play.prev">⏮ Prev</button>
               <button class="ctrl-btn ctrl-btn-main" id="ctrl-pause" data-i18n="player.play.pause">⏸ Pause</button>
               <button class="ctrl-btn" id="ctrl-next" data-i18n="player.play.next">Next ⏭</button>
+              <button class="ctrl-btn ctrl-btn-fs" id="ctrl-fullscreen" data-i18n="player.play.fullscreen">⛶ Fullscreen</button>
             </div>
             <div class="player-error-msg" id="player-error"></div>
           </div>
@@ -781,14 +972,50 @@
 
 </main>
 
+<!-- Hidden YouTube IFrame player (audio source, kept off-screen) -->
+<div id="yt-player-container"></div>
+
+<!-- Bingo finished modal -->
+<div id="modal-finished" class="modal-overlay">
+  <div class="modal-box">
+    <h3 data-i18n="player.play.finished">🎉 Bingo Complete!</h3>
+    <p data-i18n="player.play.finishedMsg">All songs have been played.</p>
+    <button id="btn-modal-ok" class="btn-primary" data-i18n="player.play.ok">OK</button>
+  </div>
+</div>
+
+<!-- Fullscreen overlay — shown during bingo play session -->
+<div id="fullscreen-overlay">
+  <button id="btn-exit-fullscreen" data-i18n="player.play.exitFullscreen">✕ Exit Fullscreen</button>
+  <div class="fs-label" data-i18n="player.play.nowPlaying">Now Playing</div>
+  <div class="fs-song-title" id="fs-song-title">—</div>
+  <div class="fs-song-artist" id="fs-song-artist"></div>
+  <div class="fs-progress">
+    <div class="fs-progress-bar-wrap">
+      <div class="fs-progress-bar-fill" id="fs-progress-bar-fill"></div>
+    </div>
+    <div class="fs-progress-time" id="fs-progress-time">0:00 / 1:00</div>
+  </div>
+  <div class="fs-controls">
+    <button class="fs-ctrl-btn" id="fs-ctrl-prev" data-i18n="player.play.prev">⏮ Prev</button>
+    <button class="fs-ctrl-btn fs-ctrl-btn-main" id="fs-ctrl-pause" data-i18n="player.play.pause">⏸ Pause</button>
+    <button class="fs-ctrl-btn" id="fs-ctrl-next" data-i18n="player.play.next">Next ⏭</button>
+  </div>
+  <div class="fs-history" id="fs-history" style="display:none"></div>
+</div>
+
 <script>
   // ── Translations ───────────────────────────────────────────────
   const TRANSLATIONS = {
     en: {
       'header.title':    '🎵 Music Bingo Card Generator',
-      'header.subtitle': 'Enter your songs, configure the card size, and generate printable bingo cards.',
+      'header.subtitle': 'Generate printable bingo cards, set up YouTube links for your songs, and host a live music bingo game.',
+      'generator.how.title': 'How does it work?',
+      'generator.hint':  'Enter your songs, configure the card size, and generate printable bingo cards.',
+      'config.hint':     'Set the card title, grid dimensions (columns × rows), and how many cards to generate.',
       'tabs.generator':  'Card Generator',
-      'tabs.player':     'Bingo Player',
+      'tabs.player':     'Prepare Bingo',
+      'tabs.bingo':      'Bingo Player',
       'config.title':    'Card Configuration',
       'config.cardTitle':'Card Title',
       'config.columns':  'Columns',
@@ -807,16 +1034,23 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cards · ${cols} col × ${rows} row · ${songs} songs`,
       'card.title':      'Music Bingo',
       'player.prepare.title':   'Prepare Bingo',
-      'player.prepare.hint':    'For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 30 seconds.',
+      'player.prepare.hint':    'For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. When done, use Export Config to save the configuration as a JSON file you can reload later, or press Play Bingo to start right away.',
       'player.prepare.songCol': 'Song',
       'player.prepare.urlCol':  'YouTube URL',
-      'player.prepare.startCol':'Start (s)',
-      'player.prepare.endCol':  'End (s)',
+      'player.prepare.startCol':'Start',
+      'player.prepare.endCol':  'End',
       'player.prepare.playNow': 'Play Bingo',
       'player.prepare.export':  'Export Config',
       'player.prepare.noSongs': 'No songs in the Song List yet. Add songs in the Card Generator tab first.',
+      'player.prepare.loadHint': 'Or load a previously exported config file to restore your song list and URLs:',
       'player.play.title':      'Play Bingo',
-      'player.play.hint':       'Load a previously exported config file, then press Play to shuffle and start.',
+      'player.play.hint':       'Press Play to shuffle your songs and start the game. Fullscreen for a big-screen presentation. Songs play from the URLs you configured in the Prepare Bingo tab.',
+      'player.play.noConfig.before': 'No songs with YouTube links found. Fill in the URLs in the ',
+      'player.play.noConfig.link':   'Prepare Bingo tab',
+      'player.play.noConfig.after':  ' or load a config file.',
+      'player.play.finished':   '🎉 Bingo Complete!',
+      'player.play.finishedMsg':'All songs have been played.',
+      'player.play.ok':         'OK',
       'player.play.load':       'Load Config File',
       'player.play.loaded':     (n) => `${n} song${n !== 1 ? 's' : ''} loaded`,
       'player.play.start':      'Play Bingo',
@@ -826,14 +1060,21 @@
       'player.play.pause':      '⏸ Pause',
       'player.play.resume':     '▶ Resume',
       'player.play.next':       'Next ⏭',
-      'player.play.queue':      'Queue',
-      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
+      'player.play.queue':        'Queue of played songs',
+      'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
+      'player.play.fullscreen':   '⛶ Fullscreen',
+      'player.play.exitFullscreen': '✕ Exit Fullscreen',
+      'player.play.lastPlayed':   'Last 5 played:',
     },
     es: {
       'header.title':    '🎵 Generador de Cartones de Bingo Musical',
-      'header.subtitle': 'Introduce tus canciones, configura el tamaño del cartón y genera cartones imprimibles.',
+      'header.subtitle': 'Genera cartones de bingo imprimibles, configura los enlaces de YouTube y organiza un juego de bingo musical en vivo.',
+      'generator.how.title': '¿Cómo funciona?',
+      'generator.hint':  'Introduce tus canciones, configura el tamaño del cartón y genera cartones imprimibles.',
+      'config.hint':     'Establece el título, las dimensiones de la cuadrícula (columnas × filas) y cuántos cartones generar.',
       'tabs.generator':  'Generador de cartones',
-      'tabs.player':     'Reproductor de bingo',
+      'tabs.player':     'Preparar bingo',
+      'tabs.bingo':      'Reproductor de bingo',
       'config.title':    'Configuración del cartón',
       'config.cardTitle':'Título del cartón',
       'config.columns':  'Columnas',
@@ -852,16 +1093,23 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cartones · ${cols} col × ${rows} fil · ${songs} canciones`,
       'card.title':      'Bingo Musical',
       'player.prepare.title':   'Preparar el bingo',
-      'player.prepare.hint':    'Para cada canción, pega una URL de YouTube y opcionalmente establece los segundos de inicio/fin. Déjalo en blanco para reproducir los primeros 30 segundos.',
+      'player.prepare.hint':    'Para cada canción, pega una URL de YouTube y opcionalmente establece los segundos de inicio/fin. Déjalo en blanco para reproducir los primeros 60 segundos. Cuando termines, usa Exportar configuración para guardar la configuración como un archivo JSON que puedes recargar más tarde, o pulsa Jugar al bingo para empezar.',
       'player.prepare.songCol': 'Canción',
       'player.prepare.urlCol':  'URL de YouTube',
-      'player.prepare.startCol':'Inicio (s)',
-      'player.prepare.endCol':  'Fin (s)',
+      'player.prepare.startCol':'Inicio',
+      'player.prepare.endCol':  'Fin',
       'player.prepare.playNow': 'Jugar al bingo',
       'player.prepare.export':  'Exportar configuración',
       'player.prepare.noSongs': 'No hay canciones en la lista todavía. Añade canciones en la pestaña Generador de cartones primero.',
+      'player.prepare.loadHint': 'O carga un archivo de configuración exportado anteriormente para restaurar tu lista de canciones y URLs:',
       'player.play.title':      'Jugar al bingo',
-      'player.play.hint':       'Carga un archivo de configuración exportado previamente y pulsa Jugar para empezar.',
+      'player.play.hint':       'Pulsa Jugar para barajar tus canciones y empezar la partida. Pantalla completa para una presentación en pantalla grande. Las canciones se reproducen desde las URLs configuradas en la pestaña Preparar bingo.',
+      'player.play.noConfig.before': 'No hay canciones con enlaces de YouTube. Rellena las URLs en la pestaña ',
+      'player.play.noConfig.link':   'Preparar bingo',
+      'player.play.noConfig.after':  ' o carga un archivo de configuración.',
+      'player.play.finished':   '🎉 ¡Bingo completado!',
+      'player.play.finishedMsg':'Se han reproducido todas las canciones.',
+      'player.play.ok':         'Aceptar',
       'player.play.load':       'Cargar archivo de configuración',
       'player.play.loaded':     (n) => `${n} canción${n !== 1 ? 'es' : ''} cargada${n !== 1 ? 's' : ''}`,
       'player.play.start':      'Jugar al bingo',
@@ -871,14 +1119,21 @@
       'player.play.pause':      '⏸ Pausa',
       'player.play.resume':     '▶ Reanudar',
       'player.play.next':       'Siguiente ⏭',
-      'player.play.queue':      'Cola',
-      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
+      'player.play.queue':        'Cola de canciones reproducidas',
+      'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
+      'player.play.fullscreen':   '⛶ Pantalla completa',
+      'player.play.exitFullscreen': '✕ Salir de pantalla completa',
+      'player.play.lastPlayed':   'Últimas 5 canciones:',
     },
     ca: {
       'header.title':    '🎵 Generador de Cartrons de Bingo Musical',
-      'header.subtitle': 'Introdueix les teves cançons, configura la mida del cartró i genera cartrons imprimibles.',
+      'header.subtitle': 'Genera cartrons de bingo imprimibles, configura els enllaços de YouTube i organitza un joc de bingo musical en directe.',
+      'generator.how.title': 'Com funciona?',
+      'generator.hint':  'Introdueix les teves cançons, configura la mida del cartró i genera cartrons imprimibles.',
+      'config.hint':     'Estableix el títol, les dimensions de la graella (columnes × files) i quants cartrons generar.',
       'tabs.generator':  'Generador de cartrons',
-      'tabs.player':     'Reproductor de bingo',
+      'tabs.player':     'Preparar el bingo',
+      'tabs.bingo':      'Reproductor de bingo',
       'config.title':    'Configuració del cartró',
       'config.cardTitle':'Títol del cartró',
       'config.columns':  'Columnes',
@@ -897,16 +1152,23 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cartrons · ${cols} col × ${rows} fil · ${songs} cançons`,
       'card.title':      'Bingo Musical',
       'player.prepare.title':   'Preparar el bingo',
-      'player.prepare.hint':    "Per a cada cançó, enganxa una URL de YouTube i, opcionalment, estableix els segons d'inici/fi. Deixa-ho en blanc per reproduir els primers 30 segons.",
+      'player.prepare.hint':    "Per a cada cançó, enganxa una URL de YouTube i, opcionalment, estableix els segons d'inici/fi. Deixa-ho en blanc per reproduir els primers 60 segons. Quan acabis, usa Exportar configuració per desar la configuració com a fitxer JSON que pots recarregar més tard, o prem Jugar al bingo per començar.",
       'player.prepare.songCol': 'Cançó',
       'player.prepare.urlCol':  'URL de YouTube',
-      'player.prepare.startCol':'Inici (s)',
-      'player.prepare.endCol':  'Fi (s)',
+      'player.prepare.startCol':'Inici',
+      'player.prepare.endCol':  'Fi',
       'player.prepare.playNow': 'Jugar al bingo',
       'player.prepare.export':  'Exportar configuració',
       'player.prepare.noSongs': 'Encara no hi ha cançons a la llista. Afegeix cançons a la pestanya Generador de cartrons primer.',
+      'player.prepare.loadHint': "O carrega un fitxer de configuració exportat prèviament per restaurar la teva llista de cançons i URLs:",
       'player.play.title':      'Jugar al bingo',
-      'player.play.hint':       'Carrega un fitxer de configuració exportat prèviament i prem Jugar per començar.',
+      'player.play.hint':       "Prem Jugar per barrejar les teves cançons i començar la partida. Pantalla completa per a una millor presentació. Les cançons es reprodueixen des de les URLs configurades a la pestanya Preparar el bingo.",
+      'player.play.noConfig.before': "No hi ha cançons amb enllaços de YouTube. Omple les URLs a la pestanya ",
+      'player.play.noConfig.link':   "Preparar el bingo",
+      'player.play.noConfig.after':  " o carrega un fitxer de configuració.",
+      'player.play.finished':   '🎉 Bingo completat!',
+      'player.play.finishedMsg':"S'han reproduït totes les cançons.",
+      'player.play.ok':         'D\'acord',
       'player.play.load':       'Carregar fitxer de configuració',
       'player.play.loaded':     (n) => `${n} cançó${n !== 1 ? 'ns' : ''} carregada${n !== 1 ? 'es' : ''}`,
       'player.play.start':      'Jugar al bingo',
@@ -916,14 +1178,21 @@
       'player.play.pause':      '⏸ Pausa',
       'player.play.resume':     '▶ Reprèn',
       'player.play.next':       'Següent ⏭',
-      'player.play.queue':      'Cua',
-      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
+      'player.play.queue':        'Cua de cançons reproduïdes',
+      'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
+      'player.play.fullscreen':   '⛶ Pantalla completa',
+      'player.play.exitFullscreen': '✕ Sortir de pantalla completa',
+      'player.play.lastPlayed':   'Últimes 5 cançons:',
     },
     eu: {
       'header.title':    '🎵 Musika Bingo Txartel Sortzailea',
-      'header.subtitle': 'Sartu zure abestiak, txartelaren tamaina konfiguratu eta inprimatzeko bingo txartelak sortu.',
+      'header.subtitle': 'Sortu inprimatzeko bingo txartelak, konfiguratu YouTube estekak eta antolatu zuzeneko musika bingo jokoa.',
+      'generator.how.title': 'Nola funtzionatzen du?',
+      'generator.hint':  'Sartu zure abestiak, txartelaren tamaina konfiguratu eta inprimatzeko bingo txartelak sortu.',
+      'config.hint':     'Ezarri txartelaren izenburua, saretaren dimentsioak (zutabeak × errenkadak) eta zenbat txartel sortu.',
       'tabs.generator':  'Txartel sortzailea',
-      'tabs.player':     'Bingo erreproduzitzailea',
+      'tabs.player':     'Bingoa prestatu',
+      'tabs.bingo':      'Bingo erreproduzitzailea',
       'config.title':    'Txartelaren konfigurazioa',
       'config.cardTitle':'Txartelaren izenburua',
       'config.columns':  'Zutabeak',
@@ -942,16 +1211,23 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} txartel · ${cols} zut × ${rows} err · ${songs} abesti`,
       'card.title':      'Musika Bingoa',
       'player.prepare.title':   'Bingoa prestatu',
-      'player.prepare.hint':    'Abesti bakoitzeko, itsatsi YouTube URL bat eta, aukeran, ezarri hasiera/amaiera segunduak. Hutsik utziz gero, lehenengo 30 segunduak erreproduzituko dira.',
+      'player.prepare.hint':    'Abesti bakoitzeko, itsatsi YouTube URL bat eta, aukeran, ezarri hasiera/amaiera segunduak. Hutsik utziz gero, lehenengo 60 segunduak erreproduzituko dira. Amaitzean, erabili Konfigurazioa esportatu JSON fitxategi gisa gordetzeko eta gero berriro kargatzeko, edo sakatu Bingoa jokatu zuzenean hasteko.',
       'player.prepare.songCol': 'Abestia',
       'player.prepare.urlCol':  'YouTube URLa',
-      'player.prepare.startCol':'Hasiera (s)',
-      'player.prepare.endCol':  'Amaiera (s)',
+      'player.prepare.startCol':'Hasiera',
+      'player.prepare.endCol':  'Amaiera',
       'player.prepare.playNow': 'Bingoa jokatu',
       'player.prepare.export':  'Konfigurazioa esportatu',
       'player.prepare.noSongs': 'Oraindik ez dago abestirik zerrendan. Gehitu abestiak Txartel sortzailea fitxan lehenik.',
+      'player.prepare.loadHint': 'Edo kargatu aurretik esportatutako konfigurazio fitxategi bat zure abesti zerrenda eta URLak berreskuratzeko:',
       'player.play.title':      'Bingoa jokatu',
-      'player.play.hint':       'Kargatu aurretik esportatutako konfigurazio fitxategia eta sakatu Jokatu hasteko.',
+      'player.play.hint':       'Sakatu Jokatu abestiak nahastu eta jolasa hasteko. Pantaila osoa aurkezpen hobea izateko. Abestiak Bingoa prestatu fitxan konfiguratutako URLetan erreproduzitzen dira.',
+      'player.play.noConfig.before': 'Ez dago YouTube estekak dituzten abestirik. Bete URLak ',
+      'player.play.noConfig.link':   'Bingoa prestatu fitxan',
+      'player.play.noConfig.after':  ' edo kargatu konfigurazio fitxategi bat.',
+      'player.play.finished':   '🎉 Bingoa osatu da!',
+      'player.play.finishedMsg':'Abesti guztiak erreproduzitu dira.',
+      'player.play.ok':         'Ados',
       'player.play.load':       'Konfigurazio fitxategia kargatu',
       'player.play.loaded':     (n) => `${n} abesti kargatu da`,
       'player.play.start':      'Bingoa jokatu',
@@ -961,8 +1237,11 @@
       'player.play.pause':      '⏸ Pausatu',
       'player.play.resume':     '▶ Jarraitu',
       'player.play.next':       'Hurrengoa ⏭',
-      'player.play.queue':      'Ilara',
-      'player.play.queuePos':   (cur, total) => `${cur} / ${total}`,
+      'player.play.queue':        'Entzundako abestien ilara',
+      'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
+      'player.play.fullscreen':   '⛶ Pantaila osoa',
+      'player.play.exitFullscreen': '✕ Pantaila osotik irten',
+      'player.play.lastPlayed':   'Azken 5 abestiak:',
     },
   };
 
@@ -1004,15 +1283,21 @@
   const inpCards       = document.getElementById('inp-cards');
 
   // ── Tab switching ──────────────────────────────────────────────
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tabId = btn.dataset.tab;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('tab-generator').style.display = tabId === 'tab-generator' ? '' : 'none';
-      document.getElementById('tab-player').style.display    = tabId === 'tab-player'    ? '' : 'none';
-      if (tabId === 'tab-player') renderPrepareTable();
+  const ALL_TABS = ['tab-generator', 'tab-prepare', 'tab-player'];
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === tabId);
     });
+    ALL_TABS.forEach(id => {
+      document.getElementById(id).style.display = id === tabId ? '' : 'none';
+    });
+    if (tabId === 'tab-prepare') renderPrepareTable();
+    if (tabId === 'tab-player')  document.getElementById('play-bingo-error').style.display = 'none';
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
   // ── Live song counter ──────────────────────────────────────────
@@ -1147,6 +1432,28 @@
     return m ? m[1] : null;
   }
 
+  // ── Time input helpers ─────────────────────────────────────────
+  // Accepts "90", "1:30", "01:30" → returns seconds integer or undefined
+  function parseTimeInput(val) {
+    val = (val || '').trim();
+    if (val === '') return undefined;
+    const mmss = val.match(/^(\d+):(\d{2})$/);
+    if (mmss) return parseInt(mmss[1], 10) * 60 + parseInt(mmss[2], 10);
+    const n = parseInt(val, 10);
+    return isNaN(n) ? undefined : n;
+  }
+
+  // Converts seconds integer → "m:ss" display string (e.g. 90 → "1:30")
+  function fmtMmSs(sec) {
+    return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+  }
+
+  // On blur: reformat the input value to mm:ss (or leave blank)
+  function reformatTimeInput(input) {
+    const parsed = parseTimeInput(input.value);
+    input.value = parsed !== undefined ? fmtMmSs(parsed) : '';
+  }
+
   // ── Prepare table ──────────────────────────────────────────────
   function renderPrepareTable() {
     const songs = parseSongs(songsInput.value);
@@ -1159,8 +1466,10 @@
     }
 
     songs.forEach(song => {
-      const saved = prepareData[song] || {};
-      const tr    = document.createElement('tr');
+      const saved      = prepareData[song] || {};
+      const startDisp  = saved.startSeconds !== undefined ? fmtMmSs(saved.startSeconds) : '';
+      const endDisp    = saved.endSeconds   !== undefined ? fmtMmSs(saved.endSeconds)   : '';
+      const tr         = document.createElement('tr');
       tr.innerHTML = `
         <td class="song-name-cell" title="${escapeHtml(song)}">${escapeHtml(song)}</td>
         <td class="col-url">
@@ -1169,12 +1478,12 @@
             value="${escapeHtml(saved.url || '')}">
         </td>
         <td class="col-seconds">
-          <input type="number" class="start-input" placeholder="0" min="0"
-            value="${saved.startSeconds !== undefined ? saved.startSeconds : ''}">
+          <input type="text" class="start-input" placeholder="0:00"
+            value="${escapeHtml(startDisp)}">
         </td>
         <td class="col-seconds">
-          <input type="number" class="end-input" placeholder="30" min="1"
-            value="${saved.endSeconds !== undefined ? saved.endSeconds : ''}">
+          <input type="text" class="end-input" placeholder="1:00"
+            value="${escapeHtml(endDisp)}">
         </td>
         <td class="col-preview">
           <button class="btn-preview-song" title="Preview">▶</button>
@@ -1195,25 +1504,30 @@
         }
         prepareData[song] = {
           url:          urlInput.value.trim(),
-          startSeconds: startInput.value !== '' ? parseInt(startInput.value, 10) : undefined,
-          endSeconds:   endInput.value   !== '' ? parseInt(endInput.value,   10) : undefined,
+          startSeconds: parseTimeInput(startInput.value),
+          endSeconds:   parseTimeInput(endInput.value),
         };
       }
 
-      urlInput.addEventListener('input',   saveRow);
+      urlInput.addEventListener('input', saveRow);
       startInput.addEventListener('input', saveRow);
-      endInput.addEventListener('input',   saveRow);
+      endInput.addEventListener('input', saveRow);
+
+      // On blur, reformat the time inputs to mm:ss
+      startInput.addEventListener('blur', () => { reformatTimeInput(startInput); saveRow(); });
+      endInput.addEventListener('blur',   () => { reformatTimeInput(endInput);   saveRow(); });
+
       if (saved.url) saveRow(); // validate pre-filled value
 
       previewBtn.addEventListener('click', () => {
         saveRow();
         const vid = extractVideoId(urlInput.value.trim());
         if (!vid) { alert('Please enter a valid YouTube URL first.'); return; }
-        const start = parseInt(startInput.value, 10) || 0;
-        const end   = parseInt(endInput.value,   10) || (start + 30);
+        const d     = prepareData[song] || {};
+        const start = d.startSeconds !== undefined ? d.startSeconds : 0;
+        const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 60;
         previewSegment(vid, start, end);
-        // Switch to Play section visually
-        document.getElementById('tab-player').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        switchTab('tab-player');
       });
 
       tbody.appendChild(tr);
@@ -1231,7 +1545,7 @@
       songs: songs.map(song => {
         const d     = prepareData[song] || {};
         const start = d.startSeconds !== undefined ? d.startSeconds : 0;
-        const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 30;
+        const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 60;
         return {
           name:         song,
           videoId:      extractVideoId(d.url || '') || '',
@@ -1258,7 +1572,7 @@
       .map(song => {
         const d     = prepareData[song] || {};
         const start = d.startSeconds !== undefined ? d.startSeconds : 0;
-        const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 30;
+        const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 60;
         return { name: song, videoId: extractVideoId(d.url || '') || '', startSeconds: start, endSeconds: end };
       })
       .filter(s => s.videoId);
@@ -1268,17 +1582,16 @@
       return;
     }
 
-    // Start the bingo session in the Play section
+    // Switch to the Bingo Player tab and start the session
+    switchTab('tab-player');
     playlist      = shuffle(valid);
     currentIndex  = -1;
     isPreviewMode = false;
-    loadedConfig  = null; // clear any previously loaded file
-    document.getElementById('config-loaded-info').style.display = 'none';
-    document.getElementById('btn-play-bingo').style.display     = 'none';
-    document.getElementById('btn-stop-bingo').style.display     = 'inline-block';
+    loadedConfig  = null;
+    document.getElementById('play-bingo-error').style.display  = 'none';
+    document.getElementById('btn-play-bingo').style.display    = 'none';
+    document.getElementById('btn-stop-bingo').style.display    = 'inline-block';
     updateQueueUI();
-    // Scroll to Play section and start
-    document.querySelector('.player-section:last-child').scrollIntoView({ behavior: 'smooth', block: 'start' });
     playSong(0);
   });
 
@@ -1294,10 +1607,25 @@
         const cfg = JSON.parse(ev.target.result);
         if (!cfg.songs || !Array.isArray(cfg.songs)) throw new Error();
         loadedConfig = cfg;
+
+        // Sync the song list textarea with the config's song names so that
+        // renderPrepareTable (which reads from the textarea) can show them.
+        songsInput.value = cfg.songs.map(s => s.name).join('\n');
+        songCounter.textContent = t('songs.counter', cfg.songs.length);
+
+        // Populate prepareData with URL and timing from the config
+        cfg.songs.forEach(s => {
+          prepareData[s.name] = {
+            url:          s.videoId ? `https://www.youtube.com/watch?v=${s.videoId}` : '',
+            startSeconds: s.startSeconds || 0,
+            endSeconds:   s.endSeconds  !== undefined ? s.endSeconds : (s.startSeconds || 0) + 60,
+          };
+        });
+        renderPrepareTable();
+
         const info = document.getElementById('config-loaded-info');
         info.textContent = t('player.play.loaded', cfg.songs.length);
         info.style.display = 'inline';
-        document.getElementById('btn-play-bingo').disabled = false;
       } catch {
         alert('Could not read config file. Make sure it was exported from this app.');
       }
@@ -1305,70 +1633,34 @@
     reader.readAsText(file);
   });
 
-  // ── Audio via Piped API (no embedding, no API key) ────────────
-  // Piped is an open-source YouTube frontend that proxies audio streams.
-  // We fetch the raw audio URL and play it with <audio> — YouTube's
-  // embedding restrictions don't apply at all.
+  // ── YouTube IFrame API ─────────────────────────────────────────
+  // Official YouTube embed API — no CORS, no third-party services, always works.
+  // The IFrame player renders directly inside #yt-player-container.
 
-  // We try multiple Piped instances. For each one we first attempt a
-  // direct fetch (fast when CORS is present), then fall back to routing
-  // through corsproxy.io (handles both missing CORS headers and lets us
-  // still read 502 bodies to skip broken instances quickly).
-  const PIPED_INSTANCES = [
-    'https://pipedapi.kavin.rocks',
-    'https://pipedapi.adminforge.de',
-    'https://pipedapi.in.projectsegfau.lt',
-    'https://pipedapi.mha.fi',
-  ];
-  const CORS_PROXY = 'https://corsproxy.io/?';
+  // Load the API script dynamically so onYouTubeIframeAPIReady is guaranteed
+  // to be defined before the script finishes loading.
+  (function () {
+    const tag = document.createElement('script');
+    tag.src   = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  })();
 
-  let audioEl = null;
+  let ytPlayer   = null;
+  let ytApiReady = false;
+  window.onYouTubeIframeAPIReady = function () { ytApiReady = true; };
 
-  function getAudioEl() {
-    if (!audioEl) {
-      audioEl = new Audio();
-      audioEl.addEventListener('ended', () => { if (!isPreviewMode) onSongEnded(); });
-    }
-    return audioEl;
-  }
-
-  function fetchWithTimeout(url, ms) {
-    const ctrl = new AbortController();
-    const id   = setTimeout(() => ctrl.abort(), ms);
-    return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(id));
-  }
-
-  function sortStreams(streams) {
-    return (streams || []).sort((a, b) => {
-      // Prefer audio/mp4 (AAC) for Safari; fall back to audio/webm (Opus)
-      const aM4a = (a.mimeType || '').includes('mp4') ? 1 : 0;
-      const bM4a = (b.mimeType || '').includes('mp4') ? 1 : 0;
-      if (aM4a !== bM4a) return bM4a - aM4a;
-      return (b.bitrate || 0) - (a.bitrate || 0);
+  function waitForYtApi(timeoutMs) {
+    if (ytApiReady) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const start = Date.now();
+      const id = setInterval(() => {
+        if (ytApiReady) { clearInterval(id); resolve(); }
+        else if (Date.now() - start > (timeoutMs || 10000)) {
+          clearInterval(id);
+          reject(new Error('YouTube API failed to load.'));
+        }
+      }, 100);
     });
-  }
-
-  async function tryFetch(url, ms) {
-    try {
-      const res = await fetchWithTimeout(url, ms);
-      if (!res.ok) return null;
-      const data = await res.json();
-      const streams = sortStreams(data.audioStreams);
-      return streams.length ? streams[0].url : null;
-    } catch { return null; }
-  }
-
-  async function fetchAudioStream(videoId) {
-    for (const base of PIPED_INSTANCES) {
-      const apiUrl = `${base}/streams/${videoId}`;
-      // Direct first (4 s — CORS errors fail instantly so this barely costs time)
-      const direct = await tryFetch(apiUrl, 4000);
-      if (direct) return direct;
-      // Via CORS proxy (handles missing headers + lets us read any error status)
-      const proxied = await tryFetch(CORS_PROXY + encodeURIComponent(apiUrl), 8000);
-      if (proxied) return proxied;
-    }
-    throw new Error('All Piped instances unreachable.');
   }
 
   function showPlayerError(msg) {
@@ -1382,55 +1674,67 @@
     el.textContent   = '';
   }
 
-  function setThumb(videoId) {
-    const c = document.getElementById('yt-player-container');
-    c.innerHTML = '';
-    const img = document.createElement('img');
-    img.src   = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-    c.appendChild(img);
-  }
-
-  function setThumbLoading() {
-    const c = document.getElementById('yt-player-container');
-    c.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;'
-      + 'justify-content:center;font-size:.7rem;color:#666;">Loading…</div>';
-  }
-
   async function ytLoad(videoId, startSeconds) {
     document.getElementById('player-ui').style.display = 'flex';
-    setThumbLoading();
     clearPlayerError();
+
     try {
-      const url = await fetchAudioStream(videoId);
-      const audio = getAudioEl();
-      audio.src         = url;
-      audio.currentTime = startSeconds;
-      const playPromise = audio.play();
-      if (playPromise) playPromise.catch(() =>
-        showPlayerError('Autoplay blocked — click anywhere on the page then press Resume.')
-      );
-      setThumb(videoId);
-    } catch (e) {
-      setThumb(videoId);
-      showPlayerError('Could not load audio stream. Check your internet connection or try a different video URL.');
+      await waitForYtApi();
+    } catch {
+      showPlayerError('Could not load YouTube player. Check your internet connection.');
+      return;
+    }
+
+    if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
+      // Reuse existing player — just swap the video
+      ytPlayer.loadVideoById({ videoId, startSeconds });
+    } else {
+      // First time: IFrame API replaces the target div with an <iframe>
+      const container = document.getElementById('yt-player-container');
+      container.innerHTML = '<div id="yt-iframe-slot"></div>';
+
+      ytPlayer = new YT.Player('yt-iframe-slot', {
+        width:  120,
+        height: 68,
+        videoId,
+        playerVars: {
+          autoplay:       1,
+          start:          Math.floor(startSeconds),
+          controls:       0,
+          modestbranding: 1,
+          rel:            0,
+          playsinline:    1,
+          iv_load_policy: 3,
+        },
+        events: {
+          onReady(e) { e.target.playVideo(); },
+          onError()  { showPlayerError('Could not load video. Check the YouTube URL or try a different one.'); },
+        },
+      });
     }
   }
 
   function ytStop() {
-    if (audioEl) { audioEl.pause(); audioEl.src = ''; }
+    if (ytPlayer) {
+      try { ytPlayer.stopVideo(); ytPlayer.destroy(); } catch (_) {}
+      ytPlayer = null;
+    }
+    const c = document.getElementById('yt-player-container');
+    if (c) c.innerHTML = '';
   }
 
   function ytCommand(func) {
-    if (!audioEl) return;
-    if (func === 'pauseVideo') audioEl.pause();
-    if (func === 'playVideo')  audioEl.play().catch(() => {});
+    if (!ytPlayer) return;
+    try {
+      if (func === 'pauseVideo') ytPlayer.pauseVideo();
+      if (func === 'playVideo')  ytPlayer.playVideo();
+    } catch (_) {}
   }
 
   // ── Playback state ─────────────────────────────────────────────
   let playlist        = [];
   let currentIndex    = -1;
-  let segmentDuration = 30000; // ms of the current segment
+  let segmentDuration = 60000; // ms of the current segment
   let segmentElapsed  = 0;     // ms elapsed before the last pause
   let segmentStart    = 0;     // Date.now() when playback (re)started
   let isPaused        = false;
@@ -1451,13 +1755,29 @@
     const total  = Math.round(segmentDuration / 1000);
     segmentStart = Date.now() - segmentElapsed;
 
+    const fsFill = document.getElementById('fs-progress-bar-fill');
+    const fsTime = document.getElementById('fs-progress-time');
+
     clearInterval(progressTimer);
     progressTimer = setInterval(() => {
       const elapsed = Date.now() - segmentStart;
       const pct     = Math.min(100, elapsed / segmentDuration * 100);
-      fill.style.width = pct + '%';
-      const elSec  = Math.min(total, Math.round(elapsed / 1000));
-      timeEl.textContent = `${fmtTime(elSec)} / ${fmtTime(total)}`;
+      const elSec   = Math.min(total, Math.round(elapsed / 1000));
+      const timeStr = `${fmtTime(elSec)} / ${fmtTime(total)}`;
+
+      fill.style.width    = pct + '%';
+      timeEl.textContent  = timeStr;
+      fsFill.style.width  = pct + '%';
+      fsTime.textContent  = timeStr;
+
+      // Fade volume to 0 over the last 2 seconds of the segment
+      const fadeMs = 2000;
+      if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
+        if (elapsed >= segmentDuration - fadeMs) {
+          const fadeRatio = Math.min(1, (elapsed - (segmentDuration - fadeMs)) / fadeMs);
+          try { ytPlayer.setVolume(Math.round(100 * (1 - fadeRatio))); } catch (_) {}
+        }
+      }
     }, 200);
   }
 
@@ -1480,12 +1800,18 @@
     segmentDuration = (end - start) * 1000;
 
     document.getElementById('player-song-name').textContent = song.name;
-    document.getElementById('ctrl-pause').textContent       = t('player.play.pause');
-    document.getElementById('progress-bar-fill').style.width = '0%';
+    syncPauseButtons();
+    document.getElementById('progress-bar-fill').style.width  = '0%';
+    document.getElementById('fs-progress-bar-fill').style.width = '0%';
     clearPlayerError();
+    // Reset volume for new song (undoes the fade-out from the previous song)
+    if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
+      try { ytPlayer.setVolume(100); } catch (_) {}
+    }
     updateQueueUI();
 
     // Start progress UI immediately (optimistic); audio loads in the background
+    updateFullscreenUI();
     startProgressUI();
     segmentTimer = setTimeout(() => advanceToNext(), segmentDuration + 1000);
     ytLoad(song.videoId, start);
@@ -1499,6 +1825,7 @@
       document.getElementById('player-song-name').textContent = '✓ Done';
       document.getElementById('progress-bar-fill').style.width = '100%';
       updateQueueUI();
+      document.getElementById('modal-finished').classList.add('modal-active');
     }
   }
 
@@ -1532,22 +1859,37 @@
     if (!isPreviewMode) advanceToNext();
   });
 
-  document.getElementById('ctrl-pause').addEventListener('click', () => {
-    const btn = document.getElementById('ctrl-pause');
+  function syncPauseButtons() {
+    const label = isPaused ? t('player.play.resume') : t('player.play.pause');
+    document.getElementById('ctrl-pause').textContent    = label;
+    document.getElementById('fs-ctrl-pause').textContent = label;
+  }
+
+  function togglePause() {
     if (isPaused) {
       isPaused = false;
       ytCommand('playVideo');
-      btn.textContent = t('player.play.pause');
+      syncPauseButtons();
       const remaining = segmentDuration - segmentElapsed;
-      startProgressUI(); // uses segmentElapsed to set segmentStart correctly
+      startProgressUI();
       segmentTimer = setTimeout(() => { if (!isPreviewMode) advanceToNext(); }, remaining + 1000);
     } else {
       isPaused       = true;
       segmentElapsed = Date.now() - segmentStart;
       clearTimers();
       ytCommand('pauseVideo');
-      btn.textContent = t('player.play.resume');
+      syncPauseButtons();
     }
+  }
+
+  document.getElementById('ctrl-pause').addEventListener('click', togglePause);
+  document.getElementById('fs-ctrl-pause').addEventListener('click', togglePause);
+
+  document.getElementById('fs-ctrl-prev').addEventListener('click', () => {
+    if (currentIndex > 0) playSong(currentIndex - 1);
+  });
+  document.getElementById('fs-ctrl-next').addEventListener('click', () => {
+    if (!isPreviewMode) advanceToNext();
   });
 
   document.getElementById('btn-stop-bingo').addEventListener('click', () => {
@@ -1559,29 +1901,111 @@
     isPreviewMode = false;
     document.getElementById('player-ui').style.display           = 'none';
     document.getElementById('btn-stop-bingo').style.display      = 'none';
-    // Re-enable Play button only if a config file is loaded
+    document.getElementById('play-bingo-error').style.display    = 'none';
     const playBtn = document.getElementById('btn-play-bingo');
     playBtn.style.display = 'inline-block';
-    playBtn.disabled      = !loadedConfig;
     document.getElementById('queue-list').innerHTML              = '';
     document.getElementById('queue-progress-label').textContent  = '';
   });
 
+  // ── Error link: go to Prepare Bingo tab ───────────────────────
+  document.getElementById('error-goto-prepare').addEventListener('click', e => {
+    e.preventDefault();
+    switchTab('tab-prepare');
+  });
+
+  // ── Finished modal ─────────────────────────────────────────────
+  document.getElementById('btn-modal-ok').addEventListener('click', () => {
+    document.getElementById('modal-finished').classList.remove('modal-active');
+  });
+
   // ── Play Bingo ─────────────────────────────────────────────────
   document.getElementById('btn-play-bingo').addEventListener('click', () => {
-    if (!loadedConfig) return;
-    const valid = loadedConfig.songs.filter(s => s.videoId);
+    const errorDiv = document.getElementById('play-bingo-error');
+    const songs = parseSongs(songsInput.value);
+    const valid = songs
+      .map(song => {
+        const d     = prepareData[song] || {};
+        const start = d.startSeconds !== undefined ? d.startSeconds : 0;
+        const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 60;
+        return { name: song, videoId: extractVideoId(d.url || '') || '', startSeconds: start, endSeconds: end };
+      })
+      .filter(s => s.videoId);
+
     if (valid.length === 0) {
-      alert('No songs with YouTube links found. Please complete the Prepare step first.');
+      errorDiv.style.display = 'block';
       return;
     }
-    playlist     = shuffle(valid);
-    currentIndex = -1;
+    errorDiv.style.display = 'none';
+
+    playlist      = shuffle(valid);
+    currentIndex  = -1;
     isPreviewMode = false;
     document.getElementById('btn-play-bingo').style.display = 'none';
     document.getElementById('btn-stop-bingo').style.display = 'inline-block';
     updateQueueUI();
     playSong(0);
+  });
+
+  // ── Fullscreen mode ────────────────────────────────────────────
+  let isFullscreen = false;
+
+  function updateFullscreenUI() {
+    if (!isFullscreen) return;
+    const song = playlist[currentIndex];
+    if (!song) return;
+
+    // Split "Song Title - Artist" into title + artist parts
+    const sep = song.name.match(/\s[-–—]\s/);
+    const splitAt = sep ? song.name.indexOf(sep[0]) : -1;
+    const title  = splitAt > 0 ? song.name.slice(0, splitAt) : song.name;
+    const artist = splitAt > 0 ? song.name.slice(splitAt + sep[0].length) : '';
+
+    document.getElementById('fs-song-title').textContent  = title;
+    document.getElementById('fs-song-artist').textContent = artist;
+
+    // Last 3 played songs (before the current one), most recent first
+    const historyDiv = document.getElementById('fs-history');
+    const lastPlayed = playlist.slice(Math.max(0, currentIndex - 5), currentIndex).reverse();
+    if (lastPlayed.length > 0) {
+      historyDiv.innerHTML = `<div class="fs-history-label">${escapeHtml(t('player.play.lastPlayed'))}</div>`;
+      lastPlayed.forEach((s, i) => {
+        const item = document.createElement('div');
+        const isOldest       = i === lastPlayed.length - 1 && lastPlayed.length === 5;
+        const isSecondOldest = i === lastPlayed.length - 2 && lastPlayed.length === 5;
+        item.className = 'fs-history-item' +
+          (isOldest       ? ' fs-history-item--oldest' : '') +
+          (isSecondOldest ? ' fs-history-item--fourth'  : '');
+        item.textContent = s.name;
+        historyDiv.appendChild(item);
+      });
+      historyDiv.style.display = 'flex';
+    } else {
+      historyDiv.style.display = 'none';
+    }
+  }
+
+  function openFullscreen() {
+    isFullscreen = true;
+    const overlay = document.getElementById('fullscreen-overlay');
+    overlay.classList.add('fs-active');
+    updateFullscreenUI();
+    // Request browser fullscreen on the overlay element
+    overlay.requestFullscreen?.().catch(() => {});
+  }
+
+  function closeFullscreen() {
+    isFullscreen = false;
+    document.getElementById('fullscreen-overlay').classList.remove('fs-active');
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }
+
+  document.getElementById('ctrl-fullscreen').addEventListener('click', openFullscreen);
+  document.getElementById('btn-exit-fullscreen').addEventListener('click', closeFullscreen);
+
+  // Handle native Escape / browser fullscreen exit
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement && isFullscreen) closeFullscreen();
   });
 
   // ── Preview a single segment (from Prepare table) ─────────────
@@ -1596,7 +2020,7 @@
     isPaused        = false;
 
     document.getElementById('player-song-name').textContent       = '▶ Preview';
-    document.getElementById('ctrl-pause').textContent             = t('player.play.pause');
+    syncPauseButtons();
     document.getElementById('progress-bar-fill').style.width      = '0%';
     document.getElementById('queue-progress-label').textContent   = '';
     document.getElementById('queue-list').innerHTML                = '';

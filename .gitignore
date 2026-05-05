@@ -131,3 +131,5 @@ dmypy.json
 # Songs and Bingo Cards files
 songs.txt
 MusicBingoCards.xlsx
+.vercel
+.env*.local

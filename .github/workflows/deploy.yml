@@ -5,13 +5,11 @@ on:
     branches:
       - main
 
-# Allow the workflow to write to Pages and create deployments
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Only one deployment at a time; don't cancel in-progress runs
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -33,7 +31,6 @@ jobs:
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          # Deploy the repo root (index.html lives here)
           path: .
 
       - name: Deploy to GitHub Pages
