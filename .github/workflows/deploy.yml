@@ -28,6 +28,11 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Inject secrets
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+        run: sed -i "s/__SPOTIFY_CLIENT_ID__/${SPOTIFY_CLIENT_ID}/g" index.html
+
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
