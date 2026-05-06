@@ -591,7 +591,10 @@
       background: rgba(255,255,255,.2);
       border-radius: 2px;
       overflow: hidden;
+      cursor: pointer;
+      transition: height .15s;
     }
+    .progress-bar-wrap:hover { height: 7px; }
     .progress-bar-fill {
       height: 100%;
       background: #a855f7;
@@ -673,7 +676,10 @@
       background: rgba(255,255,255,.18);
       border-radius: 3px;
       overflow: hidden;
+      cursor: pointer;
+      transition: height .15s;
     }
+    .fs-progress-bar-wrap:hover { height: 10px; }
     .fs-progress-bar-fill {
       height: 100%;
       background: #a855f7;
@@ -940,7 +946,7 @@
 
     <div class="player-section">
       <h2 data-i18n="player.prepare.title">Prepare Bingo</h2>
-      <p class="hint" data-i18n="player.prepare.hint">For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube automatically for all songs at once. When done, use Export Config to save your setup as a JSON file you can reload later, or press Play Bingo to start right away.</p>
+      <p class="hint" data-i18n="player.prepare.hint">For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube automatically for all songs at once.<br>When done, use Export Config to save your setup as a JSON file you can reload later, or press Play Bingo to start right away.</p>
 
       <div class="prepare-table-wrap">
         <table class="prepare-table">
@@ -1011,6 +1017,12 @@
               <button class="ctrl-btn ctrl-btn-fs" id="ctrl-fullscreen" data-i18n="player.play.fullscreen">⛶ Fullscreen</button>
             </div>
             <div class="player-error-msg" id="player-error"></div>
+            <div id="yt-link-wrap" style="display:none;margin-top:.35rem">
+              <a id="yt-link" href="#" target="_blank" rel="noopener" data-i18n="player.play.watchOnYT"
+                 style="color:rgba(255,255,255,.55);font-size:.75rem;text-decoration:none;transition:color .2s"
+                 onmouseover="this.style.color='rgba(255,255,255,.9)'"
+                 onmouseout="this.style.color='rgba(255,255,255,.55)'">▶ Watch this song on YouTube</a>
+            </div>
           </div>
         </div>
 
@@ -1126,6 +1138,7 @@
       'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
       'player.play.fullscreen':   '⛶ Fullscreen',
       'player.play.exitFullscreen': '✕ Exit Fullscreen',
+      'player.play.watchOnYT':    '▶ Watch this song on YouTube',
       'player.play.lastPlayed':   'Last 5 played:',
     },
     es: {
@@ -1191,6 +1204,7 @@
       'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
       'player.play.fullscreen':   '⛶ Pantalla completa',
       'player.play.exitFullscreen': '✕ Salir de pantalla completa',
+      'player.play.watchOnYT':    '▶ Ver esta canción en YouTube',
       'player.play.lastPlayed':   'Últimas 5 canciones:',
     },
     ca: {
@@ -1256,6 +1270,7 @@
       'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
       'player.play.fullscreen':   '⛶ Pantalla completa',
       'player.play.exitFullscreen': '✕ Sortir de pantalla completa',
+      'player.play.watchOnYT':    '▶ Mira aquesta cançó a YouTube',
       'player.play.lastPlayed':   'Últimes 5 cançons:',
     },
     eu: {
@@ -1321,6 +1336,7 @@
       'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
       'player.play.fullscreen':   '⛶ Pantaila osoa',
       'player.play.exitFullscreen': '✕ Pantaila osotik irten',
+      'player.play.watchOnYT':    '▶ Ikusi abesti hau YouTuben',
       'player.play.lastPlayed':   'Azken 5 abestiak:',
     },
   };
@@ -1639,9 +1655,7 @@
       'Provócame - Chayanne',
       'María - Ricky Martin',
       'Entre Dos Tierras - Héroes del Silencio',
-      'Vuela, Vuela - Magneto',
       'Sin Documentos - Los Rodríguez',
-      'Pelo Suelto - Gloria Trevi',
       'Sopa de Caracol - Banda Blanca',
       'De Música Ligera - Soda Stereo',
       'Oye mi Amor - Maná',
@@ -2293,6 +2307,23 @@
   let progressTimer   = null;
   let isPreviewMode   = false; // true while playing a single preview
 
+  function seekToRatio(ratio) {
+    if (!playlist[currentIndex]) return;
+    const song = playlist[currentIndex];
+    const newElapsedMs = ratio * segmentDuration;
+    const ytTime = song.startSeconds + ratio * (song.endSeconds - song.startSeconds);
+    segmentElapsed = newElapsedMs;
+    clearTimers();
+    if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
+      try { ytPlayer.setVolume(100); ytPlayer.seekTo(ytTime, true); } catch (_) {}
+    }
+    startProgressUI();
+    if (!isPaused) {
+      const remaining = segmentDuration - newElapsedMs;
+      segmentTimer = setTimeout(() => { if (!isPreviewMode) advanceToNext(); }, remaining + 1000);
+    }
+  }
+
   function clearTimers() {
     clearTimeout(segmentTimer);
     clearInterval(progressTimer);
@@ -2360,6 +2391,16 @@
       try { ytPlayer.setVolume(100); } catch (_) {}
     }
     updateQueueUI();
+
+    // Update YouTube link
+    const ytLinkWrap = document.getElementById('yt-link-wrap');
+    const ytLinkEl   = document.getElementById('yt-link');
+    if (song.videoId) {
+      ytLinkEl.href = `https://www.youtube.com/watch?v=${song.videoId}&t=${Math.floor(start)}`;
+      ytLinkWrap.style.display = '';
+    } else {
+      ytLinkWrap.style.display = 'none';
+    }
 
     // Start progress UI immediately (optimistic); audio loads in the background
     updateFullscreenUI();
@@ -2443,6 +2484,18 @@
     if (!isPreviewMode) advanceToNext();
   });
 
+  // Seekable progress bars
+  document.querySelector('.progress-bar-wrap').addEventListener('click', (e) => {
+    const rect  = e.currentTarget.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    seekToRatio(ratio);
+  });
+  document.querySelector('.fs-progress-bar-wrap').addEventListener('click', (e) => {
+    const rect  = e.currentTarget.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    seekToRatio(ratio);
+  });
+
   document.getElementById('btn-stop-bingo').addEventListener('click', () => {
     clearTimers();
     ytStop();
@@ -2453,6 +2506,7 @@
     document.getElementById('player-ui').style.display           = 'none';
     document.getElementById('btn-stop-bingo').style.display      = 'none';
     document.getElementById('play-bingo-error').style.display    = 'none';
+    document.getElementById('yt-link-wrap').style.display        = 'none';
     const playBtn = document.getElementById('btn-play-bingo');
     playBtn.style.display = 'inline-block';
     document.getElementById('queue-list').innerHTML              = '';
