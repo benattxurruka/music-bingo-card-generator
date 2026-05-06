@@ -940,7 +940,7 @@
 
     <div class="player-section">
       <h2 data-i18n="player.prepare.title">Prepare Bingo</h2>
-      <p class="hint" data-i18n="player.prepare.hint">For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. When done, use Export Config to save the configuration as a JSON file you can reload later, or press Play Bingo to start right away.</p>
+      <p class="hint" data-i18n="player.prepare.hint">For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube automatically for all songs at once. When done, use Export Config to save your setup as a JSON file you can reload later, or press Play Bingo to start right away.</p>
 
       <div class="prepare-table-wrap">
         <table class="prepare-table">
@@ -1092,7 +1092,7 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cards · ${cols} col × ${rows} row · ${songs} songs`,
       'card.title':      'Music Bingo',
       'player.prepare.title':   'Prepare Bingo',
-      'player.prepare.hint':    'For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. When done, use Export Config to save the configuration as a JSON file you can reload later, or press Play Bingo to start right away.',
+      'player.prepare.hint':    'For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube automatically for all songs at once. When done, use Export Config to save your setup as a JSON file you can reload later, or press Play Bingo to start right away.',
       'player.prepare.songCol': 'Song',
       'player.prepare.urlCol':  'YouTube URL',
       'player.prepare.startCol':'Start',
@@ -1157,7 +1157,7 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cartones · ${cols} col × ${rows} fil · ${songs} canciones`,
       'card.title':      'Bingo Musical',
       'player.prepare.title':   'Preparar el bingo',
-      'player.prepare.hint':    'Para cada canción, pega una URL de YouTube y opcionalmente establece los segundos de inicio/fin. Déjalo en blanco para reproducir los primeros 60 segundos. Cuando termines, usa Exportar configuración para guardar la configuración como un archivo JSON que puedes recargar más tarde, o pulsa Jugar al bingo para empezar.',
+      'player.prepare.hint':    'Para cada canción, pega una URL de YouTube y opcionalmente establece los segundos de inicio/fin. Déjalo en blanco para reproducir los primeros 60 segundos. Usa Rellenar URLs automáticamente para buscar YouTube automáticamente para todas las canciones a la vez. Cuando termines, usa Exportar configuración para guardar tu configuración como un archivo JSON que puedes recargar más tarde, o pulsa Jugar al bingo para empezar.',
       'player.prepare.songCol': 'Canción',
       'player.prepare.urlCol':  'URL de YouTube',
       'player.prepare.startCol':'Inicio',
@@ -1222,7 +1222,7 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cartrons · ${cols} col × ${rows} fil · ${songs} cançons`,
       'card.title':      'Bingo Musical',
       'player.prepare.title':   'Preparar el bingo',
-      'player.prepare.hint':    "Per a cada cançó, enganxa una URL de YouTube i, opcionalment, estableix els segons d'inici/fi. Deixa-ho en blanc per reproduir els primers 60 segons. Quan acabis, usa Exportar configuració per desar la configuració com a fitxer JSON que pots recarregar més tard, o prem Jugar al bingo per començar.",
+      'player.prepare.hint':    "Per a cada cançó, enganxa una URL de YouTube i, opcionalment, estableix els segons d'inici/fi. Deixa-ho en blanc per reproduir els primers 60 segons. Usa Emplena URLs automàticament per cercar YouTube automàticament totes les cançons alhora. Quan acabis, usa Exportar configuració per desar la teva configuració com a fitxer JSON que pots recarregar més tard, o prem Jugar al bingo per començar.",
       'player.prepare.songCol': 'Cançó',
       'player.prepare.urlCol':  'URL de YouTube',
       'player.prepare.startCol':'Inici',
@@ -1287,7 +1287,7 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} txartel · ${cols} zut × ${rows} err · ${songs} abesti`,
       'card.title':      'Musika Bingoa',
       'player.prepare.title':   'Bingoa prestatu',
-      'player.prepare.hint':    'Abesti bakoitzeko, itsatsi YouTube URL bat eta, aukeran, ezarri hasiera/amaiera segunduak. Hutsik utziz gero, lehenengo 60 segunduak erreproduzituko dira. Amaitzean, erabili Konfigurazioa esportatu JSON fitxategi gisa gordetzeko eta gero berriro kargatzeko, edo sakatu Bingoa jokatu zuzenean hasteko.',
+      'player.prepare.hint':    'Abesti bakoitzeko, itsatsi YouTube URL bat eta, aukeran, ezarri hasiera/amaiera segunduak. Hutsik utziz gero, lehenengo 60 segunduak erreproduzituko dira. Erabili URLak automatikoki bete YouTube-n abesti guztiak automatikoki bilatzeko. Amaitzean, erabili Konfigurazioa esportatu zure konfigurazioa JSON fitxategi gisa gordetzeko eta gero berriro kargatzeko, edo sakatu Bingoa jokatu zuzenean hasteko.',
       'player.prepare.songCol': 'Abestia',
       'player.prepare.urlCol':  'YouTube URLa',
       'player.prepare.startCol':'Hasiera',
@@ -2194,58 +2194,25 @@
   }
 
   // ── Video search (for auto-fill URLs) ─────────────────────────
-  // Tries Invidious instances directly (proper CORS headers),
-  // then falls back to Piped routed through a CORS proxy.
+  // Calls a Cloudflare Worker that proxies Piped/Invidious server-side,
+  // bypassing browser CORS restrictions. Deploy search-worker.js at
+  // https://dash.cloudflare.com and paste your *.workers.dev URL below.
 
-  const PIPED_INSTANCES = [
-    'https://pipedapi.kavin.rocks',
-    'https://piped-api.garudalinux.org',
-    'https://api.piped.projectsegfau.lt',
-  ];
-
-  const INVIDIOUS_INSTANCES = [
-    'https://inv.riverside.rocks',
-    'https://invidious.privacydev.net',
-    'https://yewtu.be',
-    'https://yt.cdaut.de',
-  ];
+  const SEARCH_WORKER_URL = 'https://music-bingo-searcher.betxurruka.workers.dev'; // ← paste your Worker URL here, e.g. 'https://bingo-search.example.workers.dev'
 
   async function fetchPipedSearch(query) {
-    const encoded = encodeURIComponent(query);
-
-    // 1. Try Invidious instances directly — they consistently send CORS headers
-    for (const instance of INVIDIOUS_INSTANCES) {
-      try {
-        const res = await fetch(
-          `${instance}/api/v1/search?q=${encoded}&type=video`,
-          { signal: AbortSignal.timeout(8000) }
-        );
-        if (!res.ok) continue;
-        const items = await res.json();
-        const video = (Array.isArray(items) ? items : []).find(i => i.videoId);
-        if (video) return `https://www.youtube.com/watch?v=${video.videoId}`;
-      } catch (_) {}
+    if (!SEARCH_WORKER_URL) return null;
+    try {
+      const res = await fetch(
+        `${SEARCH_WORKER_URL}?q=${encodeURIComponent(query)}`,
+        { signal: AbortSignal.timeout(10000) }
+      );
+      if (!res.ok) return null;
+      const { videoId } = await res.json();
+      return videoId ? `https://www.youtube.com/watch?v=${videoId}` : null;
+    } catch (_) {
+      return null;
     }
-
-    // 2. Fall back to Piped via corsproxy.io (adds the missing CORS header)
-    for (const instance of PIPED_INSTANCES) {
-      const target = `${instance}/search?q=${encoded}&filter=videos`;
-      try {
-        const res = await fetch(
-          `https://corsproxy.io/?url=${encodeURIComponent(target)}`,
-          { signal: AbortSignal.timeout(12000) }
-        );
-        if (!res.ok) continue;
-        const data  = await res.json();
-        const items = (data.items || []).filter(i => i.url && i.url.includes('watch'));
-        if (!items.length) continue;
-        const params  = new URLSearchParams(items[0].url.split('?')[1] || '');
-        const videoId = params.get('v');
-        if (videoId) return `https://www.youtube.com/watch?v=${videoId}`;
-      } catch (_) {}
-    }
-
-    return null;
   }
 
   function showPlayerError(msg) {
