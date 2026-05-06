@@ -489,7 +489,7 @@
     }
 
     /* Spotify bar */
-    #spotify-bar {
+    #spotify-bar, #spotify-bar-prepare {
       display: flex;
       align-items: center;
       background: rgba(255,255,255,.06);
@@ -987,6 +987,22 @@
       <h2 data-i18n="player.prepare.title">Prepare Bingo</h2>
       <p class="hint" data-i18n="player.prepare.hint">For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube automatically for all songs at once.<br>When done, use Export Config to save your setup as a JSON file you can reload later, or press Play Bingo to start right away.</p>
 
+      <div id="spotify-bar-prepare">
+        <div id="spotify-disconnected-prepare">
+          <button id="btn-spotify-login-prepare" class="btn-spotify">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:.4em"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.441 17.323a.75.75 0 0 1-1.032.244c-2.827-1.727-6.387-2.117-10.582-1.159a.75.75 0 0 1-.334-1.463c4.588-1.048 8.522-.597 11.704 1.346a.75.75 0 0 1 .244 1.032zm1.451-3.228a.937.937 0 0 1-1.29.308c-3.234-1.988-8.163-2.563-11.986-1.403a.937.937 0 0 1-.575-1.787c4.37-1.406 9.8-.724 13.543 1.592a.937.937 0 0 1 .308 1.29zm.125-3.359c-3.878-2.302-10.277-2.514-13.977-1.39a1.125 1.125 0 0 1-.651-2.151c4.248-1.287 11.307-1.038 15.77 1.608a1.125 1.125 0 1 1-1.142 1.933z"/></svg>
+            <span data-i18n="player.spotify.connect">Connect Spotify</span>
+          </button>
+          <span class="spotify-hint" data-i18n="player.spotify.hintPrepare">Connect Spotify Premium to preview songs without ads</span>
+        </div>
+        <div id="spotify-connected-prepare" style="display:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1db954" style="vertical-align:middle;margin-right:.35em"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.441 17.323a.75.75 0 0 1-1.032.244c-2.827-1.727-6.387-2.117-10.582-1.159a.75.75 0 0 1-.334-1.463c4.588-1.048 8.522-.597 11.704 1.346a.75.75 0 0 1 .244 1.032zm1.451-3.228a.937.937 0 0 1-1.29.308c-3.234-1.988-8.163-2.563-11.986-1.403a.937.937 0 0 1-.575-1.787c4.37-1.406 9.8-.724 13.543 1.592a.937.937 0 0 1 .308 1.29zm.125-3.359c-3.878-2.302-10.277-2.514-13.977-1.39a1.125 1.125 0 0 1-.651-2.151c4.248-1.287 11.307-1.038 15.77 1.608a1.125 1.125 0 1 1-1.142 1.933z"/></svg>
+          <span id="spotify-user-name-prepare" style="font-size:.85rem;font-weight:600;color:#1db954"></span>
+          <span style="font-size:.8rem;color:var(--muted);margin-left:.25rem" data-i18n="player.spotify.connected">· Spotify connected</span>
+          <button id="btn-spotify-logout-prepare" class="btn-spotify-logout" data-i18n="player.spotify.disconnect">Disconnect</button>
+        </div>
+      </div>
+
       <div class="prepare-table-wrap">
         <table class="prepare-table">
           <thead>
@@ -1197,6 +1213,7 @@
       'player.play.lastPlayed':   'Last 5 played:',
       'player.spotify.connect':   'Connect Spotify',
       'player.spotify.hint':      'Log in with Spotify Premium for ad-free playback',
+      'player.spotify.hintPrepare': 'Connect Spotify Premium to preview songs without ads',
       'player.spotify.connected': '· Spotify connected',
       'player.spotify.disconnect':'Disconnect',
     },
@@ -1267,6 +1284,7 @@
       'player.play.lastPlayed':   'Últimas 5 canciones:',
       'player.spotify.connect':   'Conectar Spotify',
       'player.spotify.hint':      'Inicia sesión con Spotify Premium para reproducción sin anuncios',
+      'player.spotify.hintPrepare': 'Conecta Spotify Premium para previsualizar canciones sin anuncios',
       'player.spotify.connected': '· Spotify conectado',
       'player.spotify.disconnect':'Desconectar',
     },
@@ -1337,6 +1355,7 @@
       'player.play.lastPlayed':   'Últimes 5 cançons:',
       'player.spotify.connect':   'Connecta Spotify',
       'player.spotify.hint':      'Inicia sessió amb Spotify Premium per a reproducció sense anuncis',
+      'player.spotify.hintPrepare': 'Connecta Spotify Premium per previsualitzar cançons sense anuncis',
       'player.spotify.connected': '· Spotify connectat',
       'player.spotify.disconnect':'Desconnecta',
     },
@@ -1407,6 +1426,7 @@
       'player.play.lastPlayed':   'Azken 5 abestiak:',
       'player.spotify.connect':   'Spotify konektatu',
       'player.spotify.hint':      'Hasi saioa Spotify Premiumekin iragarkirik gabeko erreprodukziorako',
+      'player.spotify.hintPrepare': 'Konektatu Spotify Premium abestiak iragarkirik gabe aurrebistatzeko',
       'player.spotify.connected': '· Spotify konektatuta',
       'player.spotify.disconnect':'Deskonektatu',
     },
@@ -2095,7 +2115,7 @@
         const d     = prepareData[song] || {};
         const start = d.startSeconds !== undefined ? d.startSeconds : 0;
         const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 60;
-        previewSegment(vid, start, end);
+        previewSegment(vid, start, end, song);
         switchTab('tab-player');
       });
 
@@ -2386,12 +2406,17 @@
   }
 
   function _spUpdateUI(connected) {
-    document.getElementById('spotify-disconnected').style.display = connected ? 'none' : '';
-    document.getElementById('spotify-connected').style.display    = connected ? ''     : 'none';
-    if (connected) {
-      const u = localStorage.getItem('sp_u');
-      if (u) document.getElementById('spotify-user-name').textContent = u;
-    }
+    const u = connected ? (localStorage.getItem('sp_u') || '') : '';
+    [
+      ['spotify-disconnected',         'spotify-connected',         'spotify-user-name'],
+      ['spotify-disconnected-prepare', 'spotify-connected-prepare', 'spotify-user-name-prepare'],
+    ].forEach(([discId, connId, nameId]) => {
+      const disc = document.getElementById(discId);
+      const conn = document.getElementById(connId);
+      if (disc) disc.style.display = connected ? 'none' : '';
+      if (conn) conn.style.display = connected ? ''     : 'none';
+      if (connected && u) { const el = document.getElementById(nameId); if (el) el.textContent = u; }
+    });
   }
 
   function _spLoadSDK() {
@@ -2473,6 +2498,8 @@
 
   document.getElementById('btn-spotify-login').addEventListener('click', spotifyLogin);
   document.getElementById('btn-spotify-logout').addEventListener('click', spotifyLogout);
+  document.getElementById('btn-spotify-login-prepare').addEventListener('click', spotifyLogin);
+  document.getElementById('btn-spotify-logout-prepare').addEventListener('click', spotifyLogout);
   // ────────────────────────────────────────────────────────────────
 
   function showPlayerError(msg) {
@@ -2878,7 +2905,7 @@
   // ── Preview a single segment (from Prepare table) ─────────────
   let previewStopTimer = null;
 
-  function previewSegment(videoId, startSeconds, endSeconds) {
+  async function previewSegment(videoId, startSeconds, endSeconds, songName) {
     clearTimers();
     clearTimeout(previewStopTimer);
     isPreviewMode   = true;
@@ -2891,12 +2918,20 @@
     document.getElementById('progress-bar-fill').style.width      = '0%';
     document.getElementById('queue-progress-label').textContent   = '';
     document.getElementById('queue-list').innerHTML                = '';
+    if (spotifyPlayer) { try { spotifyPlayer.setVolume(1); } catch(_) {} }
+    if (ytPlayer && typeof ytPlayer.setVolume === 'function') { try { ytPlayer.setVolume(100); } catch(_) {} }
 
     startProgressUI();
     previewStopTimer = setTimeout(() => {
+      if (spotifyPlayer) { try { spotifyPlayer.pause(); } catch(_) {} }
       ytStop();
       isPreviewMode = false;
     }, segmentDuration + 1000);
+
+    if (spotifyReady && spotifyDeviceId && songName) {
+      const uri = await spotifySearchTrack(songName);
+      if (uri) { await spotifyPlayTrack(uri, startSeconds * 1000); return; }
+    }
     ytLoad(videoId, startSeconds);
   }
 </script>
