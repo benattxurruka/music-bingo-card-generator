@@ -2698,6 +2698,9 @@
     document.getElementById('progress-bar-fill').style.width  = '0%';
     document.getElementById('fs-progress-bar-fill').style.width = '0%';
     clearPlayerError();
+    // Stop both sources before starting the new song
+    ytStop();
+    if (spotifyPlayer) { try { spotifyPlayer.pause(); } catch(_) {} }
     // Reset volume for new song (undoes the fade-out from the previous song)
     if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
       try { ytPlayer.setVolume(100); } catch (_) {}
