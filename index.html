@@ -422,6 +422,7 @@
     .prepare-table input.url-valid   { border-color: #22c55e !important; }
     .prepare-table input.url-invalid { border-color: #ef4444 !important; }
     .prepare-table-wrap.spotify-active .url-input:not(.yt-override-on).url-valid { border-color: #f97316 !important; }
+    .prepare-table-wrap.spotify-active .url-input.yt-override-on.url-valid { border-color: #a855f7 !important; }
     .col-url     { min-width: 260px; }
     .col-seconds { width: 80px; }
     .col-preview { width: 44px; text-align: center; }
@@ -531,6 +532,17 @@
     }
     .btn-spotify-logout:hover { border-color: rgba(255,255,255,.5); color: #fff; }
     .spotify-hint { font-size: .78rem; color: var(--muted); }
+    .prepare-hints p { margin-bottom: .4rem; }
+    .prepare-hints p:last-child { margin-bottom: 0; }
+    .prepare-hint-youtube {
+      padding-left: .75rem;
+      border-left: 2px solid #9ca3af;
+      margin-top: .6rem !important;
+    }
+    .prepare-hint-spotify {
+      padding-left: .75rem;
+      border-left: 2px solid #1db954;
+    }
 
     /* Player UI */
     #player-ui {
@@ -990,7 +1002,12 @@
 
     <div class="player-section">
       <h2 data-i18n="player.prepare.title">Prepare Bingo</h2>
-      <p class="hint" data-i18n="player.prepare.hint">For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube automatically for all songs at once.<br>When done, use Export Config to save your setup as a JSON file you can reload later, or press Play Bingo to start right away.</p>
+      <div class="prepare-hints">
+        <p class="hint" data-i18n="player.prepare.hint.urls"></p>
+        <p class="hint" data-i18n="player.prepare.hint.save"></p>
+        <p class="hint prepare-hint-youtube" data-i18n="player.prepare.hint.youtube"></p>
+        <p class="hint prepare-hint-spotify" data-i18n="player.prepare.hint.spotify"></p>
+      </div>
 
       <div id="spotify-bar-prepare">
         <div id="spotify-disconnected-prepare">
@@ -1051,7 +1068,9 @@
 
     <div class="player-section">
       <h2 data-i18n="player.play.title">Play Bingo</h2>
-      <p class="hint" data-i18n="player.play.hint">Press Play to shuffle your songs and start the game. Fullscreen for a big-screen presentation. Songs play from the URLs you configured in the Prepare Bingo tab.</p>
+      <p class="hint" data-i18n="player.play.hint.intro"></p>
+      <p class="hint" data-i18n="player.play.hint.fullscreen"></p>
+      <p class="hint prepare-hint-youtube" data-i18n="player.play.hint.songs"></p>
 
       <div id="spotify-bar">
         <div id="spotify-disconnected">
@@ -1187,7 +1206,10 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cards · ${cols} col × ${rows} row · ${songs} songs`,
       'card.title':      'Music Bingo',
       'player.prepare.title':   'Prepare Bingo',
-      'player.prepare.hint':    'For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube automatically for all songs at once. When done, use Export Config to save your setup as a JSON file you can reload later, or press Play Bingo to start right away. If you connect a Spotify Premium account, songs will be played through Spotify instead of YouTube — no ads, no setup per song. YouTube URLs become optional: an orange border means the URL is saved but Spotify will be used; green means the song is set to use YouTube (check the "Use YouTube" box to override Spotify for individual songs).',
+      'player.prepare.hint.urls':    'For each song, paste a YouTube URL and set optional start / end times (mm:ss). Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube for all missing songs at once.',
+      'player.prepare.hint.save':    'Use Export Config to save your setup as a JSON file and reload it later with the file picker below. Or press Play Bingo to start right away.',
+      'player.prepare.hint.youtube': 'YouTube may play ads before each song. If this is disruptive, consider connecting a Spotify Premium account instead.',
+      'player.prepare.hint.spotify': 'Spotify Premium: connect your account for ad-free playback. Songs are matched automatically — no URL needed. Use the Preview button to check each song; if Spotify picked the wrong one, tick the "Use YouTube" checkbox to use a specific YouTube video instead.',
       'player.prepare.songCol': 'Song',
       'player.prepare.urlCol':  'YouTube URL',
       'player.prepare.startCol':'Start',
@@ -1204,7 +1226,9 @@
       'player.prepare.loadHint': 'Or load a previously exported config file to restore your song list and URLs:',
       'player.prepare.spotifyWasUsed': 'This config was exported with Spotify connected, but Spotify is not connected now.\n\nWithout Spotify, songs without a YouTube override will not play.\n\nConnect to Spotify now?',
       'player.play.title':      'Play Bingo',
-      'player.play.hint':       'Press Play to shuffle your songs and start the game. See it in fullscreen for a better visualisation in big-screen mode. Songs play from the YouTube URLs configured in the Prepare Bingo tab, or via Spotify if connected — see Prepare Bingo for details.',
+      'player.play.hint.intro':      'Press Play to shuffle your songs and start the game.',
+      'player.play.hint.fullscreen': 'Use fullscreen for a better big-screen presentation.',
+      'player.play.hint.songs':      'Songs play from the YouTube URLs configured in the Prepare Bingo tab, or via Spotify if connected. YouTube may play ads before each song — consider using Spotify Premium for ad-free playback.',
       'player.play.noConfig.before': 'No songs with YouTube links found. Fill in the URLs in the ',
       'player.play.noConfig.link':   'Prepare Bingo tab',
       'player.play.noConfig.after':  ' or load a config file.',
@@ -1263,7 +1287,10 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cartones · ${cols} col × ${rows} fil · ${songs} canciones`,
       'card.title':      'Bingo Musical',
       'player.prepare.title':   'Preparar el bingo',
-      'player.prepare.hint':    'Para cada canción, pega una URL de YouTube y opcionalmente establece los segundos de inicio/fin. Déjalo en blanco para reproducir los primeros 60 segundos. Usa Rellenar URLs automáticamente para buscar YouTube automáticamente para todas las canciones a la vez. Cuando termines, usa Exportar configuración para guardar tu configuración como un archivo JSON que puedes recargar más tarde, o pulsa Jugar al bingo para empezar. Si conectas una cuenta de Spotify Premium, las canciones se reproducirán a través de Spotify en lugar de YouTube — sin anuncios y sin configurar nada por canción. Las URLs de YouTube son opcionales: un borde naranja significa que la URL está guardada pero se usará Spotify; verde significa que la canción usará YouTube (marca la casilla "Usar YouTube" para forzar YouTube en canciones concretas).',
+      'player.prepare.hint.urls':    'Para cada canción, pega una URL de YouTube y establece opcionalmente inicio / fin (mm:ss). Déjalo en blanco para reproducir los primeros 60 segundos. Usa Rellenar URLs automáticamente para buscar YouTube en todas las canciones a la vez.',
+      'player.prepare.hint.save':    'Usa Exportar configuración para guardar tu configuración como JSON y recargarla más tarde. O pulsa Jugar al bingo para empezar directamente.',
+      'player.prepare.hint.youtube': 'YouTube puede reproducir anuncios antes de cada canción. Si resulta molesto, considera conectar una cuenta de Spotify Premium.',
+      'player.prepare.hint.spotify': 'Spotify Premium: conecta tu cuenta para reproducción sin anuncios. Las canciones se seleccionan automáticamente — no hace falta URL. Usa el botón de vista previa para comprobar cada canción; si Spotify ha elegido la incorrecta, marca la casilla "Usar YouTube" para usar un vídeo de YouTube específico.',
       'player.prepare.songCol': 'Canción',
       'player.prepare.urlCol':  'URL de YouTube',
       'player.prepare.startCol':'Inicio',
@@ -1280,7 +1307,9 @@
       'player.prepare.loadHint': 'O carga un archivo de configuración exportado anteriormente para restaurar tu lista de canciones y URLs:',
       'player.prepare.spotifyWasUsed': 'Esta configuración fue exportada con Spotify conectado, pero Spotify no está conectado ahora.\n\nSin Spotify, las canciones sin URL de YouTube no se reproducirán.\n\n¿Conectar a Spotify ahora?',
       'player.play.title':      'Jugar al bingo',
-      'player.play.hint':       'Pulsa Jugar para barajar tus canciones y empezar la partida. Ver en pantalla completa para una mejor visualización del juego. Las canciones se reproducen desde las URLs de YouTube configuradas en Preparar bingo, o a través de Spotify si está conectado — consulta Preparar bingo para más detalles.',
+      'player.play.hint.intro':      'Pulsa Jugar para barajar tus canciones y empezar la partida.',
+      'player.play.hint.fullscreen': 'Usa la pantalla completa para una mejor presentación en pantalla grande.',
+      'player.play.hint.songs':      'Las canciones se reproducen desde las URLs de YouTube configuradas en Preparar bingo, o a través de Spotify si está conectado. YouTube puede reproducir anuncios antes de cada canción — considera usar Spotify Premium para reproducción sin anuncios.',
       'player.play.noConfig.before': 'No hay canciones con enlaces de YouTube. Rellena las URLs en la pestaña ',
       'player.play.noConfig.link':   'Preparar bingo',
       'player.play.noConfig.after':  ' o carga un archivo de configuración.',
@@ -1339,7 +1368,10 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cartrons · ${cols} col × ${rows} fil · ${songs} cançons`,
       'card.title':      'Bingo Musical',
       'player.prepare.title':   'Preparar el bingo',
-      'player.prepare.hint':    "Per a cada cançó, enganxa una URL de YouTube i, opcionalment, estableix els segons d'inici/fi. Deixa-ho en blanc per reproduir els primers 60 segons. Usa Emplena URLs automàticament per cercar YouTube automàticament totes les cançons alhora. Quan acabis, usa Exportar configuració per desar la teva configuració com a fitxer JSON que pots recarregar més tard, o prem Jugar al bingo per començar. Si connectes un compte de Spotify Premium, les cançons es reproduiran a través de Spotify en lloc de YouTube — sense anuncis ni configuració per cançó. Les URLs de YouTube són opcionals: un border taronja significa que la URL està desada però s'usarà Spotify; verd significa que la cançó usarà YouTube (marca la casella \"Usar YouTube\" per forçar YouTube en cançons concretes).",
+      'player.prepare.hint.urls':    "Per a cada cançó, enganxa una URL de YouTube i estableix opcionalment inici / fi (mm:ss). Deixa-ho en blanc per reproduir els primers 60 segons. Usa Emplena URLs automàticament per cercar YouTube en totes les cançons alhora.",
+      'player.prepare.hint.save':    "Usa Exportar configuració per desar la teva configuració com a JSON i recarregar-la més tard. O prem Jugar al bingo per començar directament.",
+      'player.prepare.hint.youtube': "YouTube pot reproduir anuncis abans de cada cançó. Si resulta molest, considera connectar un compte de Spotify Premium.",
+      'player.prepare.hint.spotify': "Spotify Premium: connecta el teu compte per a reproducció sense anuncis. Les cançons es seleccionen automàticament — no cal URL. Usa el botó de previsualització per comprovar cada cançó; si Spotify n'ha triat una de incorrecta, marca la casella \"Usar YouTube\" per usar un vídeo de YouTube específic.",
       'player.prepare.songCol': 'Cançó',
       'player.prepare.urlCol':  'URL de YouTube',
       'player.prepare.startCol':'Inici',
@@ -1356,7 +1388,9 @@
       'player.prepare.loadHint': "O carrega un fitxer de configuració exportat prèviament per restaurar la teva llista de cançons i URLs:",
       'player.prepare.spotifyWasUsed': "Aquesta configuració va ser exportada amb Spotify connectat, però Spotify no està connectat ara.\n\nSense Spotify, les cançons sense URL de YouTube no es reproduiran.\n\nConnectar a Spotify ara?",
       'player.play.title':      'Jugar al bingo',
-      'player.play.hint':       "Prem Jugar per barrejar les teves cançons i començar la partida. Veure en pantalla completa per a una millor visualització del joc. Les cançons es reprodueixen des de les URLs de YouTube configurades a Preparar el bingo, o a través de Spotify si està connectat — consulta Preparar el bingo per a més detalls.",
+      'player.play.hint.intro':      "Prem Jugar per barrejar les teves cançons i començar la partida.",
+      'player.play.hint.fullscreen': "Usa la pantalla completa per a una millor presentació en pantalla gran.",
+      'player.play.hint.songs':      "Les cançons es reprodueixen des de les URLs de YouTube configurades a Preparar el bingo, o a través de Spotify si està connectat. YouTube pot reproduir anuncis abans de cada cançó — considera usar Spotify Premium per a reproducció sense anuncis.",
       'player.play.noConfig.before': "No hi ha cançons amb enllaços de YouTube. Omple les URLs a la pestanya ",
       'player.play.noConfig.link':   "Preparar el bingo",
       'player.play.noConfig.after':  " o carrega un fitxer de configuració.",
@@ -1415,7 +1449,10 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} txartel · ${cols} zut × ${rows} err · ${songs} abesti`,
       'card.title':      'Musika Bingoa',
       'player.prepare.title':   'Bingoa prestatu',
-      'player.prepare.hint':    'Abesti bakoitzeko, itsatsi YouTube URL bat eta, aukeran, ezarri hasiera/amaiera segunduak. Hutsik utziz gero, lehenengo 60 segunduak erreproduzituko dira. Erabili URLak automatikoki bete YouTube-n abesti guztiak automatikoki bilatzeko. Amaitzean, erabili Konfigurazioa esportatu zure konfigurazioa JSON fitxategi gisa gordetzeko eta gero berriro kargatzeko, edo sakatu Bingoa jokatu zuzenean hasteko. Spotify Premium kontu bat konektatzen baduzu, abestiak Spotify bidez erreproduzituko dira YouTube ordez — iragarkirik gabe eta konfigurazio gehigarririk behar gabe. YouTube URLak aukerakoak dira: laranja ertza esan nahi du URLa gordeta dagoela baina Spotify erabiliko dela; berdea esan nahi du abestia YouTube bidez erreproduzituko dela ("YouTube erabili" laukia markatu abesti zehatz batzuetarako YouTube behartzeko).',
+      'player.prepare.hint.urls':    'Abesti bakoitzeko, itsatsi YouTube URL bat eta ezarri aukeran hasiera / amaiera (mm:ss). Hutsik utziz gero, lehenengo 60 segunduak erreproduzituko dira. Erabili URLak automatikoki bete YouTube-n abesti guztiak bilatzeko.',
+      'player.prepare.hint.save':    'Erabili Konfigurazioa esportatu JSON gisa gordetzeko eta gero kargatzeko. Edo sakatu Bingoa jokatu zuzenean hasteko.',
+      'player.prepare.hint.youtube': 'YouTube-k iragarkiak erreproduzitu ditzake abesti bakoitzaren aurretik. Gogaikarria bada, Spotify Premium kontu bat konektatzea kontuan hartu.',
+      'player.prepare.hint.spotify': 'Spotify Premium: konektatu zure kontua iragarkirik gabeko erreprodukziorako. Abestiak automatikoki aukeratzen dira — ez da URLrik behar. Erabili aurreikuspen botoia abesti bakoitza egiaztatzeko; Spotify-k okerra aukeratu badu, markatu "YouTube erabili" laukia YouTube bideo zehatz bat erabiltzeko.',
       'player.prepare.songCol': 'Abestia',
       'player.prepare.urlCol':  'YouTube URLa',
       'player.prepare.startCol':'Hasiera',
@@ -1432,7 +1469,9 @@
       'player.prepare.loadHint': 'Edo kargatu aurretik esportatutako konfigurazio fitxategi bat zure abesti zerrenda eta URLak berreskuratzeko:',
       'player.prepare.spotifyWasUsed': 'Konfigurazio hau Spotify konektatuta zegoela esportatu zen, baina Spotify ez dago orain konektatuta.\n\nSpotify gabe, YouTube override-rik gabeko abestiak ez dira erreproduzituko.\n\nSpotify-ra konektatu orain?',
       'player.play.title':      'Bingoa jokatu',
-      'player.play.hint':       'Sakatu Jokatu abestiak nahastu eta jolasa hasteko. Ikusi pantaila osoan jokoaren aurkezpen hobea izateko. Abestiak Bingoa prestatu fitxan konfiguratutako YouTube URLetan erreproduzitzen dira, edo Spotify bidez konektatuta badago — ikusi Bingoa prestatu xehetasunetarako.',
+      'player.play.hint.intro':      'Sakatu Jokatu abestiak nahastu eta jolasa hasteko.',
+      'player.play.hint.fullscreen': 'Erabili pantaila osoa pantaila handirako aurkezpen hobea izateko.',
+      'player.play.hint.songs':      'Abestiak Bingoa prestatu fitxan konfiguratutako YouTube URLetan erreproduzitzen dira, edo Spotify bidez konektatuta badago. YouTube-k iragarkiak erreproduzitu ditzake abesti bakoitzaren aurretik — kontuan hartu Spotify Premium erabiltzea iragarkirik gabeko erreprodukziorako.',
       'player.play.noConfig.before': 'Ez dago YouTube estekak dituzten abestirik. Bete URLak ',
       'player.play.noConfig.link':   'Bingoa prestatu fitxan',
       'player.play.noConfig.after':  ' edo kargatu konfigurazio fitxategi bat.',
@@ -2784,6 +2823,7 @@
   }
 
   function advanceToNext() {
+    if (isPreviewMode) return;
     clearTimers();
     if (currentIndex < playlist.length - 1) {
       playSong(currentIndex + 1);
@@ -2902,6 +2942,14 @@
   // ── Finished modal ─────────────────────────────────────────────
   document.getElementById('btn-modal-ok').addEventListener('click', () => {
     document.getElementById('modal-finished').classList.remove('modal-active');
+  });
+
+  // ── Spotify preview link — pause before opening ─────────────────
+  document.getElementById('sp-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    const href = e.currentTarget.href;
+    if (isPreviewMode && !isPaused) togglePause();
+    window.open(href, '_blank', 'noopener');
   });
 
   // ── Play Bingo ─────────────────────────────────────────────────
