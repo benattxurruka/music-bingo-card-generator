@@ -861,11 +861,12 @@
     @media print {
       body { background: #fff; }
       header, .tab-bar, #tab-prepare, #tab-player,
-      main > .config-panel, main > .songs-panel, .actions, #results-header {
+      #tab-generator .config-panel, #tab-generator .songs-panel,
+      #tab-generator .actions, #results-header {
         display: none !important;
       }
       main { max-width: 100%; margin: 0; padding: 0; }
-      #results { display: block !important; }
+      #tab-generator, #results { display: block !important; }
       #cards-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
