@@ -534,10 +534,21 @@
     .spotify-hint { font-size: .78rem; color: var(--muted); }
     .prepare-hints p { margin-bottom: .4rem; }
     .prepare-hints p:last-child { margin-bottom: 0; }
+    .prepare-hint-block { margin-top: .75rem; }
+    .prepare-hint-block-label {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: .35rem;
+    }
+    .prepare-hint-block-label.yt  { color: #9ca3af; }
+    .prepare-hint-block-label.sp  { color: #1db954; }
+    .prepare-hint-block .hint { margin-bottom: .4rem; }
+    .prepare-hint-block .hint:last-child { margin-bottom: 0; }
     .prepare-hint-youtube {
       padding-left: .75rem;
       border-left: 2px solid #9ca3af;
-      margin-top: .6rem !important;
     }
     .prepare-hint-spotify {
       padding-left: .75rem;
@@ -932,29 +943,6 @@
       <p class="hint" data-i18n="generator.hint">Enter your songs, configure the card size, and generate printable bingo cards.</p>
     </div>
 
-    <div class="config-panel">
-      <h2 data-i18n="config.title">Card Configuration</h2>
-      <p class="hint" style="margin-bottom:1rem" data-i18n="config.hint">Set the card title, grid dimensions (columns × rows), and how many cards to generate.</p>
-      <div class="config-row">
-        <div class="config-field" style="flex:2;min-width:200px">
-          <label for="inp-title" data-i18n="config.cardTitle">Card Title</label>
-          <input type="text" id="inp-title" data-i18n-placeholder="card.title" placeholder="Music Bingo" maxlength="80">
-        </div>
-        <div class="config-field">
-          <label for="inp-columns" data-i18n="config.columns">Columns</label>
-          <input type="number" id="inp-columns" value="3" min="1" max="10">
-        </div>
-        <div class="config-field">
-          <label for="inp-rows" data-i18n="config.rows">Rows</label>
-          <input type="number" id="inp-rows" value="2" min="1" max="10">
-        </div>
-        <div class="config-field">
-          <label for="inp-cards" data-i18n="config.cards">Number of cards</label>
-          <input type="number" id="inp-cards" value="10" min="1" max="500">
-        </div>
-      </div>
-    </div>
-
     <div class="songs-panel">
       <h2 data-i18n="songs.title">Song List</h2>
       <p class="hint">
@@ -983,6 +971,29 @@
       </div>
     </div>
 
+    <div class="config-panel">
+      <h2 data-i18n="config.title">Card Configuration</h2>
+      <p class="hint" style="margin-bottom:1rem" data-i18n="config.hint">Set the card title, grid dimensions (columns × rows), and how many cards to generate.</p>
+      <div class="config-row">
+        <div class="config-field" style="flex:2;min-width:200px">
+          <label for="inp-title" data-i18n="config.cardTitle">Card Title</label>
+          <input type="text" id="inp-title" data-i18n-placeholder="card.title" placeholder="Music Bingo" maxlength="80">
+        </div>
+        <div class="config-field">
+          <label for="inp-columns" data-i18n="config.columns">Columns</label>
+          <input type="number" id="inp-columns" value="3" min="1" max="10">
+        </div>
+        <div class="config-field">
+          <label for="inp-rows" data-i18n="config.rows">Rows</label>
+          <input type="number" id="inp-rows" value="2" min="1" max="10">
+        </div>
+        <div class="config-field">
+          <label for="inp-cards" data-i18n="config.cards">Number of cards</label>
+          <input type="number" id="inp-cards" value="10" min="1" max="500">
+        </div>
+      </div>
+    </div>
+
     <div class="actions">
       <button id="btn-generate" data-i18n="actions.generate">Generate Bingo Cards</button>
       <button id="btn-print"    data-i18n="actions.print">Print / Export PDF</button>
@@ -1004,10 +1015,20 @@
     <div class="player-section">
       <h2 data-i18n="player.prepare.title">Prepare Bingo</h2>
       <div class="prepare-hints">
-        <p class="hint" data-i18n="player.prepare.hint.urls"></p>
-        <p class="hint" data-i18n="player.prepare.hint.save"></p>
-        <p class="hint prepare-hint-youtube" data-i18n="player.prepare.hint.youtube"></p>
-        <p class="hint prepare-hint-spotify" data-i18n="player.prepare.hint.spotify"></p>
+        <p class="hint" data-i18n="player.prepare.hint.songlist"></p>
+        <p class="hint" data-i18n="player.prepare.hint.methods"></p>
+
+        <div class="prepare-hint-block">
+          <div class="prepare-hint-block-label yt">YouTube</div>
+          <p class="hint prepare-hint-youtube" data-i18n="player.prepare.hint.urls"></p>
+          <p class="hint prepare-hint-youtube" data-i18n="player.prepare.hint.save"></p>
+          <p class="hint prepare-hint-youtube" data-i18n="player.prepare.hint.youtube"></p>
+        </div>
+
+        <div class="prepare-hint-block">
+          <div class="prepare-hint-block-label sp">Spotify</div>
+          <p class="hint prepare-hint-spotify" data-i18n="player.prepare.hint.spotify"></p>
+        </div>
       </div>
 
       <div id="spotify-bar-prepare">
@@ -1207,10 +1228,12 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cards · ${cols} col × ${rows} row · ${songs} songs`,
       'card.title':      'Music Bingo',
       'player.prepare.title':   'Prepare Bingo',
+      'player.prepare.hint.songlist': 'First, enter your song list in the Song List textbox in the Card Generator tab.',
+      'player.prepare.hint.methods': 'There are two ways to configure audio playback for the bingo game:',
       'player.prepare.hint.urls':    'For each song, paste a YouTube URL and set optional start / end times (mm:ss). Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube for all missing songs at once.',
       'player.prepare.hint.save':    'Use Export Config to save your setup as a JSON file and reload it later with the file picker below. Or press Play Bingo to start right away.',
       'player.prepare.hint.youtube': 'YouTube may play ads before each song. If this is disruptive, consider connecting a Spotify Premium account instead.',
-      'player.prepare.hint.spotify': 'Spotify Premium: connect your account for ad-free playback. Songs are matched automatically — no URL needed. Use the Preview button to check each song; if Spotify picked the wrong one, tick the "Use YouTube" checkbox to use a specific YouTube video instead.',
+      'player.prepare.hint.spotify': 'Spotify Premium: connect your account for ad-free playback. Songs are matched automatically — no URL needed. Use the Preview button to check each song; if Spotify picked the wrong one, you can tick the "Use YouTube" checkbox to use a specific YouTube video instead.',
       'player.prepare.songCol': 'Song',
       'player.prepare.urlCol':  'YouTube URL',
       'player.prepare.startCol':'Start',
@@ -1288,10 +1311,12 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cartones · ${cols} col × ${rows} fil · ${songs} canciones`,
       'card.title':      'Bingo Musical',
       'player.prepare.title':   'Preparar el bingo',
+      'player.prepare.hint.songlist': 'Primero, introduce tu lista de canciones en el cuadro de texto Lista de canciones de la pestaña Generador de tarjetas.',
+      'player.prepare.hint.methods': 'Hay dos formas de configurar la reproducción de audio para el juego de bingo:',
       'player.prepare.hint.urls':    'Para cada canción, pega una URL de YouTube y establece opcionalmente inicio / fin (mm:ss). Déjalo en blanco para reproducir los primeros 60 segundos. Usa Rellenar URLs automáticamente para buscar YouTube en todas las canciones a la vez.',
       'player.prepare.hint.save':    'Usa Exportar configuración para guardar tu configuración como JSON y recargarla más tarde. O pulsa Jugar al bingo para empezar directamente.',
       'player.prepare.hint.youtube': 'YouTube puede reproducir anuncios antes de cada canción. Si resulta molesto, considera conectar una cuenta de Spotify Premium.',
-      'player.prepare.hint.spotify': 'Spotify Premium: conecta tu cuenta para reproducción sin anuncios. Las canciones se seleccionan automáticamente — no hace falta URL. Usa el botón de vista previa para comprobar cada canción; si Spotify ha elegido la incorrecta, marca la casilla "Usar YouTube" para usar un vídeo de YouTube específico.',
+      'player.prepare.hint.spotify': 'Spotify Premium: conecta tu cuenta para reproducción sin anuncios. Las canciones se seleccionan automáticamente — no hace falta URL. Usa el botón de vista previa para comprobar cada canción; si Spotify ha elegido la incorrecta, puedes marcar la casilla "Usar YouTube" para usar un vídeo de YouTube específico.',
       'player.prepare.songCol': 'Canción',
       'player.prepare.urlCol':  'URL de YouTube',
       'player.prepare.startCol':'Inicio',
@@ -1369,10 +1394,12 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cartrons · ${cols} col × ${rows} fil · ${songs} cançons`,
       'card.title':      'Bingo Musical',
       'player.prepare.title':   'Preparar el bingo',
+      'player.prepare.hint.songlist': "Primer, introdueix la teva llista de cançons al quadre de text Llista de cançons de la pestanya Generador de targetes.",
+      'player.prepare.hint.methods': "Hi ha dues maneres de configurar la reproducció d'àudio per al joc de bingo:",
       'player.prepare.hint.urls':    "Per a cada cançó, enganxa una URL de YouTube i estableix opcionalment inici / fi (mm:ss). Deixa-ho en blanc per reproduir els primers 60 segons. Usa Emplena URLs automàticament per cercar YouTube en totes les cançons alhora.",
       'player.prepare.hint.save':    "Usa Exportar configuració per desar la teva configuració com a JSON i recarregar-la més tard. O prem Jugar al bingo per començar directament.",
       'player.prepare.hint.youtube': "YouTube pot reproduir anuncis abans de cada cançó. Si resulta molest, considera connectar un compte de Spotify Premium.",
-      'player.prepare.hint.spotify': "Spotify Premium: connecta el teu compte per a reproducció sense anuncis. Les cançons es seleccionen automàticament — no cal URL. Usa el botó de previsualització per comprovar cada cançó; si Spotify n'ha triat una de incorrecta, marca la casella \"Usar YouTube\" per usar un vídeo de YouTube específic.",
+      'player.prepare.hint.spotify': "Spotify Premium: connecta el teu compte per a reproducció sense anuncis. Les cançons es seleccionen automàticament — no cal URL. Usa el botó de previsualització per comprovar cada cançó; si Spotify n'ha triat una de incorrecta, pots marcar la casella \"Usar YouTube\" per usar un vídeo de YouTube específic.",
       'player.prepare.songCol': 'Cançó',
       'player.prepare.urlCol':  'URL de YouTube',
       'player.prepare.startCol':'Inici',
@@ -1450,10 +1477,12 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} txartel · ${cols} zut × ${rows} err · ${songs} abesti`,
       'card.title':      'Musika Bingoa',
       'player.prepare.title':   'Bingoa prestatu',
+      'player.prepare.hint.songlist': 'Lehenik, sartu zure abesti-zerrenda Txartelen Sorgailua fitxako Abesti-zerrenda testu-koadroan.',
+      'player.prepare.hint.methods': 'Bingo jokorako audio-erreprodukzioa konfiguratzeko bi modu daude:',
       'player.prepare.hint.urls':    'Abesti bakoitzeko, itsatsi YouTube URL bat eta ezarri aukeran hasiera / amaiera (mm:ss). Hutsik utziz gero, lehenengo 60 segunduak erreproduzituko dira. Erabili URLak automatikoki bete YouTube-n abesti guztiak bilatzeko.',
       'player.prepare.hint.save':    'Erabili Konfigurazioa esportatu JSON gisa gordetzeko eta gero kargatzeko. Edo sakatu Bingoa jokatu zuzenean hasteko.',
       'player.prepare.hint.youtube': 'YouTube-k iragarkiak erreproduzitu ditzake abesti bakoitzaren aurretik. Gogaikarria bada, Spotify Premium kontu bat konektatzea kontuan hartu.',
-      'player.prepare.hint.spotify': 'Spotify Premium: konektatu zure kontua iragarkirik gabeko erreprodukziorako. Abestiak automatikoki aukeratzen dira — ez da URLrik behar. Erabili aurreikuspen botoia abesti bakoitza egiaztatzeko; Spotify-k okerra aukeratu badu, markatu "YouTube erabili" laukia YouTube bideo zehatz bat erabiltzeko.',
+      'player.prepare.hint.spotify': 'Spotify Premium: konektatu zure kontua iragarkirik gabeko erreprodukziorako. Abestiak automatikoki aukeratzen dira — ez da URLrik behar. Erabili aurreikuspen botoia abesti bakoitza egiaztatzeko; Spotify-k okerra aukeratu badu, "YouTube erabili" laukia marka dezakezu YouTube bideo zehatz bat erabiltzeko.',
       'player.prepare.songCol': 'Abestia',
       'player.prepare.urlCol':  'YouTube URLa',
       'player.prepare.startCol':'Hasiera',
