@@ -1100,6 +1100,12 @@
                  onmouseover="this.style.color='rgba(255,255,255,.9)'"
                  onmouseout="this.style.color='rgba(255,255,255,.55)'">▶ Watch this song on YouTube</a>
             </div>
+            <div id="sp-link-wrap" style="display:none;margin-top:.25rem">
+              <a id="sp-link" href="#" target="_blank" rel="noopener" data-i18n="player.play.listenOnSpotify"
+                 style="color:rgba(255,255,255,.55);font-size:.75rem;text-decoration:none;transition:color .2s"
+                 onmouseover="this.style.color='rgba(255,255,255,.9)'"
+                 onmouseout="this.style.color='rgba(255,255,255,.55)'">▶ Listen on Spotify</a>
+            </div>
           </div>
         </div>
 
@@ -1218,7 +1224,8 @@
       'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
       'player.play.fullscreen':   '⛶ Fullscreen',
       'player.play.exitFullscreen': '✕ Exit Fullscreen',
-      'player.play.watchOnYT':    '▶ Watch this song on YouTube',
+      'player.play.watchOnYT':      '▶ Watch this song on YouTube',
+      'player.play.listenOnSpotify':'▶ Listen on Spotify',
       'player.play.lastPlayed':   'Last 5 played:',
       'player.spotify.connect':   'Connect Spotify',
       'player.spotify.loginWarning': 'Connecting to Spotify will reload the page. Any unsaved song list or configuration will be lost.\n\nContinue?',
@@ -1293,7 +1300,8 @@
       'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
       'player.play.fullscreen':   '⛶ Pantalla completa',
       'player.play.exitFullscreen': '✕ Salir de pantalla completa',
-      'player.play.watchOnYT':    '▶ Ver esta canción en YouTube',
+      'player.play.watchOnYT':      '▶ Ver esta canción en YouTube',
+      'player.play.listenOnSpotify':'▶ Escuchar en Spotify',
       'player.play.lastPlayed':   'Últimas 5 canciones:',
       'player.spotify.connect':   'Conectar Spotify',
       'player.spotify.loginWarning': 'Conectar con Spotify recargará la página. Se perderá cualquier lista de canciones o configuración no guardada.\n\n¿Continuar?',
@@ -1368,7 +1376,8 @@
       'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
       'player.play.fullscreen':   '⛶ Pantalla completa',
       'player.play.exitFullscreen': '✕ Sortir de pantalla completa',
-      'player.play.watchOnYT':    '▶ Mira aquesta cançó a YouTube',
+      'player.play.watchOnYT':      '▶ Mira aquesta cançó a YouTube',
+      'player.play.listenOnSpotify':'▶ Escolta a Spotify',
       'player.play.lastPlayed':   'Últimes 5 cançons:',
       'player.spotify.connect':   'Connecta Spotify',
       'player.spotify.loginWarning': 'Connectar amb Spotify recarregarà la pàgina. Es perdrà qualsevol llista de cançons o configuració no guardada.\n\nContinuar?',
@@ -1443,7 +1452,8 @@
       'player.play.queuePos':     (cur, total) => `${cur} / ${total}`,
       'player.play.fullscreen':   '⛶ Pantaila osoa',
       'player.play.exitFullscreen': '✕ Pantaila osotik irten',
-      'player.play.watchOnYT':    '▶ Ikusi abesti hau YouTuben',
+      'player.play.watchOnYT':      '▶ Ikusi abesti hau YouTuben',
+      'player.play.listenOnSpotify':'▶ Entzun Spotify-n',
       'player.play.lastPlayed':   'Azken 5 abestiak:',
       'player.spotify.connect':   'Spotify konektatu',
       'player.spotify.loginWarning': 'Spotify-ra konektatzeak orria berrekargatu egingo du. Gordeta ez dagoen abesti-zerrenda edo konfigurazioa galduko da.\n\nJarraitu?',
@@ -2627,12 +2637,28 @@
   let segmentStart    = 0;     // Date.now() when playback (re)started
   let isPaused        = false;
   let segmentTimer    = null;
-  let progressTimer   = null;
-  let isPreviewMode   = false; // true while playing a single preview
+  let progressTimer    = null;
+  let isPreviewMode    = false; // true while playing a single preview
+  let spotifyIsPlaying  = false; // true when current audio is coming from Spotify
+  let currentSpotifyUri = null;  // URI of the track currently playing on Spotify
 
-  // Returns true if the currently playing song is being streamed via Spotify
-  function usingSpotify() {
-    return spotifyReady && spotifyDeviceId && !!playlist[currentIndex] && !playlist[currentIndex].ytOverride;
+  function usingSpotify() { return spotifyIsPlaying; }
+
+  // Show/hide elements that differ between preview mode and full bingo play
+  function syncPreviewUI(preview) {
+    document.getElementById('ctrl-fullscreen').style.display = preview ? 'none' : '';
+    document.getElementById('ctrl-prev').style.display       = preview ? 'none' : '';
+    document.getElementById('ctrl-next').style.display       = preview ? 'none' : '';
+    document.querySelector('.player-queue').style.display    = preview ? 'none' : '';
+    // Spotify link: only in preview, only when Spotify is playing
+    const spWrap = document.getElementById('sp-link-wrap');
+    if (preview && spotifyIsPlaying && currentSpotifyUri) {
+      const trackId = currentSpotifyUri.split(':').pop();
+      document.getElementById('sp-link').href = `https://open.spotify.com/track/${trackId}`;
+      spWrap.style.display = '';
+    } else {
+      spWrap.style.display = 'none';
+    }
   }
 
   function seekToRatio(ratio) {
@@ -2705,6 +2731,7 @@
     isPreviewMode  = false;
     currentIndex   = index;
     isPaused       = false;
+    syncPreviewUI(false);
     segmentElapsed = 0;
 
     const song     = playlist[index];
@@ -2747,10 +2774,12 @@
     if (spotifyReady && spotifyDeviceId && !song.ytOverride) {
       const uri = await spotifySearchTrack(song.name);
       if (uri) {
+        spotifyIsPlaying = true;
         await spotifyPlayTrack(uri, start * 1000);
         return;
       }
     }
+    spotifyIsPlaying = false;
     ytLoad(song.videoId, start);
   }
 
@@ -2847,10 +2876,13 @@
     clearTimers();
     ytStop();
     if (spotifyPlayer) { try { spotifyPlayer.pause(); } catch(_) {} }
+    spotifyIsPlaying  = false;
+    currentSpotifyUri = null;
     playlist      = [];
     currentIndex  = -1;
     isPaused      = false;
     isPreviewMode = false;
+    syncPreviewUI(false);
     document.getElementById('player-ui').style.display           = 'none';
     document.getElementById('btn-stop-bingo').style.display      = 'none';
     document.getElementById('play-bingo-error').style.display    = 'none';
@@ -2985,13 +3017,24 @@
     previewStopTimer = setTimeout(() => {
       if (spotifyPlayer) { try { spotifyPlayer.pause(); } catch(_) {} }
       ytStop();
+      spotifyIsPlaying = false;
       isPreviewMode = false;
+      syncPreviewUI(false);
     }, segmentDuration + 1000);
 
     if (spotifyReady && spotifyDeviceId && songName) {
       const uri = await spotifySearchTrack(songName);
-      if (uri) { await spotifyPlayTrack(uri, startSeconds * 1000); return; }
+      if (uri) {
+        spotifyIsPlaying  = true;
+        currentSpotifyUri = uri;
+        syncPreviewUI(true);
+        await spotifyPlayTrack(uri, startSeconds * 1000);
+        return;
+      }
     }
+    spotifyIsPlaying  = false;
+    currentSpotifyUri = null;
+    syncPreviewUI(true);
     ytLoad(videoId, startSeconds);
   }
 </script>
