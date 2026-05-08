@@ -77,7 +77,7 @@
 
     /* ── Layout ─────────────────────────────────────────────────── */
     main {
-      max-width: 860px;
+      max-width: 1100px;
       margin: 2rem auto;
       padding: 0 1rem;
     }
@@ -424,6 +424,10 @@
     .col-url     { min-width: 260px; }
     .col-seconds { width: 80px; }
     .col-preview { width: 44px; text-align: center; }
+    .col-yt-override { width: 44px; text-align: center; display: none; }
+    .prepare-table-wrap.spotify-active .col-yt-override { display: table-cell; }
+    .prepare-table-wrap.spotify-active .url-input:not(.yt-override-on) { opacity: .35; pointer-events: none; }
+    .prepare-table-wrap.spotify-active .url-input { transition: opacity .2s; }
 
     .btn-preview-song {
       background: none;
@@ -1008,10 +1012,11 @@
           <thead>
             <tr>
               <th data-i18n="player.prepare.songCol">Song</th>
-              <th class="col-url"     data-i18n="player.prepare.urlCol">YouTube URL</th>
-              <th class="col-seconds" data-i18n="player.prepare.startCol">Start</th>
-              <th class="col-seconds" data-i18n="player.prepare.endCol">End</th>
-              <th class="col-preview"></th>
+              <th class="col-url"         data-i18n="player.prepare.urlCol">YouTube URL</th>
+              <th class="col-seconds"     data-i18n="player.prepare.startCol">Start</th>
+              <th class="col-seconds"     data-i18n="player.prepare.endCol">End</th>
+              <th class="col-yt-override" title="" data-i18n="player.prepare.ytOverrideCol">YT</th>
+              <th class="col-preview" data-i18n="player.prepare.previewCol">Preview</th>
             </tr>
           </thead>
           <tbody id="prepare-tbody">
@@ -1180,6 +1185,8 @@
       'player.prepare.urlCol':  'YouTube URL',
       'player.prepare.startCol':'Start',
       'player.prepare.endCol':  'End',
+      'player.prepare.ytOverrideCol': 'Use YouTube',
+      'player.prepare.previewCol':    'Preview',
       'player.prepare.playNow': 'Play Bingo',
       'player.prepare.export':          'Export Config',
       'player.prepare.autofill':        'Auto-fill URLs',
@@ -1212,6 +1219,7 @@
       'player.play.watchOnYT':    '▶ Watch this song on YouTube',
       'player.play.lastPlayed':   'Last 5 played:',
       'player.spotify.connect':   'Connect Spotify',
+      'player.spotify.loginWarning': 'Connecting to Spotify will reload the page. Any unsaved song list or configuration will be lost.\n\nContinue?',
       'player.spotify.hint':      'Log in with Spotify Premium for ad-free playback',
       'player.spotify.hintPrepare': 'Connect Spotify Premium to preview songs without ads',
       'player.spotify.connected': '· Spotify connected',
@@ -1251,6 +1259,8 @@
       'player.prepare.urlCol':  'URL de YouTube',
       'player.prepare.startCol':'Inicio',
       'player.prepare.endCol':  'Fin',
+      'player.prepare.ytOverrideCol': 'Usar YouTube',
+      'player.prepare.previewCol':    'Vista previa',
       'player.prepare.playNow': 'Jugar al bingo',
       'player.prepare.export':          'Exportar configuración',
       'player.prepare.autofill':        'Rellenar URLs automáticamente',
@@ -1283,6 +1293,7 @@
       'player.play.watchOnYT':    '▶ Ver esta canción en YouTube',
       'player.play.lastPlayed':   'Últimas 5 canciones:',
       'player.spotify.connect':   'Conectar Spotify',
+      'player.spotify.loginWarning': 'Conectar con Spotify recargará la página. Se perderá cualquier lista de canciones o configuración no guardada.\n\n¿Continuar?',
       'player.spotify.hint':      'Inicia sesión con Spotify Premium para reproducción sin anuncios',
       'player.spotify.hintPrepare': 'Conecta Spotify Premium para previsualizar canciones sin anuncios',
       'player.spotify.connected': '· Spotify conectado',
@@ -1322,6 +1333,8 @@
       'player.prepare.urlCol':  'URL de YouTube',
       'player.prepare.startCol':'Inici',
       'player.prepare.endCol':  'Fi',
+      'player.prepare.ytOverrideCol': 'Usar YouTube',
+      'player.prepare.previewCol':    'Previsualització',
       'player.prepare.playNow': 'Jugar al bingo',
       'player.prepare.export':          'Exportar configuració',
       'player.prepare.autofill':        'Emplena URLs automàticament',
@@ -1354,6 +1367,7 @@
       'player.play.watchOnYT':    '▶ Mira aquesta cançó a YouTube',
       'player.play.lastPlayed':   'Últimes 5 cançons:',
       'player.spotify.connect':   'Connecta Spotify',
+      'player.spotify.loginWarning': 'Connectar amb Spotify recarregarà la pàgina. Es perdrà qualsevol llista de cançons o configuració no guardada.\n\nContinuar?',
       'player.spotify.hint':      'Inicia sessió amb Spotify Premium per a reproducció sense anuncis',
       'player.spotify.hintPrepare': 'Connecta Spotify Premium per previsualitzar cançons sense anuncis',
       'player.spotify.connected': '· Spotify connectat',
@@ -1393,6 +1407,8 @@
       'player.prepare.urlCol':  'YouTube URLa',
       'player.prepare.startCol':'Hasiera',
       'player.prepare.endCol':  'Amaiera',
+      'player.prepare.ytOverrideCol': 'YouTube erabili',
+      'player.prepare.previewCol':    'Aurrebista',
       'player.prepare.playNow': 'Bingoa jokatu',
       'player.prepare.export':          'Konfigurazioa esportatu',
       'player.prepare.autofill':        'URLak automatikoki bete',
@@ -1425,6 +1441,7 @@
       'player.play.watchOnYT':    '▶ Ikusi abesti hau YouTuben',
       'player.play.lastPlayed':   'Azken 5 abestiak:',
       'player.spotify.connect':   'Spotify konektatu',
+      'player.spotify.loginWarning': 'Spotify-ra konektatzeak orria berrekargatu egingo du. Gordeta ez dagoen abesti-zerrenda edo konfigurazioa galduko da.\n\nJarraitu?',
       'player.spotify.hint':      'Hasi saioa Spotify Premiumekin iragarkirik gabeko erreprodukziorako',
       'player.spotify.hintPrepare': 'Konektatu Spotify Premium abestiak iragarkirik gabe aurrebistatzeko',
       'player.spotify.connected': '· Spotify konektatuta',
@@ -2058,11 +2075,12 @@
       const saved      = prepareData[song] || {};
       const startDisp  = saved.startSeconds !== undefined ? fmtMmSs(saved.startSeconds) : '';
       const endDisp    = saved.endSeconds   !== undefined ? fmtMmSs(saved.endSeconds)   : '';
+      const isOverride = !!(saved.ytOverride);
       const tr         = document.createElement('tr');
       tr.innerHTML = `
         <td class="song-name-cell" title="${escapeHtml(song)}">${escapeHtml(song)}</td>
         <td class="col-url">
-          <input type="text" class="url-input"
+          <input type="text" class="url-input${isOverride ? ' yt-override-on' : ''}"
             placeholder="https://youtube.com/watch?v=..."
             value="${escapeHtml(saved.url || '')}">
         </td>
@@ -2074,14 +2092,18 @@
           <input type="text" class="end-input" placeholder="1:00"
             value="${escapeHtml(endDisp)}">
         </td>
+        <td class="col-yt-override">
+          <input type="checkbox" class="yt-override-cb" title="${escapeHtml(t('player.prepare.ytOverrideCol'))}"${isOverride ? ' checked' : ''}>
+        </td>
         <td class="col-preview">
           <button class="btn-preview-song" title="Preview">▶</button>
         </td>`;
 
-      const urlInput   = tr.querySelector('.url-input');
-      const startInput = tr.querySelector('.start-input');
-      const endInput   = tr.querySelector('.end-input');
-      const previewBtn = tr.querySelector('.btn-preview-song');
+      const urlInput    = tr.querySelector('.url-input');
+      const startInput  = tr.querySelector('.start-input');
+      const endInput    = tr.querySelector('.end-input');
+      const overrideCb  = tr.querySelector('.yt-override-cb');
+      const previewBtn  = tr.querySelector('.btn-preview-song');
 
       function saveRow() {
         const vid = extractVideoId(urlInput.value.trim());
@@ -2095,8 +2117,14 @@
           url:          urlInput.value.trim(),
           startSeconds: parseTimeInput(startInput.value),
           endSeconds:   parseTimeInput(endInput.value),
+          ytOverride:   overrideCb.checked,
         };
       }
+
+      overrideCb.addEventListener('change', () => {
+        urlInput.classList.toggle('yt-override-on', overrideCb.checked);
+        saveRow();
+      });
 
       urlInput.addEventListener('input', saveRow);
       startInput.addEventListener('input', saveRow);
@@ -2110,12 +2138,17 @@
 
       previewBtn.addEventListener('click', () => {
         saveRow();
-        const vid = extractVideoId(urlInput.value.trim());
-        if (!vid) { alert('Please enter a valid YouTube URL first.'); return; }
         const d     = prepareData[song] || {};
         const start = d.startSeconds !== undefined ? d.startSeconds : 0;
         const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 60;
-        previewSegment(vid, start, end, song);
+        const useSpotify = spotifyReady && spotifyDeviceId && !overrideCb.checked;
+        if (!useSpotify) {
+          const vid = extractVideoId(urlInput.value.trim());
+          if (!vid) { alert('Please enter a valid YouTube URL first.'); return; }
+          previewSegment(vid, start, end, null);
+        } else {
+          previewSegment(null, start, end, song);
+        }
         switchTab('tab-player');
       });
 
@@ -2213,9 +2246,9 @@
         const d     = prepareData[song] || {};
         const start = d.startSeconds !== undefined ? d.startSeconds : 0;
         const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 60;
-        return { name: song, videoId: extractVideoId(d.url || '') || '', startSeconds: start, endSeconds: end };
+        return { name: song, videoId: extractVideoId(d.url || '') || '', startSeconds: start, endSeconds: end, ytOverride: !!d.ytOverride };
       })
-      .filter(s => s.videoId);
+      .filter(s => s.videoId || (spotifyReady && !s.ytOverride));
 
     if (valid.length === 0) {
       alert('No songs have YouTube URLs yet. Fill in the URLs in the table above first.');
@@ -2345,6 +2378,7 @@
 
   async function spotifyLogin() {
     if (!SPOTIFY_CLIENT_ID) { alert('Set SPOTIFY_CLIENT_ID in index.html first.'); return; }
+    if (!confirm(t('player.spotify.loginWarning'))) return;
     const v = _spRandStr(64);
     sessionStorage.setItem('sp_v', v);
     const p = new URLSearchParams({
@@ -2417,6 +2451,8 @@
       if (conn) conn.style.display = connected ? ''     : 'none';
       if (connected && u) { const el = document.getElementById(nameId); if (el) el.textContent = u; }
     });
+    // Show override column and dim URL inputs when Spotify is active
+    document.querySelector('.prepare-table-wrap')?.classList.toggle('spotify-active', connected);
   }
 
   function _spLoadSDK() {
@@ -2685,8 +2721,8 @@
     startProgressUI();
     segmentTimer = setTimeout(() => advanceToNext(), segmentDuration + 1000);
 
-    // Use Spotify if connected, fall back to YouTube
-    if (spotifyReady && spotifyDeviceId) {
+    // Use Spotify if connected and not overridden for this song, fall back to YouTube
+    if (spotifyReady && spotifyDeviceId && !song.ytOverride) {
       const uri = await spotifySearchTrack(song.name);
       if (uri) {
         await spotifyPlayTrack(uri, start * 1000);
@@ -2823,9 +2859,9 @@
         const d     = prepareData[song] || {};
         const start = d.startSeconds !== undefined ? d.startSeconds : 0;
         const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 60;
-        return { name: song, videoId: extractVideoId(d.url || '') || '', startSeconds: start, endSeconds: end };
+        return { name: song, videoId: extractVideoId(d.url || '') || '', startSeconds: start, endSeconds: end, ytOverride: !!d.ytOverride };
       })
-      .filter(s => s.videoId);
+      .filter(s => s.videoId || (spotifyReady && !s.ytOverride));
 
     if (valid.length === 0) {
       errorDiv.style.display = 'block';
