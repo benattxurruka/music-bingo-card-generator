@@ -2616,6 +2616,11 @@
   let progressTimer   = null;
   let isPreviewMode   = false; // true while playing a single preview
 
+  // Returns true if the currently playing song is being streamed via Spotify
+  function usingSpotify() {
+    return spotifyReady && spotifyDeviceId && !!playlist[currentIndex] && !playlist[currentIndex].ytOverride;
+  }
+
   function seekToRatio(ratio) {
     if (!playlist[currentIndex]) return;
     const song = playlist[currentIndex];
@@ -2623,7 +2628,7 @@
     const ytTime = song.startSeconds + ratio * (song.endSeconds - song.startSeconds);
     segmentElapsed = newElapsedMs;
     clearTimers();
-    if (spotifyPlayer && spotifyReady) {
+    if (usingSpotify()) {
       try { spotifyPlayer.setVolume(1); spotifyPlayer.seek(Math.round(song.startSeconds * 1000 + newElapsedMs)); } catch(_) {}
     } else if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
       try { ytPlayer.setVolume(100); ytPlayer.seekTo(ytTime, true); } catch (_) {}
@@ -2786,7 +2791,7 @@
   function togglePause() {
     if (isPaused) {
       isPaused = false;
-      if (spotifyPlayer && spotifyReady) { try { spotifyPlayer.resume(); } catch(_) {} }
+      if (usingSpotify()) { try { spotifyPlayer.resume(); } catch(_) {} }
       else ytCommand('playVideo');
       syncPauseButtons();
       const remaining = segmentDuration - segmentElapsed;
@@ -2796,7 +2801,7 @@
       isPaused       = true;
       segmentElapsed = Date.now() - segmentStart;
       clearTimers();
-      if (spotifyPlayer && spotifyReady) { try { spotifyPlayer.pause(); } catch(_) {} }
+      if (usingSpotify()) { try { spotifyPlayer.pause(); } catch(_) {} }
       else ytCommand('pauseVideo');
       syncPauseButtons();
     }
