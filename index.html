@@ -2949,7 +2949,21 @@
     e.preventDefault();
     const href = e.currentTarget.href;
     if (isPreviewMode && !isPaused) togglePause();
+    // Disconnect our SDK device so Spotify can freely use its own player in
+    // the newly opened tab (otherwise Spotify routes playback to our device
+    // and errors because we don't handle incoming play requests).
+    if (spotifyPlayer) {
+      try { spotifyPlayer.disconnect(); } catch(_) {}
+      spotifyReady = false;
+      spotifyDeviceId = null;
+    }
     window.open(href, '_blank', 'noopener');
+    // Reconnect automatically when the user comes back to this tab.
+    document.addEventListener('visibilitychange', function _spReconnect() {
+      if (document.visibilityState !== 'visible') return;
+      document.removeEventListener('visibilitychange', _spReconnect);
+      if (spotifyPlayer) { try { spotifyPlayer.connect(); } catch(_) {} }
+    });
   });
 
   // ── Play Bingo ─────────────────────────────────────────────────
