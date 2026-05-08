@@ -1095,13 +1095,6 @@
       <p class="hint prepare-hint-youtube" data-i18n="player.play.hint.songs"></p>
 
       <div id="spotify-bar">
-        <div id="spotify-disconnected">
-          <button id="btn-spotify-login" class="btn-spotify">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:.4em"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.441 17.323a.75.75 0 0 1-1.032.244c-2.827-1.727-6.387-2.117-10.582-1.159a.75.75 0 0 1-.334-1.463c4.588-1.048 8.522-.597 11.704 1.346a.75.75 0 0 1 .244 1.032zm1.451-3.228a.937.937 0 0 1-1.29.308c-3.234-1.988-8.163-2.563-11.986-1.403a.937.937 0 0 1-.575-1.787c4.37-1.406 9.8-.724 13.543 1.592a.937.937 0 0 1 .308 1.29zm.125-3.359c-3.878-2.302-10.277-2.514-13.977-1.39a1.125 1.125 0 0 1-.651-2.151c4.248-1.287 11.307-1.038 15.77 1.608a1.125 1.125 0 1 1-1.142 1.933z"/></svg>
-            <span data-i18n="player.spotify.connect">Connect Spotify</span>
-          </button>
-          <span class="spotify-hint" data-i18n="player.spotify.hint">Log in with Spotify Premium for ad-free playback</span>
-        </div>
         <div id="spotify-connected" style="display:none">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="#1db954" style="vertical-align:middle;margin-right:.35em"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.441 17.323a.75.75 0 0 1-1.032.244c-2.827-1.727-6.387-2.117-10.582-1.159a.75.75 0 0 1-.334-1.463c4.588-1.048 8.522-.597 11.704 1.346a.75.75 0 0 1 .244 1.032zm1.451-3.228a.937.937 0 0 1-1.29.308c-3.234-1.988-8.163-2.563-11.986-1.403a.937.937 0 0 1-.575-1.787c4.37-1.406 9.8-.724 13.543 1.592a.937.937 0 0 1 .308 1.29zm.125-3.359c-3.878-2.302-10.277-2.514-13.977-1.39a1.125 1.125 0 0 1-.651-2.151c4.248-1.287 11.307-1.038 15.77 1.608a1.125 1.125 0 1 1-1.142 1.933z"/></svg>
           <span id="spotify-user-name" style="font-size:.85rem;font-weight:600;color:#1db954"></span>
@@ -1228,7 +1221,7 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cards · ${cols} col × ${rows} row · ${songs} songs`,
       'card.title':      'Music Bingo',
       'player.prepare.title':   'Prepare Bingo',
-      'player.prepare.hint.songlist': 'First, enter your song list in the Song List textbox in the Card Generator tab.',
+      'player.prepare.hint.songlist': 'If you haven\'t already, first enter your song list in the Song List textbox in the Card Generator tab.',
       'player.prepare.hint.methods': 'There are two ways to configure audio playback for the bingo game:',
       'player.prepare.hint.urls':    'For each song, paste a YouTube URL and set optional start / end times (mm:ss). Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube for all missing songs at once.',
       'player.prepare.hint.save':    'Use Export Config to save your setup as a JSON file and reload it later with the file picker below. Or press Play Bingo to start right away.',
@@ -1252,7 +1245,7 @@
       'player.play.title':      'Play Bingo',
       'player.play.hint.intro':      'Press Play to shuffle your songs and start the game.',
       'player.play.hint.fullscreen': 'Use fullscreen for a better big-screen presentation.',
-      'player.play.hint.songs':      'Songs play from the YouTube URLs configured in the Prepare Bingo tab, or via Spotify if connected. YouTube may play ads before each song — consider using Spotify Premium for ad-free playback.',
+      'player.play.hint.songs':      'Songs play from the YouTube URLs configured in the Prepare Bingo tab, or via Spotify if connected.',
       'player.play.noConfig.before': 'No songs with YouTube links found. Fill in the URLs in the ',
       'player.play.noConfig.link':   'Prepare Bingo tab',
       'player.play.noConfig.after':  ' or load a config file.',
@@ -1311,7 +1304,7 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cartones · ${cols} col × ${rows} fil · ${songs} canciones`,
       'card.title':      'Bingo Musical',
       'player.prepare.title':   'Preparar el bingo',
-      'player.prepare.hint.songlist': 'Primero, introduce tu lista de canciones en el cuadro de texto Lista de canciones de la pestaña Generador de tarjetas.',
+      'player.prepare.hint.songlist': 'Si no lo has hecho, primero introduce tu lista de canciones en el cuadro de texto Lista de canciones de la pestaña Generador de tarjetas.',
       'player.prepare.hint.methods': 'Hay dos formas de configurar la reproducción de audio para el juego de bingo:',
       'player.prepare.hint.urls':    'Para cada canción, pega una URL de YouTube y establece opcionalmente inicio / fin (mm:ss). Déjalo en blanco para reproducir los primeros 60 segundos. Usa Rellenar URLs automáticamente para buscar YouTube en todas las canciones a la vez.',
       'player.prepare.hint.save':    'Usa Exportar configuración para guardar tu configuración como JSON y recargarla más tarde. O pulsa Jugar al bingo para empezar directamente.',
@@ -1335,7 +1328,7 @@
       'player.play.title':      'Jugar al bingo',
       'player.play.hint.intro':      'Pulsa Jugar para barajar tus canciones y empezar la partida.',
       'player.play.hint.fullscreen': 'Usa la pantalla completa para una mejor presentación en pantalla grande.',
-      'player.play.hint.songs':      'Las canciones se reproducen desde las URLs de YouTube configuradas en Preparar bingo, o a través de Spotify si está conectado. YouTube puede reproducir anuncios antes de cada canción — considera usar Spotify Premium para reproducción sin anuncios.',
+      'player.play.hint.songs':      'Las canciones se reproducen desde las URLs de YouTube configuradas en Preparar bingo, o a través de Spotify si está conectado.',
       'player.play.noConfig.before': 'No hay canciones con enlaces de YouTube. Rellena las URLs en la pestaña ',
       'player.play.noConfig.link':   'Preparar bingo',
       'player.play.noConfig.after':  ' o carga un archivo de configuración.',
@@ -1394,7 +1387,7 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} cartrons · ${cols} col × ${rows} fil · ${songs} cançons`,
       'card.title':      'Bingo Musical',
       'player.prepare.title':   'Preparar el bingo',
-      'player.prepare.hint.songlist': "Primer, introdueix la teva llista de cançons al quadre de text Llista de cançons de la pestanya Generador de targetes.",
+      'player.prepare.hint.songlist': "Si encara no ho has fet, primer introdueix la teva llista de cançons al quadre de text Llista de cançons de la pestanya Generador de targetes.",
       'player.prepare.hint.methods': "Hi ha dues maneres de configurar la reproducció d'àudio per al joc de bingo:",
       'player.prepare.hint.urls':    "Per a cada cançó, enganxa una URL de YouTube i estableix opcionalment inici / fi (mm:ss). Deixa-ho en blanc per reproduir els primers 60 segons. Usa Emplena URLs automàticament per cercar YouTube en totes les cançons alhora.",
       'player.prepare.hint.save':    "Usa Exportar configuració per desar la teva configuració com a JSON i recarregar-la més tard. O prem Jugar al bingo per començar directament.",
@@ -1418,7 +1411,7 @@
       'player.play.title':      'Jugar al bingo',
       'player.play.hint.intro':      "Prem Jugar per barrejar les teves cançons i començar la partida.",
       'player.play.hint.fullscreen': "Usa la pantalla completa per a una millor presentació en pantalla gran.",
-      'player.play.hint.songs':      "Les cançons es reprodueixen des de les URLs de YouTube configurades a Preparar el bingo, o a través de Spotify si està connectat. YouTube pot reproduir anuncis abans de cada cançó — considera usar Spotify Premium per a reproducció sense anuncis.",
+      'player.play.hint.songs':      "Les cançons es reprodueixen des de les URLs de YouTube configurades a Preparar el bingo, o a través de Spotify si està connectat.",
       'player.play.noConfig.before': "No hi ha cançons amb enllaços de YouTube. Omple les URLs a la pestanya ",
       'player.play.noConfig.link':   "Preparar el bingo",
       'player.play.noConfig.after':  " o carrega un fitxer de configuració.",
@@ -1477,7 +1470,7 @@
       'results.meta':    (cards, cols, rows, songs) => `${cards} txartel · ${cols} zut × ${rows} err · ${songs} abesti`,
       'card.title':      'Musika Bingoa',
       'player.prepare.title':   'Bingoa prestatu',
-      'player.prepare.hint.songlist': 'Lehenik, sartu zure abesti-zerrenda Txartelen Sorgailua fitxako Abesti-zerrenda testu-koadroan.',
+      'player.prepare.hint.songlist': 'Oraindik egin ez baduzu, lehenik sartu zure abesti-zerrenda Txartelen Sorgailua fitxako Abesti-zerrenda testu-koadroan.',
       'player.prepare.hint.methods': 'Bingo jokorako audio-erreprodukzioa konfiguratzeko bi modu daude:',
       'player.prepare.hint.urls':    'Abesti bakoitzeko, itsatsi YouTube URL bat eta ezarri aukeran hasiera / amaiera (mm:ss). Hutsik utziz gero, lehenengo 60 segunduak erreproduzituko dira. Erabili URLak automatikoki bete YouTube-n abesti guztiak bilatzeko.',
       'player.prepare.hint.save':    'Erabili Konfigurazioa esportatu JSON gisa gordetzeko eta gero kargatzeko. Edo sakatu Bingoa jokatu zuzenean hasteko.',
@@ -1501,7 +1494,7 @@
       'player.play.title':      'Bingoa jokatu',
       'player.play.hint.intro':      'Sakatu Jokatu abestiak nahastu eta jolasa hasteko.',
       'player.play.hint.fullscreen': 'Erabili pantaila osoa pantaila handirako aurkezpen hobea izateko.',
-      'player.play.hint.songs':      'Abestiak Bingoa prestatu fitxan konfiguratutako YouTube URLetan erreproduzitzen dira, edo Spotify bidez konektatuta badago. YouTube-k iragarkiak erreproduzitu ditzake abesti bakoitzaren aurretik — kontuan hartu Spotify Premium erabiltzea iragarkirik gabeko erreprodukziorako.',
+      'player.play.hint.songs':      'Abestiak Bingoa prestatu fitxan konfiguratutako YouTube URLetan erreproduzitzen dira, edo Spotify bidez konektatuta badago.',
       'player.play.noConfig.before': 'Ez dago YouTube estekak dituzten abestirik. Bete URLak ',
       'player.play.noConfig.link':   'Bingoa prestatu fitxan',
       'player.play.noConfig.after':  ' edo kargatu konfigurazio fitxategi bat.',
@@ -2638,7 +2631,7 @@
     }
   })();
 
-  document.getElementById('btn-spotify-login').addEventListener('click', spotifyLogin);
+  document.getElementById('btn-spotify-login')?.addEventListener('click', spotifyLogin);
   document.getElementById('btn-spotify-logout').addEventListener('click', spotifyLogout);
   document.getElementById('btn-spotify-login-prepare').addEventListener('click', spotifyLogin);
   document.getElementById('btn-spotify-logout-prepare').addEventListener('click', spotifyLogout);
