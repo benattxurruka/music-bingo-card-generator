@@ -907,7 +907,7 @@
   <div id="lang-switcher">
     <select id="lang-select">
       <option value="en">English</option>
-      <option value="es">Español</option>
+      <option value="es" selected>Español</option>
       <option value="ca">Català</option>
       <option value="eu">Euskara</option>
     </select>
@@ -1504,7 +1504,7 @@
     },
   };
 
-  let currentLang = 'en';
+  let currentLang = 'es';
 
   function t(key, ...args) {
     const val = TRANSLATIONS[currentLang][key];
@@ -1540,6 +1540,8 @@
   const inpColumns     = document.getElementById('inp-columns');
   const inpRows        = document.getElementById('inp-rows');
   const inpCards       = document.getElementById('inp-cards');
+
+  applyLanguage('es'); // populate all data-i18n elements on first load
 
   // ── Decade example songs ───────────────────────────────────────
   const DECADE_SONGS = {
