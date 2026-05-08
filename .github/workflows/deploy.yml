@@ -28,6 +28,16 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Inject secrets
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+        run: |
+          if [ -z "$SPOTIFY_CLIENT_ID" ]; then
+            echo "ERROR: SPOTIFY_CLIENT_ID secret is empty or not set" && exit 1
+          fi
+          sed -i "s/__SPOTIFY_CLIENT_ID__/${SPOTIFY_CLIENT_ID}/g" index.html
+          grep -q "$SPOTIFY_CLIENT_ID" index.html && echo "Injection OK" || (echo "Injection FAILED" && exit 1)
+
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:

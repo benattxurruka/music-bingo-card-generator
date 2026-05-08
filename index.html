@@ -488,6 +488,45 @@
       font-weight: 600;
     }
 
+    /* Spotify bar */
+    #spotify-bar, #spotify-bar-prepare {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px;
+      padding: .55rem .9rem;
+      margin-bottom: .85rem;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+    #spotify-disconnected, #spotify-connected { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+    .btn-spotify {
+      background: #1db954;
+      color: #000;
+      border: none;
+      border-radius: 20px;
+      padding: .38rem .9rem;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .btn-spotify:hover { background: #1ed760; }
+    .btn-spotify-logout {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px;
+      padding: .28rem .75rem;
+      font-size: .75rem;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-spotify-logout:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+    .spotify-hint { font-size: .78rem; color: var(--muted); }
+
     /* Player UI */
     #player-ui {
       display: none;
@@ -948,6 +987,22 @@
       <h2 data-i18n="player.prepare.title">Prepare Bingo</h2>
       <p class="hint" data-i18n="player.prepare.hint">For each song, paste a YouTube URL and optionally set start / end seconds. Leave blank to play the first 60 seconds. Use Auto-fill URLs to search YouTube automatically for all songs at once.<br>When done, use Export Config to save your setup as a JSON file you can reload later, or press Play Bingo to start right away.</p>
 
+      <div id="spotify-bar-prepare">
+        <div id="spotify-disconnected-prepare">
+          <button id="btn-spotify-login-prepare" class="btn-spotify">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:.4em"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.441 17.323a.75.75 0 0 1-1.032.244c-2.827-1.727-6.387-2.117-10.582-1.159a.75.75 0 0 1-.334-1.463c4.588-1.048 8.522-.597 11.704 1.346a.75.75 0 0 1 .244 1.032zm1.451-3.228a.937.937 0 0 1-1.29.308c-3.234-1.988-8.163-2.563-11.986-1.403a.937.937 0 0 1-.575-1.787c4.37-1.406 9.8-.724 13.543 1.592a.937.937 0 0 1 .308 1.29zm.125-3.359c-3.878-2.302-10.277-2.514-13.977-1.39a1.125 1.125 0 0 1-.651-2.151c4.248-1.287 11.307-1.038 15.77 1.608a1.125 1.125 0 1 1-1.142 1.933z"/></svg>
+            <span data-i18n="player.spotify.connect">Connect Spotify</span>
+          </button>
+          <span class="spotify-hint" data-i18n="player.spotify.hintPrepare">Connect Spotify Premium to preview songs without ads</span>
+        </div>
+        <div id="spotify-connected-prepare" style="display:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1db954" style="vertical-align:middle;margin-right:.35em"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.441 17.323a.75.75 0 0 1-1.032.244c-2.827-1.727-6.387-2.117-10.582-1.159a.75.75 0 0 1-.334-1.463c4.588-1.048 8.522-.597 11.704 1.346a.75.75 0 0 1 .244 1.032zm1.451-3.228a.937.937 0 0 1-1.29.308c-3.234-1.988-8.163-2.563-11.986-1.403a.937.937 0 0 1-.575-1.787c4.37-1.406 9.8-.724 13.543 1.592a.937.937 0 0 1 .308 1.29zm.125-3.359c-3.878-2.302-10.277-2.514-13.977-1.39a1.125 1.125 0 0 1-.651-2.151c4.248-1.287 11.307-1.038 15.77 1.608a1.125 1.125 0 1 1-1.142 1.933z"/></svg>
+          <span id="spotify-user-name-prepare" style="font-size:.85rem;font-weight:600;color:#1db954"></span>
+          <span style="font-size:.8rem;color:var(--muted);margin-left:.25rem" data-i18n="player.spotify.connected">· Spotify connected</span>
+          <button id="btn-spotify-logout-prepare" class="btn-spotify-logout" data-i18n="player.spotify.disconnect">Disconnect</button>
+        </div>
+      </div>
+
       <div class="prepare-table-wrap">
         <table class="prepare-table">
           <thead>
@@ -991,6 +1046,22 @@
     <div class="player-section">
       <h2 data-i18n="player.play.title">Play Bingo</h2>
       <p class="hint" data-i18n="player.play.hint">Press Play to shuffle your songs and start the game. Fullscreen for a big-screen presentation. Songs play from the URLs you configured in the Prepare Bingo tab.</p>
+
+      <div id="spotify-bar">
+        <div id="spotify-disconnected">
+          <button id="btn-spotify-login" class="btn-spotify">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:.4em"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.441 17.323a.75.75 0 0 1-1.032.244c-2.827-1.727-6.387-2.117-10.582-1.159a.75.75 0 0 1-.334-1.463c4.588-1.048 8.522-.597 11.704 1.346a.75.75 0 0 1 .244 1.032zm1.451-3.228a.937.937 0 0 1-1.29.308c-3.234-1.988-8.163-2.563-11.986-1.403a.937.937 0 0 1-.575-1.787c4.37-1.406 9.8-.724 13.543 1.592a.937.937 0 0 1 .308 1.29zm.125-3.359c-3.878-2.302-10.277-2.514-13.977-1.39a1.125 1.125 0 0 1-.651-2.151c4.248-1.287 11.307-1.038 15.77 1.608a1.125 1.125 0 1 1-1.142 1.933z"/></svg>
+            <span data-i18n="player.spotify.connect">Connect Spotify</span>
+          </button>
+          <span class="spotify-hint" data-i18n="player.spotify.hint">Log in with Spotify Premium for ad-free playback</span>
+        </div>
+        <div id="spotify-connected" style="display:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#1db954" style="vertical-align:middle;margin-right:.35em"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.441 17.323a.75.75 0 0 1-1.032.244c-2.827-1.727-6.387-2.117-10.582-1.159a.75.75 0 0 1-.334-1.463c4.588-1.048 8.522-.597 11.704 1.346a.75.75 0 0 1 .244 1.032zm1.451-3.228a.937.937 0 0 1-1.29.308c-3.234-1.988-8.163-2.563-11.986-1.403a.937.937 0 0 1-.575-1.787c4.37-1.406 9.8-.724 13.543 1.592a.937.937 0 0 1 .308 1.29zm.125-3.359c-3.878-2.302-10.277-2.514-13.977-1.39a1.125 1.125 0 0 1-.651-2.151c4.248-1.287 11.307-1.038 15.77 1.608a1.125 1.125 0 1 1-1.142 1.933z"/></svg>
+          <span id="spotify-user-name" style="font-size:.85rem;font-weight:600;color:#1db954"></span>
+          <span style="font-size:.8rem;color:var(--muted);margin-left:.25rem" data-i18n="player.spotify.connected">· Spotify connected</span>
+          <button id="btn-spotify-logout" class="btn-spotify-logout" data-i18n="player.spotify.disconnect">Disconnect</button>
+        </div>
+      </div>
 
       <div class="actions" style="margin-bottom:.5rem">
         <button id="btn-play-bingo" class="btn-primary" data-i18n="player.play.start">Play Bingo</button>
@@ -1118,7 +1189,7 @@
       'player.prepare.noSongs': 'No songs in the Song List yet. Add songs in the Card Generator tab first.',
       'player.prepare.loadHint': 'Or load a previously exported config file to restore your song list and URLs:',
       'player.play.title':      'Play Bingo',
-      'player.play.hint':       'Press Play to shuffle your songs and start the game. Fullscreen for a big-screen presentation. Songs play from the URLs you configured in the Prepare Bingo tab.',
+      'player.play.hint':       'Press Play to shuffle your songs and start the game. Fullscreen for a big-screen presentation. Songs play from the URLs you configured in the Prepare Bingo tab. Connect a Spotify Premium account to avoid ads.',
       'player.play.noConfig.before': 'No songs with YouTube links found. Fill in the URLs in the ',
       'player.play.noConfig.link':   'Prepare Bingo tab',
       'player.play.noConfig.after':  ' or load a config file.',
@@ -1140,6 +1211,11 @@
       'player.play.exitFullscreen': '✕ Exit Fullscreen',
       'player.play.watchOnYT':    '▶ Watch this song on YouTube',
       'player.play.lastPlayed':   'Last 5 played:',
+      'player.spotify.connect':   'Connect Spotify',
+      'player.spotify.hint':      'Log in with Spotify Premium for ad-free playback',
+      'player.spotify.hintPrepare': 'Connect Spotify Premium to preview songs without ads',
+      'player.spotify.connected': '· Spotify connected',
+      'player.spotify.disconnect':'Disconnect',
     },
     es: {
       'header.title':    '🎵 Generador de Cartones de Bingo Musical',
@@ -1184,7 +1260,7 @@
       'player.prepare.noSongs': 'No hay canciones en la lista todavía. Añade canciones en la pestaña Generador de cartones primero.',
       'player.prepare.loadHint': 'O carga un archivo de configuración exportado anteriormente para restaurar tu lista de canciones y URLs:',
       'player.play.title':      'Jugar al bingo',
-      'player.play.hint':       'Pulsa Jugar para barajar tus canciones y empezar la partida. Pantalla completa para una presentación en pantalla grande. Las canciones se reproducen desde las URLs configuradas en la pestaña Preparar bingo.',
+      'player.play.hint':       'Pulsa Jugar para barajar tus canciones y empezar la partida. Pantalla completa para una presentación en pantalla grande. Las canciones se reproducen desde las URLs configuradas en la pestaña Preparar bingo. Conecta una cuenta de Spotify Premium para evitar anuncios.',
       'player.play.noConfig.before': 'No hay canciones con enlaces de YouTube. Rellena las URLs en la pestaña ',
       'player.play.noConfig.link':   'Preparar bingo',
       'player.play.noConfig.after':  ' o carga un archivo de configuración.',
@@ -1206,6 +1282,11 @@
       'player.play.exitFullscreen': '✕ Salir de pantalla completa',
       'player.play.watchOnYT':    '▶ Ver esta canción en YouTube',
       'player.play.lastPlayed':   'Últimas 5 canciones:',
+      'player.spotify.connect':   'Conectar Spotify',
+      'player.spotify.hint':      'Inicia sesión con Spotify Premium para reproducción sin anuncios',
+      'player.spotify.hintPrepare': 'Conecta Spotify Premium para previsualizar canciones sin anuncios',
+      'player.spotify.connected': '· Spotify conectado',
+      'player.spotify.disconnect':'Desconectar',
     },
     ca: {
       'header.title':    '🎵 Generador de Cartrons de Bingo Musical',
@@ -1250,7 +1331,7 @@
       'player.prepare.noSongs': 'Encara no hi ha cançons a la llista. Afegeix cançons a la pestanya Generador de cartrons primer.',
       'player.prepare.loadHint': "O carrega un fitxer de configuració exportat prèviament per restaurar la teva llista de cançons i URLs:",
       'player.play.title':      'Jugar al bingo',
-      'player.play.hint':       "Prem Jugar per barrejar les teves cançons i començar la partida. Pantalla completa per a una millor presentació. Les cançons es reprodueixen des de les URLs configurades a la pestanya Preparar el bingo.",
+      'player.play.hint':       "Prem Jugar per barrejar les teves cançons i començar la partida. Pantalla completa per a una millor presentació. Les cançons es reprodueixen des de les URLs configurades a la pestanya Preparar el bingo. Connecta un compte de Spotify Premium per evitar anuncis.",
       'player.play.noConfig.before': "No hi ha cançons amb enllaços de YouTube. Omple les URLs a la pestanya ",
       'player.play.noConfig.link':   "Preparar el bingo",
       'player.play.noConfig.after':  " o carrega un fitxer de configuració.",
@@ -1272,6 +1353,11 @@
       'player.play.exitFullscreen': '✕ Sortir de pantalla completa',
       'player.play.watchOnYT':    '▶ Mira aquesta cançó a YouTube',
       'player.play.lastPlayed':   'Últimes 5 cançons:',
+      'player.spotify.connect':   'Connecta Spotify',
+      'player.spotify.hint':      'Inicia sessió amb Spotify Premium per a reproducció sense anuncis',
+      'player.spotify.hintPrepare': 'Connecta Spotify Premium per previsualitzar cançons sense anuncis',
+      'player.spotify.connected': '· Spotify connectat',
+      'player.spotify.disconnect':'Desconnecta',
     },
     eu: {
       'header.title':    '🎵 Musika Bingo Txartel Sortzailea',
@@ -1316,7 +1402,7 @@
       'player.prepare.noSongs': 'Oraindik ez dago abestirik zerrendan. Gehitu abestiak Txartel sortzailea fitxan lehenik.',
       'player.prepare.loadHint': 'Edo kargatu aurretik esportatutako konfigurazio fitxategi bat zure abesti zerrenda eta URLak berreskuratzeko:',
       'player.play.title':      'Bingoa jokatu',
-      'player.play.hint':       'Sakatu Jokatu abestiak nahastu eta jolasa hasteko. Pantaila osoa aurkezpen hobea izateko. Abestiak Bingoa prestatu fitxan konfiguratutako URLetan erreproduzitzen dira.',
+      'player.play.hint':       'Sakatu Jokatu abestiak nahastu eta jolasa hasteko. Pantaila osoa aurkezpen hobea izateko. Abestiak Bingoa prestatu fitxan konfiguratutako URLetan erreproduzitzen dira. Konektatu Spotify Premium kontu bat iragarkiak saihesteko.',
       'player.play.noConfig.before': 'Ez dago YouTube estekak dituzten abestirik. Bete URLak ',
       'player.play.noConfig.link':   'Bingoa prestatu fitxan',
       'player.play.noConfig.after':  ' edo kargatu konfigurazio fitxategi bat.',
@@ -1338,6 +1424,11 @@
       'player.play.exitFullscreen': '✕ Pantaila osotik irten',
       'player.play.watchOnYT':    '▶ Ikusi abesti hau YouTuben',
       'player.play.lastPlayed':   'Azken 5 abestiak:',
+      'player.spotify.connect':   'Spotify konektatu',
+      'player.spotify.hint':      'Hasi saioa Spotify Premiumekin iragarkirik gabeko erreprodukziorako',
+      'player.spotify.hintPrepare': 'Konektatu Spotify Premium abestiak iragarkirik gabe aurrebistatzeko',
+      'player.spotify.connected': '· Spotify konektatuta',
+      'player.spotify.disconnect':'Deskonektatu',
     },
   };
 
@@ -2024,7 +2115,7 @@
         const d     = prepareData[song] || {};
         const start = d.startSeconds !== undefined ? d.startSeconds : 0;
         const end   = d.endSeconds   !== undefined ? d.endSeconds   : start + 60;
-        previewSegment(vid, start, end);
+        previewSegment(vid, start, end, song);
         switchTab('tab-player');
       });
 
@@ -2212,7 +2303,8 @@
   // bypassing browser CORS restrictions. Deploy search-worker.js at
   // https://dash.cloudflare.com and paste your *.workers.dev URL below.
 
-  const SEARCH_WORKER_URL = 'https://music-bingo-searcher.betxurruka.workers.dev'; // ← paste your Worker URL here, e.g. 'https://bingo-search.example.workers.dev'
+  const SEARCH_WORKER_URL  = 'https://music-bingo-searcher.betxurruka.workers.dev'; // ← paste your Worker URL here, e.g. 'https://bingo-search.example.workers.dev'
+  const SPOTIFY_CLIENT_ID  = '__SPOTIFY_CLIENT_ID__'; // injected at deploy time from GitHub secret SPOTIFY_CLIENT_ID
 
   async function fetchPipedSearch(query) {
     if (!SEARCH_WORKER_URL) return null;
@@ -2228,6 +2320,187 @@
       return null;
     }
   }
+
+  // ── Spotify ─────────────────────────────────────────────────────
+  let spotifyToken      = null;
+  let spotifyExpiry     = 0;
+  let spotifyPlayer     = null;
+  let spotifyDeviceId   = null;
+  let spotifyReady      = false;
+  const spotifyCache    = new Map(); // query → trackUri
+
+  function _spRandStr(len) {
+    const a = new Uint8Array(len);
+    crypto.getRandomValues(a);
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    return [...a].map(b => chars[b % 62]).join('');
+  }
+  async function _spChallenge(v) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(v));
+    return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');
+  }
+  function _spRedirectUri() {
+    return window.location.origin + window.location.pathname;
+  }
+
+  async function spotifyLogin() {
+    if (!SPOTIFY_CLIENT_ID) { alert('Set SPOTIFY_CLIENT_ID in index.html first.'); return; }
+    const v = _spRandStr(64);
+    sessionStorage.setItem('sp_v', v);
+    const p = new URLSearchParams({
+      client_id: SPOTIFY_CLIENT_ID,
+      response_type: 'code',
+      redirect_uri: _spRedirectUri(),
+      scope: 'streaming user-read-email user-read-private user-modify-playback-state user-read-playback-state',
+      code_challenge_method: 'S256',
+      code_challenge: await _spChallenge(v),
+    });
+    location.href = 'https://accounts.spotify.com/authorize?' + p;
+  }
+
+  async function _spExchangeCode(code) {
+    const v = sessionStorage.getItem('sp_v');
+    sessionStorage.removeItem('sp_v');
+    const res = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ client_id: SPOTIFY_CLIENT_ID, grant_type: 'authorization_code', code, redirect_uri: _spRedirectUri(), code_verifier: v }),
+    });
+    return res.ok ? res.json() : null;
+  }
+
+  async function _spRefresh() {
+    const r = localStorage.getItem('sp_r');
+    if (!r) return false;
+    const res = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ client_id: SPOTIFY_CLIENT_ID, grant_type: 'refresh_token', refresh_token: r }),
+    });
+    if (!res.ok) return false;
+    const data = await res.json();
+    _spSaveTokens(data);
+    return true;
+  }
+
+  function _spSaveTokens(data) {
+    spotifyToken  = data.access_token;
+    spotifyExpiry = Date.now() + (data.expires_in - 60) * 1000;
+    localStorage.setItem('sp_t', data.access_token);
+    localStorage.setItem('sp_e', String(spotifyExpiry));
+    if (data.refresh_token) localStorage.setItem('sp_r', data.refresh_token);
+  }
+
+  async function _spEnsureToken() {
+    if (spotifyToken && Date.now() < spotifyExpiry) return true;
+    return _spRefresh();
+  }
+
+  function spotifyLogout() {
+    spotifyToken = null; spotifyExpiry = 0;
+    ['sp_t','sp_e','sp_r','sp_u'].forEach(k => localStorage.removeItem(k));
+    if (spotifyPlayer) { try { spotifyPlayer.disconnect(); } catch(_){} spotifyPlayer = null; }
+    spotifyDeviceId = null; spotifyReady = false;
+    spotifyCache.clear();
+    _spUpdateUI(false);
+  }
+
+  function _spUpdateUI(connected) {
+    const u = connected ? (localStorage.getItem('sp_u') || '') : '';
+    [
+      ['spotify-disconnected',         'spotify-connected',         'spotify-user-name'],
+      ['spotify-disconnected-prepare', 'spotify-connected-prepare', 'spotify-user-name-prepare'],
+    ].forEach(([discId, connId, nameId]) => {
+      const disc = document.getElementById(discId);
+      const conn = document.getElementById(connId);
+      if (disc) disc.style.display = connected ? 'none' : '';
+      if (conn) conn.style.display = connected ? ''     : 'none';
+      if (connected && u) { const el = document.getElementById(nameId); if (el) el.textContent = u; }
+    });
+  }
+
+  function _spLoadSDK() {
+    if (document.getElementById('sp-sdk')) return;
+    window.onSpotifyWebPlaybackSDKReady = _spInitPlayer;
+    const s = document.createElement('script');
+    s.id = 'sp-sdk';
+    s.src = 'https://sdk.scdn.co/spotify-player.js';
+    document.head.appendChild(s);
+  }
+
+  function _spInitPlayer() {
+    spotifyPlayer = new Spotify.Player({
+      name: 'Music Bingo',
+      getOAuthToken: async cb => { await _spEnsureToken(); cb(spotifyToken); },
+      volume: 1,
+    });
+    spotifyPlayer.addListener('ready', ({ device_id }) => { spotifyDeviceId = device_id; spotifyReady = true; });
+    spotifyPlayer.addListener('not_ready', () => { spotifyReady = false; });
+    spotifyPlayer.addListener('authentication_error', () => spotifyLogout());
+    spotifyPlayer.addListener('account_error', () => {
+      alert('Spotify Premium is required for in-browser playback.');
+      spotifyLogout();
+    });
+    spotifyPlayer.connect();
+  }
+
+  async function spotifySearchTrack(query) {
+    if (spotifyCache.has(query)) return spotifyCache.get(query);
+    if (!await _spEnsureToken()) return null;
+    try {
+      const res = await fetch(
+        `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=1`,
+        { headers: { Authorization: `Bearer ${spotifyToken}` } }
+      );
+      if (!res.ok) return null;
+      const data = await res.json();
+      const uri = data.tracks?.items?.[0]?.uri ?? null;
+      spotifyCache.set(query, uri);
+      return uri;
+    } catch(_) { return null; }
+  }
+
+  async function spotifyPlayTrack(trackUri, positionMs) {
+    if (!await _spEnsureToken()) return false;
+    const res = await fetch(
+      `https://api.spotify.com/v1/me/player/play?device_id=${spotifyDeviceId}`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${spotifyToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uris: [trackUri], position_ms: Math.round(positionMs) }),
+      }
+    );
+    return res.ok || res.status === 204;
+  }
+
+  // Handle OAuth callback and restore persisted session
+  (async () => {
+    if (!SPOTIFY_CLIENT_ID) return;
+    const params = new URLSearchParams(location.search);
+    const code   = params.get('code');
+    if (code) {
+      history.replaceState({}, '', location.pathname);
+      const data = await _spExchangeCode(code);
+      if (data?.access_token) {
+        _spSaveTokens(data);
+        const uRes = await fetch('https://api.spotify.com/v1/me', { headers: { Authorization: `Bearer ${data.access_token}` } });
+        if (uRes.ok) { const u = await uRes.json(); localStorage.setItem('sp_u', u.display_name || u.id); }
+        _spLoadSDK();
+        _spUpdateUI(true);
+      }
+    } else if (localStorage.getItem('sp_t')) {
+      spotifyToken  = localStorage.getItem('sp_t');
+      spotifyExpiry = Number(localStorage.getItem('sp_e') || '0');
+      if (await _spEnsureToken()) { _spLoadSDK(); _spUpdateUI(true); }
+      else spotifyLogout();
+    }
+  })();
+
+  document.getElementById('btn-spotify-login').addEventListener('click', spotifyLogin);
+  document.getElementById('btn-spotify-logout').addEventListener('click', spotifyLogout);
+  document.getElementById('btn-spotify-login-prepare').addEventListener('click', spotifyLogin);
+  document.getElementById('btn-spotify-logout-prepare').addEventListener('click', spotifyLogout);
+  // ────────────────────────────────────────────────────────────────
 
   function showPlayerError(msg) {
     const el = document.getElementById('player-error');
@@ -2314,7 +2587,9 @@
     const ytTime = song.startSeconds + ratio * (song.endSeconds - song.startSeconds);
     segmentElapsed = newElapsedMs;
     clearTimers();
-    if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
+    if (spotifyPlayer && spotifyReady) {
+      try { spotifyPlayer.setVolume(1); spotifyPlayer.seek(Math.round(song.startSeconds * 1000 + newElapsedMs)); } catch(_) {}
+    } else if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
       try { ytPlayer.setVolume(100); ytPlayer.seekTo(ytTime, true); } catch (_) {}
     }
     startProgressUI();
@@ -2354,11 +2629,12 @@
 
       // Fade volume to 0 over the last 2 seconds of the segment
       const fadeMs = 2000;
-      if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
-        if (elapsed >= segmentDuration - fadeMs) {
-          const fadeRatio = Math.min(1, (elapsed - (segmentDuration - fadeMs)) / fadeMs);
+      if (elapsed >= segmentDuration - fadeMs) {
+        const fadeRatio = Math.min(1, (elapsed - (segmentDuration - fadeMs)) / fadeMs);
+        if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
           try { ytPlayer.setVolume(Math.round(100 * (1 - fadeRatio))); } catch (_) {}
         }
+        if (spotifyPlayer) { try { spotifyPlayer.setVolume(1 - fadeRatio); } catch(_) {} }
       }
     }, 200);
   }
@@ -2368,7 +2644,7 @@
     advanceToNext();
   }
 
-  function playSong(index) {
+  async function playSong(index) {
     if (index < 0 || index >= playlist.length) return;
     clearTimers();
     isPreviewMode  = false;
@@ -2390,13 +2666,14 @@
     if (ytPlayer && typeof ytPlayer.setVolume === 'function') {
       try { ytPlayer.setVolume(100); } catch (_) {}
     }
+    if (spotifyPlayer) { try { spotifyPlayer.setVolume(1); } catch(_) {} }
     updateQueueUI();
 
     // Update YouTube link
     const ytLinkWrap = document.getElementById('yt-link-wrap');
     const ytLinkEl   = document.getElementById('yt-link');
     if (song.videoId) {
-      ytLinkEl.href = `https://www.youtube.com/embed/${song.videoId}?start=${Math.floor(start)}&autoplay=1`;
+      ytLinkEl.href = `https://www.youtube.com/watch?v=${song.videoId}&t=${Math.floor(start)}`;
       ytLinkWrap.style.display = '';
     } else {
       ytLinkWrap.style.display = 'none';
@@ -2406,6 +2683,15 @@
     updateFullscreenUI();
     startProgressUI();
     segmentTimer = setTimeout(() => advanceToNext(), segmentDuration + 1000);
+
+    // Use Spotify if connected, fall back to YouTube
+    if (spotifyReady && spotifyDeviceId) {
+      const uri = await spotifySearchTrack(song.name);
+      if (uri) {
+        await spotifyPlayTrack(uri, start * 1000);
+        return;
+      }
+    }
     ytLoad(song.videoId, start);
   }
 
@@ -2460,7 +2746,8 @@
   function togglePause() {
     if (isPaused) {
       isPaused = false;
-      ytCommand('playVideo');
+      if (spotifyPlayer && spotifyReady) { try { spotifyPlayer.resume(); } catch(_) {} }
+      else ytCommand('playVideo');
       syncPauseButtons();
       const remaining = segmentDuration - segmentElapsed;
       startProgressUI();
@@ -2469,7 +2756,8 @@
       isPaused       = true;
       segmentElapsed = Date.now() - segmentStart;
       clearTimers();
-      ytCommand('pauseVideo');
+      if (spotifyPlayer && spotifyReady) { try { spotifyPlayer.pause(); } catch(_) {} }
+      else ytCommand('pauseVideo');
       syncPauseButtons();
     }
   }
@@ -2499,6 +2787,7 @@
   document.getElementById('btn-stop-bingo').addEventListener('click', () => {
     clearTimers();
     ytStop();
+    if (spotifyPlayer) { try { spotifyPlayer.pause(); } catch(_) {} }
     playlist      = [];
     currentIndex  = -1;
     isPaused      = false;
@@ -2616,7 +2905,7 @@
   // ── Preview a single segment (from Prepare table) ─────────────
   let previewStopTimer = null;
 
-  function previewSegment(videoId, startSeconds, endSeconds) {
+  async function previewSegment(videoId, startSeconds, endSeconds, songName) {
     clearTimers();
     clearTimeout(previewStopTimer);
     isPreviewMode   = true;
@@ -2629,12 +2918,20 @@
     document.getElementById('progress-bar-fill').style.width      = '0%';
     document.getElementById('queue-progress-label').textContent   = '';
     document.getElementById('queue-list').innerHTML                = '';
+    if (spotifyPlayer) { try { spotifyPlayer.setVolume(1); } catch(_) {} }
+    if (ytPlayer && typeof ytPlayer.setVolume === 'function') { try { ytPlayer.setVolume(100); } catch(_) {} }
 
     startProgressUI();
     previewStopTimer = setTimeout(() => {
+      if (spotifyPlayer) { try { spotifyPlayer.pause(); } catch(_) {} }
       ytStop();
       isPreviewMode = false;
     }, segmentDuration + 1000);
+
+    if (spotifyReady && spotifyDeviceId && songName) {
+      const uri = await spotifySearchTrack(songName);
+      if (uri) { await spotifyPlayTrack(uri, startSeconds * 1000); return; }
+    }
     ytLoad(videoId, startSeconds);
   }
 </script>
