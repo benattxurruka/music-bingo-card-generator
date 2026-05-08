@@ -2679,7 +2679,8 @@
       ytLinkWrap.style.display = 'none';
     }
 
-    // Start progress UI immediately (optimistic); audio loads in the background
+    // Show player UI and start progress regardless of audio source
+    document.getElementById('player-ui').style.display = 'flex';
     updateFullscreenUI();
     startProgressUI();
     segmentTimer = setTimeout(() => advanceToNext(), segmentDuration + 1000);
@@ -2913,6 +2914,7 @@
     segmentElapsed  = 0;
     isPaused        = false;
 
+    document.getElementById('player-ui').style.display            = 'flex';
     document.getElementById('player-song-name').textContent       = '▶ Preview';
     syncPauseButtons();
     document.getElementById('progress-bar-fill').style.width      = '0%';
